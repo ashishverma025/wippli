@@ -146,14 +146,6 @@ Route::get('/subjects', 'LearningCenterController@subjectsList');
 Route::get('/fetchsubjects', 'LearningCenterController@fetchSubjects');
 Route::get('/deletesubjects/{subId?}', 'LearningCenterController@deleteSubject');
 
-/** Site Attendance Route */
-Route::get('/attendence', 'AttendanceController@attendence');
-Route::post('/saveattendence', 'AttendanceController@saveattendence');
-Route::post('/updateattendence', 'AttendanceController@updateattendance');
-Route::get('/attendance', 'AttendanceController@attendance');
-Route::get('/attendancesummary', 'AttendanceController@attendenceSummary');
-Route::get('/fetchattendance', 'AttendanceController@fetchAttendance');
-Route::get('/fetchattendancestudent', 'AttendanceController@fetchStudentsAttendance');
 
 /* ----------------------- Site Routes END -------------------------------- */
 
