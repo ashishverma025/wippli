@@ -1,7 +1,6 @@
 <!-- Main Sidebar Container -->
 <?php
 $userDetails = getUserDetails();
-$LcDetails = getLcDetails();
 $imgFolder = ($userDetails->user_type == '4') ? 'student' : 'tutor';
 $segment2 = Request::segment(2);
 $segment3 = Request::segment(3);

@@ -26,21 +26,18 @@ class WelcomeController extends Controller {
     public function landing_index() {
         // echo "Under Maintanance";die;
         $LcDetails = [];
-        $practicePaper = OnlinequestionPaper::where(['status' => 'active'])->get();
 
         if (Auth::check()) {
             $userId = getUser_Detail_ByParam('id');
             $LcDetails = LearningcenterDetails::where(['user_id' => $userId])->first();
         }
         $totalTutors = User::where(['user_type'=>3])->get();
-        $Subjects = TeachSubject::select('subjects_name','subject_image','description')->where(['status'=>'active'])->groupBy('subjects_name')->get();
 //        prd($Subjects);
         // return view('Under Maintanance');
         return view('sites.site-index', [
             'LcDetails' => $LcDetails,
-            'practicePaper'=>$practicePaper,
             'totalTutors'=>$totalTutors,
-            'Subjects'=> $Subjects
+            'isReady'=> 'no'
         ]);
     }
 
