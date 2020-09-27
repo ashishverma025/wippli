@@ -31,15 +31,10 @@ class DashboardController extends Controller {
         if (Auth::check()) {
             $studentId = getUser_Detail_ByParam('id');
             $DashboardDetails = [];
-            $ClassStudent = DB::table('tutor_students as ts')->select('ts.tutor_id', 'lc.lc_name', DB::raw('count(ts.tutor_id) as TotalLC'))
-                    ->leftJoin('learning_centers as lc', 'lc.user_id', 'ts.tutor_id')
-                    ->where(['ts.student_id' => $studentId])
-                    ->groupBy('ts.tutor_id')
-                    ->get()
-                    ->count();
+           
 
-            $DashboardDetails['LearningCenters'] = $ClassStudent;
-            $DashboardDetails['classes'] = $ClassStudent;
+            $DashboardDetails['LearningCenters'] = "";
+            $DashboardDetails['classes'] = "";
             $DashboardDetails['subjects'] = Subject::where(['user_id' => $studentId])->count();
 //            pr($DashboardDetails);
             return view('sites-student.student-dashboard', ['active' => 'Dashboard', 'DashboardDetails' => $DashboardDetails]);
@@ -51,14 +46,10 @@ class DashboardController extends Controller {
         if (Auth::check()) {
             $studentId = getUser_Detail_ByParam('id');
             $DashboardDetails = [];
-            $ClassStudent = DB::table('tutor_students as ts')->select('ts.tutor_id', DB::raw('count(ts.tutor_id) as TotalLC'))
-                    ->where(['ts.student_id' => $studentId])
-                    ->groupBy('ts.tutor_id')
-                    ->get()
-                    ->count();
-            $DashboardDetails['LearningCenters'] = $ClassStudent;
-            $DashboardDetails['classes'] = $ClassStudent;
-            $DashboardDetails['subjects'] = Subject::where(['user_id' => $studentId])->count();
+
+            $DashboardDetails['LearningCenters'] = "";
+            $DashboardDetails['classes'] = "";
+            $DashboardDetails['subjects'] = "5";
            // pr($DashboardDetails);
 //            return view('sites-student.dashboard1', ['active' => 'dashboard', 'DashboardDetails' => $DashboardDetails]);
             return view('users-dashboard.dashboard', ['active' => 'dashboard', 'DashboardDetails' => $DashboardDetails]);

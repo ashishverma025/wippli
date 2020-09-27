@@ -68,10 +68,10 @@
             </nav>
             <!-- Trigger the modal with a button -->
         </header>
-       
+       @if($isReady !='no')
 
         <!--- Services section --->
-        <section class="services-sec">
+       <section class="services-sec">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -120,7 +120,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> 
 
         <!--- Video Section -->
         <section class="video-section">
@@ -245,7 +245,6 @@
                     @if(!empty($Subjects))
                     @foreach($Subjects as $k=>$subject)
                     <?php
-//                    pr($subject['subject_image']);
                     $image = $subject['subject_image'] ? url('public/sites/images/teach-subjects/1') . '/' . $subject['subject_image'] : url('public/sites/images/chemistory.jpg');
                     ?>
                     <div class="col-lg-4 col-md-4 col-sm-4">
@@ -654,13 +653,31 @@
             </div>
             <!-- End User login/signup Modal -->
         </section>
+        @endif
+
+         <!--- Video Section -->
+         <section class="video-section">
+            <div id="video_banner" class="owl-carousel owl-theme">
+                <div class="item">
+                    <div class="video_title">
+                        <h2>Comming soon</h2>
+                        <p>UNDER MAINTAINANCE</p>
+                    </div>
+
+                </div>
+            
+            </div>
+        </section>
+
+
+
         <footer class="footer-main">
             <div class="container">
                 <div class="row">
                     <div class="footer-top-sec clearfix">
                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                             <div class="footer-logo">
-                                <img class="img-responsive" src="{{ url('public/sites/images/footer-logo.png') }}">
+                                <img class="img-responsive" src="{{ url('public/sites/wippli-front/logo.png') }}">
                             </div>
                             <div class="footer-address">
                                 Suite 405/12, Hannover Street<br>

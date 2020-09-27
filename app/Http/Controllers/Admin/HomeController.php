@@ -37,8 +37,8 @@ class HomeController extends Controller {
         if (Auth::check()) {
             $studentId = getUser_Detail_ByParam('id');
             $DashboardDetails = [];
-            $LearningCenters = LearningCenter::get()->count();
-            $ClassStudent = Tutorclass::where(['status' => '1'])->get()->count();
+            $LearningCenters = "5";
+            $ClassStudent = "10";
             $Students = User::where(['user_type' => 4])->get()->count();
             $totalUsers = User::get()->count();
 
@@ -46,7 +46,7 @@ class HomeController extends Controller {
             $DashboardDetails['LearningCenters'] = $LearningCenters;
             $DashboardDetails['classes'] = $ClassStudent;
             $DashboardDetails['students'] = $Students;
-            $DashboardDetails['subjects'] = Subject::get()->count();
+            $DashboardDetails['subjects'] = "8";
 //            pr($DashboardDetails);
             return view('admin.AdminDashboard', ['active' => 'Dashboard', 'DashboardDetails' => $DashboardDetails]);
         }
