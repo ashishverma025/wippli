@@ -77,19 +77,21 @@ Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
     Route::get('/change_password', 'AdminController@change_pwd');
     Route::post('/change_password', 'AdminController@update_changed_pwd');
     // user's Routes
-    Route::any('/addUser', 'AdminController@addUser');
+
+
+    Route::any('/user', 'UserController@index');
+    Route::any('/user/create', 'UserController@create');
+    Route::get('/user/edit/{id?}', 'UserController@edit');
+    Route::get('/user/destroy/{id}', 'UserController@destroy');
+
     Route::post('/updateuser', 'AdminController@updateuser');
     Route::get('/user_list', 'UserController@user_list');
-    Route::get('/user_list/{type?}', 'UserController@user_list');
     Route::get('/fetchUsers', 'UserController@fetchUsers');
     Route::get('/fetchUsers/{type?}', 'UserController@fetchUsers');
     Route::get('/user/{id?}', 'UserController@updateUser');
-    Route::get('/user/delete/{id}', 'UserController@destroy');
     Route::post('/add_user', 'UserController@store');
     Route::get('/fetchesUsers-data', 'UserController@fetchesUsers')->name('fetchesUsers.data');
 
-    Route::get('/edit/{id?}', 'UserController@edit');
-    Route::post('/uploadstudents', 'UserController@uploadStudentByCsv');
     Route::get('/dashboard', 'HomeController@index')->name('home')->middleware('guard.verified:admin,admin.verification.notice');
 
 
@@ -163,55 +165,13 @@ Route::prefix('/student')->name('student')->namespace('student')->middleware('ve
 });
 
 
-/** Site Listing Route */
-/** Listing Request */
-Route::get('/listing/listing_request', 'ListingController@listingRequest');
-Route::post('/listing/listing_request', 'ListingController@listingRequest');
-Route::get('/listing/listing_request/{id?}', 'ListingController@listingRequest');
-Route::get('/listing/delete_request/{id?}', 'ListingController@deleteRequest');
-Route::get('/listing/duplicate_request/{id?}', 'ListingController@duplicateRequest');
-
-/** Listing Class */
-Route::get('/listing/listing_class', 'ListingController@listingClass');
-Route::post('/listing/listing_class', 'ListingController@listingClass');
-Route::get('/listing/listing_class/{id?}', 'ListingController@listingClass');
-Route::get('/listing/duplicate_class/{id?}', 'ListingController@duplicateClass');
-Route::get('/listing/delete_class/{id?}', 'ListingController@deleteClass');
-
 
 Route::get('/listing', 'ListingController@listingResources');
 Route::post('/listing', 'ListingController@listingResources');
 
 
-/** Site Listing Route */
-Route::get('/inbox', 'StudentsController@inbox');
-Route::get('/account', 'AccountController@Account');
-Route::get('/trust_verification', 'AccountController@trustVerification');
-Route::get('/subscribe', 'SubscribeController@Subscribe');
-Route::get('/subscribePlan/{id}', 'SubscribeController@subscribePlan');
-Route::get('/plans', 'SubscribeController@Plans');
-Route::get('/getOffer/{id}', 'SubscribeController@getOffer');
-Route::get('/inviteafriend', 'FriendController@inviteaFriend');
-Route::post('/inviteafriend', 'FriendController@inviteaFriend');
-Route::get('/subscriptionDetails', 'SubscribeController@subscriptionDetails');
-Route::get('/subscriptionCancel/{id}', 'SubscribeController@subscriptionCancel');
-
 /* ----------------------- Student Routes END -------------------------------- */
 
-/* ----------------------- Online Practice -------------------------------- */
-Route::get("check-mw", ["uses" => "HomeController@checkMD", "middleware" => "checkType:2"]);
-Route::get('/email-verify/{id}/{LcId}', 'UsersController@emailverify');
-Route::get('/onlinePractice', 'StudentsController@onlinePractice');
-Route::get('/onlinePractice/{id}', 'StudentsController@onlinePractice');
-Route::post('/onlinePractice', 'StudentsController@onlinePractice');
-
-/* ----------------------- Online Exam -------------------------------- */
-
-Route::get('/onlineExam/step-1','OnlineExamController@Step1');
-Route::post('/onlineExam/start','OnlineExamController@index');
-Route::get('/onlineExam/start','OnlineExamController@index');
-//Route::get('/onlineExam/{id}','OnlineExamController@index');
-//Route::post('/onlineExam','OnlineExamController@index');
 
 /* -----------------------Frontend Ajax Routes ----------------------------------------- */
 Route::get('/checkmail', 'StudentsController@checkMail');

@@ -52,13 +52,13 @@ $segment3 = Request::segment(3);
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{url('admin/user_list')}}" class="nav-link {{$segment3==''?'active':""}}">
+                            <a href="{{url('admin/user')}}" class="nav-link {{$segment3==''?'active':""}}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>All Users</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{url('admin/addUser')}}" class="nav-link {{$segment3=='lc'?'active':""}}">
+                            <a href="{{url('admin/user/create')}}" class="nav-link {{$segment3=='lc'?'active':""}}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Add User</p>
                             </a>

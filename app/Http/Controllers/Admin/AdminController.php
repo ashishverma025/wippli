@@ -33,28 +33,7 @@ class AdminController extends Controller {
         return view('admin.edit_profile', ['data' => $getDetail]);
     }
 
-    public function addUser(Request $request) {
-        if (Auth::check()) {
-            if(!empty($_POST)){
-                // prd($_POST);
-                $data = $_POST;
-                User::create([
-                    'fname' => $data['fname'],
-                    'lname' => $data['lname'],
-                    'name' => $data['fname'] . ' ' . $data['lname'],
-                    'email' => $data['email'],
-                    'address' => $data['address'],
-                    'dob' => @$data['dob'],
-                    'email_verified_at' => date("Y-m-d h:i:s"),
-                    'password' => Hash::make($data['password']),
-                ]);
-                return redirect('/admin/user_list');
-            }
-            $view = 'admin.adduser';
-            return view($view, ['active' => 'editprofile']);            
-        }
-        return redirect('/');
-    }
+    
 
     public function update_settings(Request $request) {
         $this->validate($request, [

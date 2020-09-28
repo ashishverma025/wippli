@@ -288,6 +288,22 @@ if (!function_exists('getUserDetails')) {
     }
 
 }
+
+if (!function_exists('getRoleNameById')) {
+
+    function getRoleNameById($roleId) {
+        $Role = "";
+        if(!empty($roleId)){
+            $Role = DB::table('roles as r')
+                    ->select('*')
+                    ->where('r.id',$roleId)
+                    ->first();
+        }
+        return $Role ? $Role->name : "";
+    }
+}
+
+
 if (!function_exists('getLcDetails')) {
 
     function getLcDetails() {
