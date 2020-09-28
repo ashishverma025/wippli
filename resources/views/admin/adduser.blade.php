@@ -30,7 +30,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{url('admin/addUser')}}" id="t_profile" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                    <form action="{{url('admin/user/create')}}" id="t_profile" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                         {{ csrf_field() }}
                         <div class="row">
                             <input type="hidden" name="student_id" value="<?= @$TutorStudent->id ?>" >
@@ -68,13 +68,25 @@
                                 <div class="form-group">
                                     <label> Email</label>
                                     <input type="email" id="email" name="email" class="form-control" value="{{ ($userDetails->email != '') ? $userDetails->email : ''}}">
-                                    <span id="email-err" style="color: red"></span>
+                                    <span id="email-err" style="color: red"></span> 
                                     @if (@$errors->has('email'))
                                     <span class="help-block">
                                         <strong>{{ @$errors->first('email') }}</strong>
                                     </span>
                                     @endif
                                 </div>
+
+                                <div class="form-group">
+                                    <label> User Role</label>
+                                    <select class="form-control" name="user_role" id="gender">
+                                        <option <?= ($userDetails->user_type == '1') ? 'selected' : '' ?>>Admin</option>
+                                        <option <?= ($userDetails->user_type == '2') ? 'selected' : '' ?>>Manager</option>
+                                        <option <?= ($userDetails->user_type == '3') ? 'selected' : '' ?>>Salesman</option>
+                                        <option <?= ($userDetails->user_type == '4') ? 'selected' : '' ?>>Employee</option>
+                                    </select>
+                                </div>
+
+
                                  <div class="form-group">
                                     <label> Password</label>
                                     <input type="password" class="form-control" name="password" id="password">

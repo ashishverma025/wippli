@@ -23,9 +23,94 @@ class UserController extends Controller {
         $this->middleware('auth:admin');
     }
 
-    public function index() {
-        //
+    /**
+     * List all the registered user on admin Panel
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function index($type = null) {
+        return view('admin.user_list', ['type' => $type]);
     }
+
+
+    /**
+     * Fetch all the users from database table.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function fetchUsers(Request $request, $type = null) {
+        $input = $request->all();
+        $start = !empty($input['iDisplayStart']) ? $input['iDisplayStart'] : "";   // Offset
+        $length = !empty($input['iDisplayLength']) ? $input['iDisplayLength'] : ""; // Limit
+        $sSearch = !empty($input['sSearch']) ? $input['sSearch'] : "";            // Search string
+        $col = !empty($input['iSortCol_0']) ? $input['iSortCol_0'] : 0;      // Column number for sorting
+        $sortType = !empty($input['sSortDir_0']) ? $input['sSortDir_0'] : "";
+        $where = '';
+
+        // Datatable column number to table column name mapping
+        $arr = array(
+            0 => 'id',
+            1 => 'name',
+            //2 => 't1.username',
+            2 => 'email',
+            3 => 'phone',
+            4 => 'gender',
+            5 => 'created_at',
+        );
+
+        $user_type = ($type == 'student') ? 4 : 2;
+
+        $sortBy = $arr[$col];
+        // Get the records after applying the datatable filters
+        $users = User::where('name', 'like', '%' . $sSearch . '%')
+                ->where('id', '!=', 1);
+        if (!empty($type)) {
+            $users = $users->where('user_type', $user_type);
+        }
+        $users = $users->orderBy($sortBy, $sortType)
+                ->limit($length)
+                ->offset($start)
+                ->get();
+
+        $iTotal = User::where('name', 'like', '%' . $sSearch . '%');
+        if (!empty($type)) {
+            $iTotal = $iTotal->where('user_type', $user_type);
+        }
+        $iTotal = $iTotal->count();
+        $response = array(
+            'iTotalRecords' => $iTotal,
+            'iTotalDisplayRecords' => $iTotal,
+            'aaData' => array()
+        );
+
+        $k = 0;
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                $type = ($user->user_type == 2) ? 'Learning-Center' : 'Student';
+                $imgFolder = ($user->user_type == 2) ? 'tutor' : 'student';
+                $img = !empty($user->avatar) ? "public/sites/images/$imgFolder/$user->id/$user->avatar" : "public/sites/images/dummy.jpg";
+                $email_verified_at = !empty($user->email_verified_at) ? "<span style='color:green'>Verified</span>" : "<span style='color:red'>Not Verified</span>";
+                $Role = getRoleNameById($user->user_type);
+                $src = '<img src="' . url($img) . '"  height="50" width="50"> ';
+                $action = '<a href="user/edit/' . $user->id . '" '
+                . 'class="delete hidden-xs hidden-sm" title="Edit">'
+                . '<i class="fa fa-edit text-warning"></i></a> &nbsp;'
+                . ' <a href="user/destroy/' . $user->id . '"'
+                . ' class="delete hidden-xs hidden-sm" title="Delete"'
+                . 'onclick=\'return confirm("Are you sure you want to delete this subscription?")\'>'
+                . '<i class="fa fa-trash text-danger"></i></a>';
+                
+                
+                $response['aaData'][$k] = [$k + 1, $src, $user->name, $user->email, $user->phone,$Role, $user->gender, $type, $email_verified_at, $user->created_at,$action];
+                $k++;
+            }
+        }
+        return response()->json($response);
+    }
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -33,8 +118,42 @@ class UserController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        //
+        if (Auth::check()) {
+            if(!empty($_POST)){
+                // prd($_POST);
+                $data = $_POST;
+                User::create([
+                    'fname' => $data['fname'],
+                    'lname' => $data['lname'],
+                    'name' => $data['fname'] . ' ' . $data['lname'],
+                    'email' => $data['email'],
+                    'address' => $data['address'],
+                    'dob' => @$data['dob'],
+                    'gender' => @$data['gender'],
+                    'phone' => @$data['phone'],
+                    'user_type' => @$data['user_role'],
+                    'email_verified_at' => date("Y-m-d h:i:s"),
+                    'password' => Hash::make($data['password']),
+                ]);
+                return redirect('/admin/user');
+            }
+            $view = 'admin.adduser';
+            return view($view, ['active' => 'editprofile']);            
+        }
+        return redirect('/');   
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id) {
+        return view('admin.adduser', ['userData' => getUserDetailsById($id)]);
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -101,26 +220,9 @@ class UserController extends Controller {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id) {
-        return view('admin.edit_profile', ['userData' => getUserDetailsById($id)]);
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id) {
-        //
-    }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -142,81 +244,7 @@ class UserController extends Controller {
         }
     }
 
-    /**
-     * List all the registered user on admin Panel
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function user_list($type = null) {
-        return view('admin.user_list', ['type' => $type]);
-    }
 
-    /**
-     * Fetch all the users from database table.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function fetchUsers(Request $request, $type = null) {
-        $input = $request->all();
-        $start = !empty($input['iDisplayStart']) ? $input['iDisplayStart'] : "";   // Offset
-        $length = !empty($input['iDisplayLength']) ? $input['iDisplayLength'] : ""; // Limit
-        $sSearch = !empty($input['sSearch']) ? $input['sSearch'] : "";            // Search string
-        $col = !empty($input['iSortCol_0']) ? $input['iSortCol_0'] : 0;      // Column number for sorting
-        $sortType = !empty($input['sSortDir_0']) ? $input['sSortDir_0'] : "";
-        $where = '';
-
-        // Datatable column number to table column name mapping
-        $arr = array(
-            0 => 'id',
-            1 => 'name',
-            //2 => 't1.username',
-            2 => 'email',
-            3 => 'phone',
-            4 => 'gender',
-            5 => 'created_at',
-        );
-
-        $user_type = ($type == 'student') ? 4 : 2;
-
-        $sortBy = $arr[$col];
-        // Get the records after applying the datatable filters
-        $users = User::where('name', 'like', '%' . $sSearch . '%')
-                ->where('id', '!=', 1);
-        if (!empty($type)) {
-            $users = $users->where('user_type', $user_type);
-        }
-        $users = $users->orderBy($sortBy, $sortType)
-                ->limit($length)
-                ->offset($start)
-                ->get();
-
-        $iTotal = User::where('name', 'like', '%' . $sSearch . '%');
-        if (!empty($type)) {
-            $iTotal = $iTotal->where('user_type', $user_type);
-        }
-        $iTotal = $iTotal->count();
-        $response = array(
-            'iTotalRecords' => $iTotal,
-            'iTotalDisplayRecords' => $iTotal,
-            'aaData' => array()
-        );
-
-        $k = 0;
-        if (count($users) > 0) {
-            foreach ($users as $user) {
-                $type = ($user->user_type == 2) ? 'Learning-Center' : 'Student';
-                $imgFolder = ($user->user_type == 2) ? 'tutor' : 'student';
-                $img = !empty($user->avatar) ? "public/sites/images/$imgFolder/$user->id/$user->avatar" : "public/sites/images/dummy.jpg";
-                $email_verified_at = !empty($user->email_verified_at) ? "<span style='color:green'>Verified</span>" : "<span style='color:red'>Not Verified</span>";
-
-                $src = '<img src="' . url($img) . '"  height="50" width="50"> ';
-                $response['aaData'][$k] = [$k + 1, $src, $user->name, $user->email, $user->phone, $user->gender, $type, $email_verified_at, $user->created_at];
-                $k++;
-            }
-        }
-        return response()->json($response);
-    }
 
     //Fetch Student List Datables Ajax Request
     public function fetchesUsers(Request $request) {
