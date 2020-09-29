@@ -61,6 +61,7 @@ use AuthenticatesUsers;
     public function signIn(Request $request) {
         $credentials = $request->only($this->username(), 'password');
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
+        // prd($credentials);
 
         if ($authSuccess) {
             $request->session()->regenerate();
@@ -123,7 +124,7 @@ use AuthenticatesUsers;
         Auth::logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        return redirect('/')->with('status', 'User has been logged out!');
+        return redirect('/login')->with('status', 'User has been logged out!');
     }
 
 }

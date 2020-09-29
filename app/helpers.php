@@ -304,13 +304,13 @@ if (!function_exists('getRoleNameById')) {
 }
 
 
-if (!function_exists('getLcDetails')) {
+if (!function_exists('getUserDetails')) {
 
-    function getLcDetails() {
+    function getUserDetails() {
         $userId = getUser_Detail_ByParam('id');
-        $learningCenter = $users = DB::table('learning_centers')->where('user_id', $userId)->get();
+        $UserDetails = $users = DB::table('learning_centers')->where('user_id', $userId)->get();
 //        pr($User);
-        return isset($learningCenter[0]) ? $learningCenter[0] : "";
+        return isset($UserDetails[0]) ? $UserDetails[0] : "";
     }
 
 }

@@ -10,24 +10,25 @@ Route::get('/clear-cache', function() {
 Route::get('/privacy-policy', 'WelcomeController@privacyPolicy');
 Route::get('/terms-of-service', 'WelcomeController@termsOfService');
 
-// Auth::routes();
+Auth::routes();
 // Google login
 Route::get('/google-login', 'SocialAuthGoogleController@redirect');
 Route::get('/google-callback', 'SocialAuthGoogleController@callback');
 
 // Facebook login
 Route::post('/registration', 'Auth\RegisterController@register');
-Route::post('/signin', 'Auth\LoginController@signIn');
 
-Route::get('/seomoUserLogin', 'Auth\LoginController@seomoUserLogin');
-Route::get('/seomoUserRegister', 'Auth\RegisterController@seomoUserRegister');
 
 
 Route::post('/sign-in', 'Auth\RegisterController@signIn');
 Route::get('/facebook-login', 'SocialAuthFacebookController@redirect');
 Route::get('/facebook-callback', 'SocialAuthFacebookController@callback');
+
+//SITE INDEX PAGE ROUTE
+Route::post('/signin', 'Auth\LoginController@signIn');
 Route::get('/login', 'WelcomeController@landing_index');
-Route::get('/index1', 'WelcomeController@index1');
+Route::get('/user-dashboard', 'WelcomeController@userDashboard');
+
 // Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 Route::get("/homes", ["uses" => "HomeController@checkMD", "middleware" => "checkType:2"]);
