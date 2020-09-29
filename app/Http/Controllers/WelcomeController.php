@@ -24,31 +24,20 @@ class WelcomeController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function landing_index() {
-        // echo "Under Maintanance";die;
-        $LcDetails = [];
-
         if (Auth::check()) {
-            $userId = getUser_Detail_ByParam('id');
-            $LcDetails = LearningcenterDetails::where(['user_id' => $userId])->first();
+            return redirect('user-dashboard');
         }
-        $totalTutors = User::where(['user_type'=>3])->get();
-//        prd($Subjects);
-        // return view('Under Maintanance');
-        return view('sites.site-index', [
-            'LcDetails' => $LcDetails,
-            'totalTutors'=>$totalTutors,
-            'isReady'=> 'no'
-        ]);
+        return view('sites.index');
     }
 
-    public function index1() {
-//        prd($_GET);
-        $LcDetails = [];
+    public function userDashboard() {
         if (Auth::check()) {
-            $userId = getUser_Detail_ByParam('id');
-            $LcDetails = LearningcenterDetails::where(['user_id' => $userId])->first();
+            $userDetails = getUserDetails();
+            // prd($userDetails);
+            return view('sites.user-dashboard',['userDetails'=>$userDetails]);
         }
-        return view('sites.site-index1', ['LcDetails' => $LcDetails]);
+        return redirect("/login");
+
     }
 
     public function rate_saler() {

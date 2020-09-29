@@ -68,7 +68,6 @@
             </nav>
             <!-- Trigger the modal with a button -->
         </header>
-       @if($isReady !='no')
 
         <!--- Services section --->
        <section class="services-sec">
@@ -653,7 +652,6 @@
             </div>
             <!-- End User login/signup Modal -->
         </section>
-        @endif
 
          <!--- Video Section -->
          <section class="video-section">
