@@ -5,31 +5,22 @@ Route::get('/clear-cache', function() {
     return redirect('/');
 });
 
-
-/* --------------------- Common/User Routes START -------------------------------- */
-Route::get('/privacy-policy', 'WelcomeController@privacyPolicy');
-Route::get('/terms-of-service', 'WelcomeController@termsOfService');
-
-Auth::routes();
+// Auth::routes();
 // Google login
 Route::get('/google-login', 'SocialAuthGoogleController@redirect');
 Route::get('/google-callback', 'SocialAuthGoogleController@callback');
 
 // Facebook login
-Route::post('/registration', 'Auth\RegisterController@register');
-
-
-
-Route::post('/sign-in', 'Auth\RegisterController@signIn');
 Route::get('/facebook-login', 'SocialAuthFacebookController@redirect');
 Route::get('/facebook-callback', 'SocialAuthFacebookController@callback');
 
 //SITE INDEX PAGE ROUTE
 Route::post('/signin', 'Auth\LoginController@signIn');
 Route::get('/login', 'WelcomeController@landing_index');
+Route::get('/', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 
-// Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 Route::get("/homes", ["uses" => "HomeController@checkMD", "middleware" => "checkType:2"]);
 
@@ -40,7 +31,6 @@ Route::get('/change_password', 'UsersController@change_pwd');
 Route::post('/change_password', 'UsersController@update_changed_pwd');
 
 Route::get('/admin', 'Auth\LoginController@showLoginForm');
-/* --------------------- Common/User Routes END -------------------------------- */
 
 
 /* ----------------------- Admin Routes START -------------------------------- */
@@ -94,7 +84,5 @@ Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
     Route::get('/fetchesUsers-data', 'UserController@fetchesUsers')->name('fetchesUsers.data');
 
     Route::get('/dashboard', 'HomeController@index')->name('home')->middleware('guard.verified:admin,admin.verification.notice');
-
-
     //Put all of your admin routes here...
 });
