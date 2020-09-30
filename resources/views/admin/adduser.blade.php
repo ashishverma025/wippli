@@ -34,6 +34,7 @@
                         {{ csrf_field() }}
                         <div class="row">
                             <input type="hidden" name="student_id" value="<?= @$TutorStudent->id ?>" >
+                            <input type="hidden" name="user_id" value="<?= @$userData->id ?>" >
 
                             <div class="col-md-6">
                                 <div class="row">
