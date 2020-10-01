@@ -97,10 +97,11 @@
                                             <th class="sorting_asc wid-20" tabindex="0" rowspan="1" colspan="1">Name</th>
                                             <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">Email</th>
                                             <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">Contact</th>
+                                            <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">User Role</th>
                                             <th class="sorting wid-10 bold" tabindex="0" rowspan="1" colspan="1">Gender</th>
-                                            <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">Type</th>
                                             <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">Verify Status</th>
                                             <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">Registered At</th>
+                                            <th class="sorting wid-10" tabindex="0" rowspan="1" colspan="1">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -236,7 +237,7 @@ $(document).ready(function () {
             {'bSortable': true},
             {'bSortable': true},
             {'bSortable': true},
-//          {'bSortable': false, "width": "10%"}
+         {'bSortable': false, "width": "10%"}
         ]
     });
     var tableWrapper = $("#editable_table_wrapper");

@@ -32,7 +32,7 @@ class HomeController extends Controller {
             if ($uType == 4) {
                 return redirect('uses/dashboard');
             } else {
-                return redirect('lc/dashboard');
+                return redirect('user-dashboard');
             }
         }
         return view('home');

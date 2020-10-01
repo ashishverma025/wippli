@@ -34,6 +34,7 @@
                         {{ csrf_field() }}
                         <div class="row">
                             <input type="hidden" name="student_id" value="<?= @$TutorStudent->id ?>" >
+                            <input type="hidden" name="user_id" value="<?= @$userData->id ?>" >
 
                             <div class="col-md-6">
                                 <div class="row">
@@ -79,10 +80,10 @@
                                 <div class="form-group">
                                     <label> User Role</label>
                                     <select class="form-control" name="user_role" id="gender">
-                                        <option <?= ($userDetails->user_type == '1') ? 'selected' : '' ?>>Admin</option>
-                                        <option <?= ($userDetails->user_type == '2') ? 'selected' : '' ?>>Manager</option>
-                                        <option <?= ($userDetails->user_type == '3') ? 'selected' : '' ?>>Salesman</option>
-                                        <option <?= ($userDetails->user_type == '4') ? 'selected' : '' ?>>Employee</option>
+                                        <option value="1" <?= ($userDetails->user_type == '1') ? 'selected' : '' ?>>Admin</option>
+                                        <option value="2" <?= ($userDetails->user_type == '2') ? 'selected' : '' ?>>Manager</option>
+                                        <option value="3" <?= ($userDetails->user_type == '3') ? 'selected' : '' ?>>Salesman</option>
+                                        <option value="4" <?= ($userDetails->user_type == '4') ? 'selected' : '' ?>>Employee</option>
                                     </select>
                                 </div>
 

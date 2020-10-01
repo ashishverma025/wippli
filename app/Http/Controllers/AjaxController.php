@@ -3,28 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use App\Question,
-    App\Answer,
-    App\Attendance,
-    App\StudentRecord,
-    App\StudentAnswer,
-    App\QuestionAttempt,
-    App\OnlinequestionPaper,
-    App\ExamprogressbarDetails,
-    App\Directpayment,
-    App\Subscriber;
-use App\User,
-    App\Subscription,
-    App\Payment;
-use Auth,
-    DB,
-    Hash,
-    Session;
+use Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Hash;
+use Response;
+use App\User;
 
 class AjaxController extends Controller {
 
 //CHECK UNIQUE EMAIL 
+
+    public function popupForm(Request $request) {
+        $response = [];
+        $postData = $request->post();
+        $email_id = $postData;
+        return view('sites/popupForm');
+
+    }
+
+
+
+//CHECK UNIQUE EMAIL
+
     public function isEmailExist(Request $request) {
         $response = [];
         $postData = $request->post();
