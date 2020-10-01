@@ -33,4 +33,14 @@ class WelcomeController extends Controller {
         return redirect("/login");
 
     }
+
+
+    public function popupForm(Request $request) {
+        $response = [];
+        $postData = $request->post();
+        $email_id = $postData;
+        return 'tsedhgv';
+        // return view('popupform');
+
+    }
 }

@@ -27,9 +27,7 @@
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{@$DashboardDetails['totalUsers']}}</h3>
@@ -42,9 +40,9 @@
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+
+<!--                 
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{@$DashboardDetails['LearningCenters']}}</h3>
@@ -57,9 +55,7 @@
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3>{{@$DashboardDetails['students']}}</h3>
@@ -72,9 +68,7 @@
                     </div>
                 </div>
 
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{@$DashboardDetails['classes']}}</h3>
@@ -87,10 +81,7 @@
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-primary">
                         <div class="inner">
                             <h3>{{@$DashboardDetails['subjects']?$DashboardDetails['subjects']:0}}</h3>
@@ -103,9 +94,7 @@
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-secondary">
                         <div class="inner">
                             <h3>{{@$DashboardDetails['tutors']?$DashboardDetails['tutors']:0}}</h3>
@@ -118,9 +107,7 @@
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
-            </div>
-            <!-- /.row -->
+            </div> -->
 
         </div><!-- /.container-fluid -->
     </section>

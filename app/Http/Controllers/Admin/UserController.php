@@ -120,7 +120,7 @@ class UserController extends Controller {
     * @return \Illuminate\Http\Response
     */
 
-    public function create(Request $request) {
+    public function create( Request $request ) {
         if ( Auth::check() ) {
             if ( !empty( $_POST ) ) {
                 $response = [];
@@ -131,33 +131,35 @@ class UserController extends Controller {
                 $userId = !empty( $userDetails['user_id'] ) ? $userDetails['user_id'] : '';
                 $User = empty( $userDetails['user_id'] ) ? new User() : User::where( ['id' => $userId] )->first();
 
-                if ( !empty( $userDetails['user_id'] ) ) {
-                    $imgFolder = ( $User->user_type == 4 ) ? 'employee' : 'user';
-                    
-                    $User->name     = $userDetails['fname'] ? $userDetails['fname'] . ' ' . $userDetails['lname'] : $User->name;
-                    $User->fname = $userDetails['fname'] ? $userDetails['fname'] : $User->fname;
-                    $User->lname = $userDetails['lname'] ? $userDetails['lname'] : $User->lname;
-                    $User->phone = $userDetails['phone'] ? $userDetails['phone'] : $User->phone;
-                    $User->address = $userDetails['address'] ? $userDetails['address'] : $User->address;
-                    $User->gender =  $userDetails['gender'] ? $userDetails['gender'] : $User->gender;
-                    $User->dob = $userDetails['years'] ? $userDetails['years'] . '-' . $userDetails['months'] . '-' . $userDetails['days'] : $User->dob;;
+                $imgFolder = ( $User->user_type == 4 ) ? 'employee' : 'user';
+
+                $User->name     = $userDetails['fname'] ? $userDetails['fname'] . ' ' . $userDetails['lname'] : $User->name;
+                $User->fname = $userDetails['fname'] ? $userDetails['fname'] : $User->fname;
+                $User->lname = $userDetails['lname'] ? $userDetails['lname'] : $User->lname;
+                $User->password = $userDetails['password'] ? Hash::make($userDetails['password']) : $User->password;
+                $User->email = $userDetails['email'] ? $userDetails['email'] : $User->email;
+                $User->phone = $userDetails['phone'] ? $userDetails['phone'] : $User->phone;
+                $User->address = $userDetails['address'] ? $userDetails['address'] : $User->address;
+                $User->user_type = $userDetails['user_role'] ? $userDetails['user_role'] : $User->user_type;
+                $User->gender =  $userDetails['gender'] ? $userDetails['gender'] : $User->gender;
+                $User->dob = $userDetails['years'] ? $userDetails['years'] . '-' . $userDetails['months'] . '-' . $userDetails['days'] : $User->dob;
+                $User->email_verified_at =  date( 'Y-m-d H:i:s' );
+                // prd( $userDetails );
+
+
+                if ( $file = $request->hasFile( 'user_image' ) ) {
+                    $file = $request->file( 'user_image' );
+                    $User->avatar = upload_site_images( $userDetails['user_id'], $file, $imgFolder );
+                }
+                if ( empty( $userDetails['user_id'] ) ) {
+                    $User->created_at = date( 'Y-m-d H:i:s' );
+                    $User->save();
+                    set_flash_message( 'User added successfully', 'alert-success' );
+                } else {
+
                     $User->updated_at = date( 'Y-m-d H:i:s' );
-
-                    if ( $file = $request->hasFile( 'user_image' ) ) {
-                        $file = $request->file( 'user_image' );
-                        $User->avatar = upload_site_images( $userDetails['user_id'], $file, $imgFolder );
-                    }
-                    if (empty($userDetails['user_id'])) {
-                        $User->created_at = date('Y-m-d H:i:s');
-                        $User->save();
-                        set_flash_message('User added successfully', 'alert-success');
-                    } else {
-                        // prd( $User );
-
-                        $User->updated_at = date('Y-m-d H:i:s');
-                        $User->update();
-                        set_flash_message('User updated successfully', 'alert-success');
-                    }
+                    $User->update();
+                    set_flash_message( 'User updated successfully', 'alert-success' );
                 }
 
                 return redirect( '/admin/user' );

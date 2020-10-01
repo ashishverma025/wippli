@@ -19,8 +19,9 @@ Route::post('/signin', 'Auth\LoginController@signIn');
 Route::get('/login', 'WelcomeController@landing_index');
 Route::get('/', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
+Route::post('/popupForm', 'AjaxController@popupForm');
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 Route::get("/homes", ["uses" => "HomeController@checkMD", "middleware" => "checkType:2"]);
 
