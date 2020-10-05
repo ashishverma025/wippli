@@ -21,30 +21,33 @@
          </div>
          <div class="form-txt">
             <div class="tabs">
-               <form>
-               @csrf
-                  <p class="header_txt">Vicky Quinlan | Dell Boomi</p>
-                  <ul class="nav nav-tabs">
-                     <li class="active"><a data-toggle="tab" href="#home">Short and Sweet</a></li>
-                     <li><a data-toggle="tab" href="#menu1">Let's Go Into Details</a></li>
-                     <!--   <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
-                        <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>  -->
-                  </ul>
-                  <div class="tab-content">
-                     <div id="home" class="tab-pane fade in active">
-                        <h3>The Job</h3>
+
+            <p class="header_txt">Vicky Quinlan | Dell Boomi</p>
+            <ul class="nav nav-tabs">
+               <li class="active"><a data-toggle="tab" href="#home">Short and Sweet</a></li>
+               <li><a data-toggle="tab" href="#menu1">Let's Go Into Details</a></li>
+               <!--   <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+                  <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>  -->
+            </ul>
+            <div class="tab-content">
+               <div id="home" class="tab-pane fade in active">
+               <h3>The Job</h3><br>
+               <span class="errMsg"></span>
+                  <form id="shortSweeyForm"  enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="wippli_id" value="">
                         <div class="row">
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <label>Project Name <span>*</span></label>
-                                 <input type="text" class="form-control"  placeholder="Type here">
+                                 <input type="text" class="form-control" name="project_name" placeholder="Type here">
                               </div>
                            </div>
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Deadline <span>*</span></label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="deadline" id="exampleFormControlSelect1">
                                        <option>Select</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -59,7 +62,7 @@
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <label>Type <span>*</span></label>
-                                 <input type="text" class="form-control"  placeholder="Type here">
+                                 <input type="text" class="form-control" name="type" placeholder="Type here">
                               </div>
                            </div>
                         </div>
@@ -67,7 +70,7 @@
                            <div class="col-lg-12">
                               <div class="form-group text">
                                  <label>Instructions <span>.</span></label>
-                                 <textarea class="form-control" rows="8" placeholder="Type here"></textarea>
+                                 <textarea class="form-control" rows="8" name="instruction" placeholder="Type here"></textarea>
                               </div>
                            </div>
                         </div>
@@ -75,26 +78,32 @@
                            <div class="col-lg-12">
                               <div class="form-group">
                                  <label>Attachments/Files</label>
-                                 <input type="file" class="form-control-file" >
+                                 <input type="file" name="attachment" id="attachment" class="form-control-file" >
                               </div>
                            </div>
                         </div>
-                        <button type="button" class="btn form-btn">SUBMIT WIPPLI</button>
+                        <button type="button" id="simpleButton" class="btn form-btn">SUBMIT WIPPLI</button>
                      </div>
+                  </form>
+
+
+
+                  <form id="detailForm"  enctype="multipart/form-data">
+                     @csrf
                      <div id="menu1" class="tab-pane fade">
                         <h3>The Job</h3>
                         <div class="row">
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <label>Project Name <span>*</span></label>
-                                 <input type="text" class="form-control"  placeholder="Type here">
+                                 <input type="text" class="form-control" name="project_name" placeholder="Type here">
                               </div>
                            </div>
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Deadline <span>*</span></label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="deadline" id="exampleFormControlSelect1">
                                        <option>Select</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -109,13 +118,13 @@
                            <div class="col-lg-6">
                               <div class="form-group or">
                                  <label>Type <span>*</span></label>
-                                 <input type="text" class="form-control"  placeholder="Type here (E.g. Banner)">
+                                 <input type="text" class="form-control" name="type" placeholder="Type here (E.g. Banner)">
                               </div>
                            </div>
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <label style="overflow: hidden;">Type</label>
-                                 <input type="file" class="form-control-file" >
+                                 <input type="file" name="type_file" class="form-control-file" >
                               </div>
                            </div>
                         </div>
@@ -124,7 +133,7 @@
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Digital</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="digital" id="exampleFormControlSelect1">
                                        <option>Select</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -138,7 +147,7 @@
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Print</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="print" id="exampleFormControlSelect1">
                                        <option>Select</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -154,7 +163,7 @@
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Video</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="video" id="exampleFormControlSelect1">
                                        <option>Select</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -168,7 +177,7 @@
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Other</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="other" id="exampleFormControlSelect1">
                                        <option>Select</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -183,7 +192,7 @@
                            <div class="col-lg-12">
                               <div class="form-group">
                                  <label>Objective <span>*</span></label>
-                                 <input type="text" class="form-control"  placeholder="Type here">
+                                 <input type="text" class="form-control" name="objective"  placeholder="Type here">
                               </div>
                            </div>
                         </div>
@@ -191,7 +200,7 @@
                            <div class="col-lg-12">
                               <div class="form-group text">
                                  <label>Instructions <span>*</span></label>
-                                 <textarea class="form-control" rows="3" placeholder="Type here"></textarea>
+                                 <textarea class="form-control" rows="3" name="instruction" placeholder="Type here"></textarea>
                               </div>
                            </div>
                         </div>
@@ -199,7 +208,7 @@
                            <div class="col-lg-12">
                               <div class="form-group text">
                                  <label>Message/Copy</label>
-                                 <textarea class="form-control" rows="3" placeholder="Type here"></textarea>
+                                 <textarea class="form-control" name="message" rows="3" placeholder="Type here"></textarea>
                               </div>
                            </div>
                         </div>
@@ -213,7 +222,7 @@
                               <div class="form-group or">
                                  <div class="form-group">
                                     <label>Dimensions</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="dimensions" id="exampleFormControlSelect1">
                                        <option>Choose from standard dimensions</option>
                                        <option>2</option>
                                        <option>3</option>
@@ -226,20 +235,20 @@
                            <div class="col-lg-2">
                               <div class="form-group text-center w">
                                  <label>W</label>
-                                 <input type="text" class="form-control"  placeholder="Type here">
+                                 <input type="text" class="form-control" name="width"  placeholder="Type here">
                               </div>
                            </div>
                            <div class="col-lg-2">
                               <div class="form-group text-center">
                                  <label>H</label>
-                                 <input type="text" class="form-control"  placeholder="Type here">
+                                 <input type="text" class="form-control" name="height" placeholder="Type here">
                               </div>
                            </div>
                            <div class="col-lg-2">
                               <div class="form-group">
                                  <div class="form-group text-center">
                                     <label>UNITS</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" name="units" id="exampleFormControlSelect1">
                                        <option></option>
                                        <option>2</option>
                                        <option>3</option>
@@ -253,13 +262,13 @@
                               <ul class="radio-btn">
                                  <li>
                                     <div class="form-check form-check-inline">
-                                       <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                                       <input class="form-check-input" name="portrait" type="checkbox" id="inlineCheckbox1" value="option1">
                                        <label class="form-check-label" for="inlineCheckbox1">Portrait</label>
                                     </div>
                                  </li>
                                  <li>
                                     <div class="form-check form-check-inline">
-                                       <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                                       <input class="form-check-input" name="landscape" type="checkbox" id="inlineCheckbox2" value="option2">
                                        <label class="form-check-label" for="inlineCheckbox2">Landscape</label>
                                     </div>
                                  </li>
@@ -273,19 +282,19 @@
                            <div class="col-lg-4">
                               <div class="form-group text">
                                  <label>Comment</label>
-                                 <textarea class="form-control" rows="12" placeholder="Type here"></textarea>
+                                 <textarea class="form-control" name="comment" rows="12" placeholder="Type here"></textarea>
                               </div>
                            </div>
                            <div class="col-lg-4">
                               <div class="form-group text">
                                  <label>Target audience</label>
-                                 <textarea class="form-control" rows="12" placeholder="Type here"></textarea>
+                                 <textarea class="form-control" name="target_audience" rows="12" placeholder="Type here"></textarea>
                               </div>
                            </div>
                            <div class="col-lg-4">
                               <div class="form-group text">
                                  <label>Tone of voice</label>
-                                 <textarea class="form-control" rows="12" placeholder="Type here"></textarea>
+                                 <textarea class="form-control" name="tone_of_voice" rows="12" placeholder="Type here"></textarea>
                               </div>
                            </div>
                         </div>
@@ -293,11 +302,11 @@
                            <div class="col-lg-12">
                               <div class="form-group">
                                  <label>Attachments/Files</label>
-                                 <input type="file" class="form-control-file" >
+                                 <input type="file" name="attachment" class="form-control-file" >
                               </div>
                            </div>
                         </div>
-                        <button type="button" class="btn form-btn">SUBMIT WIPPLI</button>
+                        <button type="button" id="detailButton" class="btn form-btn">SUBMIT WIPPLI</button>
                      </div>
                      <!--   <div id="menu2" class="tab-pane fade">
                         <h3>Menu 2</h3>

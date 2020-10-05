@@ -20,6 +20,7 @@ Route::get('/login', 'WelcomeController@landing_index');
 Route::get('/', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 Route::post('/popupForm', 'AjaxController@popupForm');
+Route::post('/newWippliSave', 'AjaxController@newWippliSave');
 
 // Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
@@ -32,19 +33,14 @@ Route::get('/change_password', 'UsersController@change_pwd');
 Route::post('/change_password', 'UsersController@update_changed_pwd');
 
 Route::get('/admin', 'Auth\LoginController@showLoginForm');
-
-
 /* ----------------------- Admin Routes START -------------------------------- */
-
 Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
     /**
      * Admin Auth Route(s)
      */
     Route::namespace('Auth')->group(function() {
-
         //Login Routes
         Route::get('/login', 'LoginController@showLoginForm')->name('login');
-
         Route::post('/login', 'LoginController@login');
         Route::post('/logout', 'LoginController@logout')->name('logout');
         Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
@@ -63,14 +59,10 @@ Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
     // settings route
     Route::get('/settings', 'AdminController@settings');
     Route::post('/settings', 'AdminController@update_settings');
-
-
     // change password route
     Route::get('/change_password', 'AdminController@change_pwd');
     Route::post('/change_password', 'AdminController@update_changed_pwd');
     // user's Routes
-
-
     Route::any('/user', 'UserController@index');
     Route::any('/user/create', 'UserController@create');
     Route::get('/user/edit/{id?}', 'UserController@edit');
