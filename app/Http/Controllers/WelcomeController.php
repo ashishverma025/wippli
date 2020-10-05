@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Auth,DB;
+use App\NewWippli;
 
 class WelcomeController extends Controller {
 
@@ -26,12 +27,14 @@ class WelcomeController extends Controller {
 
     public function userDashboard() {
         if (Auth::check()) {
+            $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
+            ->leftJoin('users as u', 'u.id', 'nw.user_id')->orderBy('nw.id',)
+            ->get();
             $userDetails = getUserDetails();
-            // prd($userDetails);
-            return view('sites.user-dashboard',['userDetails'=>$userDetails]);
+            // prd($NewWippli);
+            return view('sites.user-dashboard',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
         }
         return redirect("/login");
-
     }
 
 

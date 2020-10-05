@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Hash;
 use Response;
 use App\User;
+use App\NewWippli;
 
 class AjaxController extends Controller {
 
@@ -22,7 +23,68 @@ class AjaxController extends Controller {
 
     }
 
+    public function newWippliSave(Request $request) {
+        // Get the formData
 
+        if ( !empty( $_POST ) ) {
+            $userDetails = getUserDetails();
+            $response = [];
+            $wippliDetails = $request->post();
+            $this->validate( $request, [
+                //'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id . ',id',
+            ] );
+            $imgFolder = 'wippli';
+            $wippliDetails['wippli_id'] = "";
+            $wippli_id = !empty( $wippliDetails['wippli_id'] ) ? $wippliDetails['wippli_id'] : '';
+            $NewWippli = empty( $wippliDetails['wippli_id'] ) ? new NewWippli() : NewWippli::where( ['id' => $wippli_id] )->first();
+
+            $NewWippli->project_name = !empty($wippliDetails['project_name']) ? $wippliDetails['project_name'] : $NewWippli->project_name;
+            $NewWippli->deadline = $wippliDetails['deadline'] ? $wippliDetails['deadline'] : $NewWippli->deadline;
+            $NewWippli->type = $wippliDetails['type'] ? $wippliDetails['type'] : $NewWippli->type;
+            $NewWippli->instruction = $wippliDetails['instruction'] ? ($wippliDetails['instruction']) : $NewWippli->instruction;
+            $NewWippli->digital = @$wippliDetails['digital'] ? $wippliDetails['digital'] : $NewWippli->digital;
+            $NewWippli->print = @$wippliDetails['print'] ? $wippliDetails['print'] : $NewWippli->print;
+            $NewWippli->video = @$wippliDetails['video'] ? $wippliDetails['video'] : $NewWippli->video;
+            $NewWippli->other = @$wippliDetails['other'] ? $wippliDetails['other'] : $NewWippli->other;
+            $NewWippli->objective =  @$wippliDetails['objective'] ? $wippliDetails['objective'] : $NewWippli->objective;
+            $NewWippli->dimensions = @$wippliDetails['dimensions'] ? $wippliDetails['dimensions']: $NewWippli->dimensions;
+            $NewWippli->width = @$wippliDetails['width'] ? $wippliDetails['width']: $NewWippli->width;
+            $NewWippli->height = @$wippliDetails['height'] ? $wippliDetails['height']: $NewWippli->height;
+            $NewWippli->units = @$wippliDetails['units'] ? $wippliDetails['units']: $NewWippli->units;
+            $NewWippli->portrait = @$wippliDetails['portrait'] ? $wippliDetails['portrait']: $NewWippli->portrait;
+            $NewWippli->landscape = @$wippliDetails['landscape'] ? $wippliDetails['landscape']: $NewWippli->landscape;
+            $NewWippli->comment = @$wippliDetails['comment'] ? $wippliDetails['comment']: $NewWippli->comment;
+            $NewWippli->target_audience = @$wippliDetails['target_audience'] ? $wippliDetails['target_audience']: $NewWippli->target_audience;
+            $NewWippli->tone_of_voice	 = @$wippliDetails['tone_of_voice	'] ? $wippliDetails['tone_of_voice	']: $NewWippli->tone_of_voice	;
+            $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment']: $NewWippli->attachment;
+            $NewWippli->user_id = $userDetails['id'];
+
+          
+            if ( $file = $request->hasFile('attachment' ) ) {
+                $file = $request->file( 'attachment' );
+                // prd($userDetails['id']);
+
+                $NewWippli->attachment = upload_site_images( $userDetails['id'], $file, 'wippli-image' );
+            }
+            if ( empty( $wippliDetails['wippli_id'] ) ) {
+                $NewWippli->created_at = date( 'Y-m-d H:i:s' );
+                // echo "create";
+                // prd( $wippliDetails );
+
+                $NewWippli->save();
+                $response['status'] = "success";
+                $response['msg'] = "Wippli added successfully alert-success";
+            } else {
+                $NewWippli->updated_at = date( 'Y-m-d H:i:s' );
+                $NewWippli->update();
+                $response['status'] = "success";
+                $response['msg'] = "Wippli updated successfully alert-success";
+            }
+
+            // return redirect( '/admin/user' );
+        }
+        return response()->json($response);
+    }
 
 //CHECK UNIQUE EMAIL
 
@@ -334,6 +396,10 @@ class AjaxController extends Controller {
 
         return $httpParsedResponseAr;
     }
+
+
+
+
 
 }
 
