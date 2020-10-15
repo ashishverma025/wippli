@@ -21,6 +21,11 @@ Route::get('/', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 Route::post('/popupForm', 'AjaxController@popupForm');
 Route::post('/newWippliSave', 'AjaxController@newWippliSave');
+Route::post('/wippliPreview', 'AjaxController@wippliPreview');
+Route::post('/getTypesByCategory', 'AjaxController@getTypesByCategory');
+Route::post('/generateFolderStructure', 'AjaxController@generateFolderStructure');
+
+
 
 // Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');

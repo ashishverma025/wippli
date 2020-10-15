@@ -515,7 +515,125 @@ span.time {
 
 
 
+/* ---------------------------------------------------
+    boomi Extra css
+----------------------------------------------------- */
 
+
+
+
+.bimmo_header .col-lg-12 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.wipl_logo {
+    font-size: 24px;
+    font-weight: 600;
+}
+.boomi_txt {
+    text-align: left;
+}
+.boomi_txt em {
+    font-style: normal;
+}
+.boomi_txt span {
+    display: flex;
+    align-items: center;
+}
+.boomi_txt span p {
+    background: red;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 600;
+}
+.bimmo_collaps {
+    margin-top: 40px;
+    margin-bottom: 50px;    
+}
+.drp_txt {
+    display: flex;
+}
+.drp_txt p {
+    width: 80%;
+}
+.drp_txt b {
+    width: 20%;
+}
+.drp_txt {
+    display: flex;
+    padding: 10px 0;
+}
+.bimmo_collaps .card-header h5 {
+    color: #727272;
+    font-weight: 600;
+}
+.boomi_form b {
+    display: block;
+    padding-bottom: 30px;
+    text-align: left;
+}
+.boomi_form .fields {
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 50px;
+}
+.bimmo_collaps .card {
+    padding: 0px 10px;
+    background: #f0f0f0;
+}
+.bimmo_collaps .card .card-header {
+    background: transparent;
+}
+.boomi_action_txt li {
+    text-align: left;
+    margin-bottom: 10px;
+}
+.boomi_action_txt li a {
+    text-transform: uppercase;
+    color: #727272;
+    font-size: 14px;    
+    font-weight: 600;
+}
+.boomi_form .fields label {
+    font-size: 12px;
+}
+.boomi_form .fields li {
+    width: 100%;
+    margin-right: 15px;
+}
+li.center_line:before {
+    content: '|';
+    position: absolute;
+    bottom: 50%;
+    left: -7px;
+    transform: translate(-50%, 50%);
+    font-size: 23px;
+    font-weight: 100 !important;
+}
+li.center_line {
+    position: relative;
+}
+.boomi_btn a {
+    background-color: #989898;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 11px;
+    display: block;
+    text-align: center;
+    padding: 10px 10px;
+    border-radius: 4px;
+}
+.boomi_btn {
+    padding-top: 20px;
+}
 
 
 
@@ -544,5 +662,15 @@ span.time {
 .accordion .card-txt::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.boomi_form .fields label {
+    font-size: 11px;
+}
 
+.modal-lg {
+    width: 100% !important;
+    max-width: 90% !important;
+}
 
+section.boomi .container {
+    width: 100%;
+}

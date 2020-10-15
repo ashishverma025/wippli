@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>Forms Third</title>
+      <title>Wippli Dashboard</title>
       <meta charset="utf-8">
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <meta name="route" content="{{ url('/') }}">
@@ -119,7 +119,8 @@
                                                 <div class="card-txt">
                                                 @if(!empty($NewWippli))
                                                 @foreach($NewWippli as $wippli)
-                                                <div class="row">
+                                                <span class="previewToday" data-id="{{$wippli->id}}">
+                                                   <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
                                                             <img src="{{ url('public/wippli/img/logo-icn.png') }}" alt="icn">
@@ -132,8 +133,9 @@
                                                          </div>
                                                       </div>
                                                    </div>
-                                                   @endforeach
-                                                   @endif
+                                                </span>
+                                                @endforeach
+                                                @endif
 
                                                 </div>
                                              </div>
@@ -171,23 +173,25 @@
                                                 <div class="card-txt">
                                                    @if(!empty($NewWippli))
                                                    @foreach($NewWippli as $wippli)
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <?php
-                                                            $uId = $wippli->userId;
-                                                           $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
-                                                           ?>
-                                                          <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
+                                                   <span class="previewDetails" data-id="{{$wippli->id}}">
+                                                      <div class="row">
+                                                         <div class="col-lg-3">
+                                                            <div class="small_company_logo">
+                                                               <?php
+                                                               $uId = $wippli->userId;
+                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                            ?>
+                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
+                                                            </div>
+                                                         </div>
+                                                         <div class="col-lg-9">
+                                                            <div class="company_txt">
+                                                               <span class="time">PROJECT</span>
+                                                               <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
+                                                            </div>
                                                          </div>
                                                       </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">PROJECT</span>
-                                                            <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
+                                                   </span>
                                                    @endforeach
                                                    @endif
                                                 </div>
@@ -278,49 +282,49 @@
                                              </a>
                                           </div>
                                           <!-- Card body -->
+<style>
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+}
+
+</style>
+                                          
                                           <div id="collapseTwo8" class="collapse in" role="tabpanel" aria-labelledby="headingTwo8"
                                              data-parent="#accordionEx3">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
+                                                @if(!empty($NewWippli))
+                                                   @foreach($NewWippli as $wippli)
+                                                   <span class="previewDetails" data-id="{{$wippli->id}}">
+                                                      <div class="row">
+                                                         <div class="col-lg-3">
+                                                            <div class="small_company_logo">
+                                                               <?php
+                                                               $uId = $wippli->userId;
+                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                            ?>
+                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
+                                                            </div>
+                                                         </div>
+                                                         <div class="col-lg-9">
+                                                            <div class="company_txt">
+                                                               <span class="time">PROJECT</span>
+                                                               <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
+                                                            </div>
                                                          </div>
                                                       </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">11:48 AM</span>
-                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
-                                                         </div>
-                                                      </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">11:48 AM</span>
-                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
-                                                         </div>
-                                                      </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">11:48 AM</span>
-                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
+                                                   </span>
+                                                   @endforeach
+                                                   @endif
                                                 </div>
                                              </div>
                                           </div>

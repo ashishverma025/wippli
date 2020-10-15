@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
+use Auth,DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Hash;
 use Response;
 use App\User;
 use App\NewWippli;
+use App\Type;
+use App\Category;
 
 class AjaxController extends Controller {
 
@@ -18,17 +20,68 @@ class AjaxController extends Controller {
     public function popupForm(Request $request) {
         $response = [];
         $postData = $request->post();
-        $email_id = $postData;
-        return view('sites/popupForm');
+        $categories = Category::where('status','active')->get();
+        
+        return view('sites/popupForm',[
+            'categories'=> $categories ? $categories : "",
+        ]);
 
     }
+    
+
+    public function generateFolderStructure(Request $request) {
+        $postData = $request->post();
+        $wippli_id = $postData['wippli_id'];
+        $NewWippli =  NewWippli::where('status','active')->where('id',$wippli_id)->first();
+
+        $folderStruct = ['Admin'=>'Admin','Misc'=>'Misc','BRAND AND ASSETS'=>'ND AND ASSETS','firstname+lastname'=>
+        ['CN'=>'Type'],
+        'CN-JobType'=>['CN-JOBOUTCOME'=>[
+            'BSN_JOBNAME_JOBOUTCOME_FORMAT_DATE_BI_CN_AJN_PVN'=>
+            [
+                'MASTER_JOBNAME_JOBOUTCOME_DATE',
+                'PROOFS_JOBNAME_JOBOUTCOME_DATE',
+                'FINAL_JOBNAME_JOBOUTCOME_DATE',
+                'ASSETS_JOBNAME_JOBOUTCOME_DATE',
+                'PACKAGE_JOBNAME_JOBOUTCOME_DATE',
+                'OTHERS_JOBNAME_JOBOUTCOME_DATE',
+                'BRIEF&Specs_JOBNAME_JOBOUTCOME_DATE',
+                'REFERENCE_JOBNAME_JOBOUTCOME_DATE',
+                'OLD_JOBNAME_JOBOUTCOME_DATE',
+                'ATTACHMENTS_JOBNAME_JOBOUTCOME_DATE',
+            ]
+          ]
+        ]];
+        $folderSrruct[$NewWippli->project_name] = $folderStruct;
+        $folderSrruct = generatePlanFolder($NewWippli,$folderSrruct);
+
+    } 
+    
+    
+    public function getTypesByCategory(Request $request) {
+        $response = [];
+        $postData = $request->post();
+        $category_id = $postData['category'];
+        $types =  Type::where('status','active')->where('cat_id',$category_id)->get();
+        $str = "";
+        $str .= "<select class='form-control' name='type' id='type'>";
+        if(!empty($types)){
+            foreach ($types as $key => $val) {
+                $str .= "<option class='' value='".$val->name."'>$val->name</option>";
+            }
+        }
+        $str .= "</select>";
+
+        return $str;
+    }
+
+
 
     public function newWippliSave(Request $request) {
         // Get the formData
-
+        $response = [];
         if ( !empty( $_POST ) ) {
             $userDetails = getUserDetails();
-            $response = [];
             $wippliDetails = $request->post();
             $this->validate( $request, [
                 //'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id . ',id',
@@ -41,6 +94,7 @@ class AjaxController extends Controller {
             $NewWippli->project_name = !empty($wippliDetails['project_name']) ? $wippliDetails['project_name'] : $NewWippli->project_name;
             $NewWippli->deadline = $wippliDetails['deadline'] ? $wippliDetails['deadline'] : $NewWippli->deadline;
             $NewWippli->type = $wippliDetails['type'] ? $wippliDetails['type'] : $NewWippli->type;
+            $NewWippli->category = $wippliDetails['category'] ? $wippliDetails['category'] : $NewWippli->category;
             $NewWippli->instruction = $wippliDetails['instruction'] ? ($wippliDetails['instruction']) : $NewWippli->instruction;
             $NewWippli->digital = @$wippliDetails['digital'] ? $wippliDetails['digital'] : $NewWippli->digital;
             $NewWippli->print = @$wippliDetails['print'] ? $wippliDetails['print'] : $NewWippli->print;
@@ -59,7 +113,8 @@ class AjaxController extends Controller {
             $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment']: $NewWippli->attachment;
             $NewWippli->user_id = $userDetails['id'];
 
-          
+            // prd($NewWippli);
+
             if ( $file = $request->hasFile('attachment' ) ) {
                 $file = $request->file( 'attachment' );
                 // prd($userDetails['id']);
@@ -70,12 +125,11 @@ class AjaxController extends Controller {
                 $NewWippli->created_at = date( 'Y-m-d H:i:s' );
                 // echo "create";
                 // prd( $wippliDetails );
-
                 $NewWippli->save();
                 $response['status'] = "success";
                 $response['msg'] = "Wippli added successfully alert-success";
             } else {
-                $NewWippli->updated_at = date( 'Y-m-d H:i:s' );
+                $NewWippli->updated_at = date('Y-m-d H:i:s');
                 $NewWippli->update();
                 $response['status'] = "success";
                 $response['msg'] = "Wippli updated successfully alert-success";
@@ -85,6 +139,22 @@ class AjaxController extends Controller {
         }
         return response()->json($response);
     }
+
+
+    public function wippliPreview(Request $request) {
+        $response = [];
+        $postData = $_REQUEST;
+        $wippli_id = $postData['wippli_id'];
+        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
+        ->leftJoin('users as u', 'u.id', 'nw.user_id')->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
+        ->first();
+        // prd($NewWippli);
+
+        $userDetails = getUserDetails();
+        return view('sites.wippliFormPreview',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
+    }
+
+
 
 //CHECK UNIQUE EMAIL
 
@@ -345,10 +415,6 @@ class AjaxController extends Controller {
     public function PPHttpPost($methodName_, $nvpStr_) {
 
         $environment = 'sandbox';
-        // Set up your API credentials, PayPal end point, and API version.
-        // $API_UserName = urlencode('sb-475hwt1638794_api1.business.example.com');
-        // $API_Password = urlencode('LVVNYYLN48VUR8E7');
-        // $API_Signature = urlencode('AsLDJ9.m4EOvt0m4bLCC4ceU1Ir9Ads1azXeKNygMQF6hElx5QZL9aWj');
 
         $API_UserName = urlencode('sb-cp3ue1622267_api1.business.example.com');
         $API_Password = urlencode('VLAUEKHH45JUHQ2L');
