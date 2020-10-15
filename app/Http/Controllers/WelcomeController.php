@@ -28,7 +28,7 @@ class WelcomeController extends Controller {
     public function userDashboard() {
         if (Auth::check()) {
             $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
-            ->leftJoin('users as u', 'u.id', 'nw.user_id')->orderBy('nw.id',)
+            ->leftJoin('users as u', 'u.id', 'nw.user_id')->orderBy('nw.id','DESC')
             ->get();
             $userDetails = getUserDetails();
             // prd($NewWippli);

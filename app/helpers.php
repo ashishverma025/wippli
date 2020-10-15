@@ -243,7 +243,7 @@ if (!function_exists('find_file_on_directories')) {
     }
 
 }
-if (!function_exists('find_file_on_directories')) {
+if (!function_exists('test')) {
 
     function test($directory1, $directory2, $fileName) {
         $userID = "";
@@ -709,4 +709,54 @@ if (!function_exists('getSubjectNameById')) {
     }
 
 }
+
+
+
+if (!function_exists('generatePlanFolder')) {
+
+    function generatePlanFolder($wippliData,$folderSrruct) {
+  // prd($folderSrruct);
+      foreach ($folderSrruct as $k1 => $first) {
+        $path = public_path() .'/'. $k1;
+        if (!file_exists($path)) {
+          mkdir($path, 0777, true);
+        }
+  
+        foreach ($first as $k2 => $second) {
+          $path = public_path() .'/'. $k1.'/'.$k2;
+          if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+          }
+          if(is_array($second)){
+            foreach ($second as $k3 => $third) {
+              $path = public_path() .'/'. $k1.'/'.$k2.'/'.$k3;
+              if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+              }
+
+              if(is_array($third)){
+                foreach ($third as $k4 => $fourth) {
+                  $path = public_path() .'/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4;
+                  if (!file_exists($path)) {
+                    mkdir($path, 0777, true);
+                  }
+
+                  if(is_array($fourth)){
+                    foreach ($fourth as $k5 => $fifth) {
+                        // pr($fifth);
+                      $path = public_path() .'/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4.'/'.$fifth;
+                      if (!file_exists($path)) {
+                        mkdir($path, 0777, true);
+                      }
+                    }
+                  }
+
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
