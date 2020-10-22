@@ -5,13 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
-use App\Author,
-    App\BecomeaTutor,
-    App\TutorStudents,
-    App\LearningCenter;
-use App\User;
-use App\Institute;
-use App\Qualification;
+
+use App\BusinessDetail;
 use Auth,
     DB,
     Hash,
@@ -19,6 +14,76 @@ use Auth,
 use DataTables;
 
 class UsersController extends Controller {
+
+
+    public function saveBusinessDetails(Request $request) {
+        if (Auth::check()) {
+
+            $userDetails = getUserDetails();
+            $postData = $request->post();
+
+            $businesId = !empty( $postData['business_id'] ) ? $postData['business_id'] : '';
+            $businessDetails = empty( $postData['business_id'] ) ? new BusinessDetail() : BusinessDetail::where( ['id' => $businesId] )->first();
+
+            $businessDetails->user_id = !empty($userDetails['user_id']) ? $userDetails['user_id'] :'';
+            $businessDetails->business_name = !empty($postData['business_name']) ? $postData['business_name'] : $businessDetails->business_name;
+            $businessDetails->business_legal_name = $postData['business_legal_name'] ? $postData['business_legal_name'] : $businessDetails->business_legal_name;
+            $businessDetails->business_branch = $postData['business_branch'] ? $postData['business_branch'] : $businessDetails->business_branch;
+            $businessDetails->industry = $postData['industry'] ? $postData['industry'] : $businessDetails->industry;
+            $businessDetails->business_sort_name = $postData['business_sort_name'] ? ($postData['business_sort_name']) : $businessDetails->business_sort_name;
+            $businessDetails->business_initials = @$postData['business_initials'] ? $postData['business_initials'] : $businessDetails->business_initials;
+            $businessDetails->business_number = @$postData['business_number'] ? $postData['business_number'] : $businessDetails->business_number;
+            $businessDetails->business_number_type = @$postData['business_number_type'] ? $postData['business_number_type'] : $businessDetails->business_number_type;
+            $businessDetails->tax_number = @$postData['tax_number'] ? $postData['tax_number'] : $businessDetails->tax_number;
+            $businessDetails->tax_number_type =  @$postData['tax_number_type'] ? $postData['tax_number_type'] : $businessDetails->tax_number_type;
+            
+            $businessDetails->country = @$postData['country'] ? $postData['country']: $businessDetails->country;
+            $businessDetails->state = @$postData['state'] ? $postData['state']: $businessDetails->state;
+            $businessDetails->address1 = @$postData['address1'] ? $postData['address1']: $businessDetails->address1;
+            $businessDetails->address2 = @$postData['address2'] ? $postData['address2']: $businessDetails->address2;
+            $businessDetails->city = @$postData['city'] ? $postData['city']: $businessDetails->city;
+            $businessDetails->post_code = @$postData['post_code'] ? $postData['post_code']: $businessDetails->post_code;
+
+            $businessDetails->email = @$postData['email'] ? $postData['email']: $businessDetails->email;
+            $businessDetails->contact = @$postData['contact'] ? $postData['contact']: $businessDetails->contact;
+            $businessDetails->business_type	 = @$postData['business_type	'] ? $postData['business_type	']: $businessDetails->business_type	;
+
+            $businessDetails->linkedin = @$postData['linkedin'] ? $postData['linkedin']: $businessDetails->linkedin;
+            $businessDetails->twitter = @$postData['twitter'] ? $postData['twitter']: $businessDetails->twitter;
+            $businessDetails->instagram = @$postData['instagram'] ? $postData['instagram']: $businessDetails->instagram;
+            $businessDetails->facebook = @$postData['facebook'] ? $postData['facebook']: $businessDetails->facebook;
+            $businessDetails->youtube = @$postData['youtube'] ? $postData['youtube']: $businessDetails->youtube;
+            $businessDetails->anythingelse = @$postData['anythingelse'] ? $postData['anythingelse']: $businessDetails->anythingelse;
+            $businessDetails->logocolours = @$postData['logocolours'] ? $postData['logocolours']: $businessDetails->logocolours;
+            $businessDetails->coloricon = @$postData['coloricon'] ? $postData['coloricon']: $businessDetails->coloricon;
+            $businessDetails->iconnegative = @$postData['iconnegative'] ? $postData['iconnegative']: $businessDetails->iconnegative;
+            $businessDetails->primarydarkcolour1 = @$postData['primarydarkcolour1'] ? $postData['primarydarkcolour1']: $businessDetails->primarydarkcolour1;
+            $businessDetails->primarydarkcolour2 = @$postData['primarydarkcolour2'] ? $postData['primarydarkcolour2']: $businessDetails->primarydarkcolour2;
+            $businessDetails->primarylightcolour1 = @$postData['primarylightcolour1'] ? $postData['primarylightcolour1']: $businessDetails->primarylightcolour1;
+            $businessDetails->primarylightcolour2 = @$postData['primarylightcolour2'] ? $postData['primarylightcolour2']: $businessDetails->primarylightcolour2;
+            $businessDetails->businessdrive = @$postData['businessdrive'] ? $postData['businessdrive']: $businessDetails->businessdrive;
+            $businessDetails->businessdropbox = @$postData['businessdropbox'] ? $postData['businessdropbox']: $businessDetails->businessdropbox;
+            
+            if ( empty( $postData['business_id'] ) ) {
+                $businessDetails->created_at = date( 'Y-m-d H:i:s' );
+                // echo "create";
+                // prd( $wippliDetails );
+                $businessDetails->save();
+                $response['status'] = "success";
+                $response['msg'] = "Business added successfully";
+            } else {
+                $businessDetails->updated_at = date('Y-m-d H:i:s');
+                $businessDetails->update();
+                $response['status'] = "success";
+                $response['msg'] = "Business updated successfully";
+            }
+            // prd($_POST);
+
+            return redirect('/business-details');
+        }
+    }
+
+
 
     /**
      * Show the application dashboard.
