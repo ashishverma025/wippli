@@ -24,6 +24,9 @@ Route::post('/newWippliSave', 'AjaxController@newWippliSave');
 Route::post('/wippliPreview', 'AjaxController@wippliPreview');
 Route::post('/getTypesByCategory', 'AjaxController@getTypesByCategory');
 Route::post('/generateFolderStructure', 'AjaxController@generateFolderStructure');
+Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
+Route::get('/business-details', 'WelcomeController@businessDetails');
+
 
 
 
@@ -36,6 +39,7 @@ Route::get('admin', 'HomeController@index')->name('admin');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/change_password', 'UsersController@change_pwd');
 Route::post('/change_password', 'UsersController@update_changed_pwd');
+Route::post('/save-business-details', 'UsersController@saveBusinessDetails');
 
 Route::get('/admin', 'Auth\LoginController@showLoginForm');
 /* ----------------------- Admin Routes START -------------------------------- */

@@ -625,7 +625,7 @@ li.center_line {
     background-color: #989898;
     color: #fff;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 12px;
     display: block;
     text-align: center;
     padding: 10px 10px;
@@ -633,6 +633,187 @@ li.center_line {
 }
 .boomi_btn {
     padding-top: 20px;
+}
+
+
+
+/* ---------------------------------------------------
+    Business_form Extra css
+----------------------------------------------------- */
+
+
+
+
+section.business_form label {
+    font-size: 13px;
+}
+.btnn-business {
+    padding-top: 30px;
+}
+.btnn-business button.btn {
+    width: 100%;
+}
+.grey_row input.form-control {
+    background: #d6d6d6;
+    text-align: center;
+}
+section.business_form select {
+    color: #999999 !important;
+}
+section.business_form .wipl_logo {
+    font-size: 24px;
+    font-weight: 600;
+    color: #848484;
+}
+.text-right-check .form-check label {
+    text-align: right;
+}
+.text-right-check .form-check {
+    position: relative;
+    padding-right: 20px;
+}
+.text-right-check .form-check input.form-check-input {
+    position: absolute;
+    right: 0;
+    margin-top: 3px;
+}
+section.business_form .businnes_right_side a {
+    color: #a2a2a2 ;
+    font-weight: 400 ;
+}
+p.user {
+    font-size: 20px;
+    font-weight: 600;
+}
+ .row-border-dash {
+    border-top: 1px dashed #d6d6d6;
+    border-bottom: 1px dashed #d6d6d6;
+    padding: 15px 0;
+    margin: 15px 0;
+}
+.btnn-business{
+    padding-top: 15px;
+    margin-top: 15px;
+     border-top: 1px dashed #d6d6d6;
+}
+section.business_form .form_inner {
+    padding: 25px 17px;
+}
+
+
+
+/* ---------------------------------------------------
+    three-option Extra css
+----------------------------------------------------- */
+
+
+
+.white-bg {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px 0;
+    margin: 15px 0px;
+    align-items: baseline;
+}
+.logo-inner-txt {
+    text-align: left;
+}
+.logo-inner-txt p {
+    font-size: 14px;
+    position: relative;
+}
+.logo-inner-txt ul {
+    margin: 0;
+    position: absolute;
+    right: 15px;
+    top: -13px;
+    display: inline-flex;
+    padding: 0 0px;
+}
+.logo-inner-txt ul li {
+    padding: 2px 10px;
+}
+.logo-inner-txt b {
+    display: block;
+    margin-bottom: 10px;
+}
+.white-bg .col-lg-4 {
+    border-left: 1px solid #bcbcbc;
+    border-right: 1px solid #bcbcbc;
+}
+.box-wht {
+    width: 97%;
+    margin: auto;
+}
+.grid_header li, .grids_box_white li {
+    display: inline-block;
+    width: 12%;
+    background: #d2d2d2;
+    text-align: center;
+}
+.grid_header {
+    background: #d2d2d2;
+    padding: 8px 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.grid_header ul, .grids_box_white ul {
+    margin: 0;
+}
+.grids_box_white{
+    background: #fff;
+    padding: 8px 0;    
+}
+.grids_box_white li{
+    background-color: transparent;
+}
+.grid-inner .form-control {
+    padding: 0;
+    height: auto;
+    border: 0;
+    box-shadow: 0 0 black;
+    font-size: 12px;
+    width: auto;
+    margin: auto;
+}
+.grid-iner-div {
+    display: flex;
+    align-items: center;
+}
+.grid-inner-logo img {
+    width: 40px;
+}
+.grid-inner li {
+    font-size: 12px;
+}
+.grid-inner .form-check {
+    padding-left: 0;
+}
+.grid-inner-logo img {
+    width: 25px;
+}
+.grid-inner-logo {
+    padding: 0 4px;
+}
+.grid-inner .logo-inner-txt ul {
+    position: STATIC;
+}
+.people-seting ul.nav-tabs a {
+    padding: 15px 60px !important;
+    margin: 0 0 2px;
+}
+ul.contact-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content !important;
+    margin: auto !important;
+    border-radius: 50px !important;
+    overflow: hidden !important;
+}
+ul.contact-nav li {
+    margin: 0 !important;
+    width: 50%;
 }
 
 
@@ -662,15 +843,5 @@ li.center_line {
 .accordion .card-txt::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-.boomi_form .fields label {
-    font-size: 11px;
-}
 
-.modal-lg {
-    width: 100% !important;
-    max-width: 90% !important;
-}
 
-section.boomi .container {
-    width: 100%;
-}
