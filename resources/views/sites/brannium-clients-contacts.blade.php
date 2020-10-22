@@ -341,7 +341,8 @@
                                     </ul>
                                  </div>
                               </div>
-                               
+                              @if(!empty($ContactDetails))
+                              @foreach($ContactDetails as $cDetails)
                               <div class="grids_box_white">
                                  <div class="grid-inner">
                                     <ul>
@@ -355,12 +356,12 @@
                                                 <img src="{{url('public/wippli/img/logo-icn-inner.png')}}" alt="logo"> 
                                                 </a>
                                              </div>
-                                             <div class="grid-inner-txt">Jay Marcano</div>
+                                             <div class="grid-inner-txt">{{$cDetails->business_name}}</div>
                                           </div>
                                        </li>
                                        <li>Director</li>
                                        <li>Brannium</li>
-                                       <li>jm@brannium.com</li>
+                                       <li>{{$cDetails->email}}</li>
                                        <li>
                                           <select id="inputState" class="form-control">
                                              <option selected>Resource</option>
@@ -391,7 +392,8 @@
                                     </ul>
                                  </div>
                               </div>
-                              
+                              @endforeach
+                              @endif
                                          
                                </div>
                                </div>

@@ -42,11 +42,18 @@ class WelcomeController extends Controller {
     public function branniumClientsContacts() {
         if (Auth::check()) {
             $businessDetails = DB::table('business_details as bd')->select('u.name','u.id as userId','bd.*')
-            ->leftJoin('users as u', 'u.id', 'bd.user_id')->orderBy('bd.id','DESC')
+            ->leftJoin('users as u', 'u.id', 'bd.user_id')->where('business_name','like','%Brannium%')->orderBy('bd.id','DESC')
+            ->get();
+            $ContactDetails = DB::table('business_details as bd')->select('u.name','u.id as userId','bd.*')
+            ->leftJoin('users as u', 'u.id', 'bd.user_id')->where('business_name','not like','%Brannium%')->orderBy('bd.id','DESC')
             ->get();
             $userDetails = getUserDetails();
             // prd($businessDetails);
-            return view('sites.brannium-clients-contacts',['userDetails'=>$userDetails,'businessDetails'=>$businessDetails]);
+            return view('sites.brannium-clients-contacts',[
+                'userDetails'=>$userDetails,
+                'businessDetails'=>$businessDetails,
+                'ContactDetails'=>$ContactDetails
+                ]);
         }
         return redirect("/login");
     }
