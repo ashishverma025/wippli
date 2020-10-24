@@ -40,6 +40,7 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/change_password', 'UsersController@change_pwd');
 Route::post('/change_password', 'UsersController@update_changed_pwd');
 Route::post('/save-business-details', 'UsersController@saveBusinessDetails');
+Route::post('/save-contact-details', 'UsersController@saveContactDetails');
 
 Route::get('/admin', 'Auth\LoginController@showLoginForm');
 /* ----------------------- Admin Routes START -------------------------------- */
