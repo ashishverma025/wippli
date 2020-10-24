@@ -1,5 +1,6 @@
 
 $("#popUpform").click(function () {
+  $("#myModal").modal();
   $.ajax({
     url: "popupForm",
     type: 'POST',

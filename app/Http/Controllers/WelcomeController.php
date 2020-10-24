@@ -44,8 +44,8 @@ class WelcomeController extends Controller {
             $businessDetails = DB::table('business_details as bd')->select('u.name','u.id as userId','bd.*')
             ->leftJoin('users as u', 'u.id', 'bd.user_id')->where('business_name','like','%Brannium%')->orderBy('bd.id','DESC')
             ->get();
-            $ContactDetails = DB::table('business_details as bd')->select('u.name','u.id as userId','bd.*')
-            ->leftJoin('users as u', 'u.id', 'bd.user_id')->where('business_name','not like','%Brannium%')->orderBy('bd.id','DESC')
+            $ContactDetails = DB::table('contact_details as cd')->select('u.name','u.id as userId','cd.*')
+            ->leftJoin('users as u', 'u.id', 'cd.user_id')->orderBy('cd.id','DESC')
             ->get();
             $userDetails = getUserDetails();
             // prd($businessDetails);

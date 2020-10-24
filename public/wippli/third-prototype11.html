@@ -3,52 +3,17 @@
    <head>
       <title>Forms Third</title>
       <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">      
-      <link rel="stylesheet" href="{{ url('public/wippli/css/bootstrap.min.css') }}">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <script src="js/bootstrap.min.js"></script>    
+      <script src="js/popper.min.js"></script>   
+      <script src="js/jquery.min.js"></script>  
+      <script src="js/slider.js"></script>
       <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-      <link rel="stylesheet" href="{{ url('public/wippli/css/main.css') }}">
-
+      <link rel="stylesheet" href="css/main.css">
    </head>
    <body>
       <!--------------------------  form1  -------------------------->
-       <style>
-       section.header img {
-    width: 50%;
-}
-           section.header li {
-    display: inline-flex;
-    padding: 0 7px;
-}
-    section.header li a {
-    color: #848484;
-}       
-section.header ul {
-    margin: 0;
-    text-align: right;
-}
-section.header {
-    padding: 10px 0;
-}           
-       </style>
-             <section class="header">
-         <div class="container">
-             <div class="row">
-                 <div class="col-lg-2">
-             <img src="img/Group%201087.png" alt="logo">
-                     </div>
-                 <div class="col-lg-10">
-                     <ul>
-                     <li><a href="#"><i class="fas fa-comment"></i></a> 
-                         <li><a href="#"><i class="fas fa-search"></i></a> 
-                         </li><li><a href="#"><i class="far fa-bell"></i></a> 
-                         </li><li><a href="#"><i class="fas fa-user"></i></a> </li>
-                         <li><a href="#"><i class="fas fa-ellipsis-v"></i></a> </li>
-                     </ul>
-                 </div>
-             </div>
-                 </div>
-       </section>
-       
       <section class="form1 form form_third">
          <div class="container">
             <div class="form_inner">
@@ -58,7 +23,7 @@ section.header {
                         <div class="logo">
                            <a href="#">
                               <img src="img/logo-icn.png" alt="logo"> 
-                              <h3>Hi {{@$userDetails->name}}! <span>Brannium</span></h3>
+                              <h3>Hi Jay! <span>Brannium</span></h3>
                            </a>
                         </div>
                      </div>
@@ -125,94 +90,6 @@ section.header {
                                              data-parent="#accordionEx1">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                   
-                                                   @if(!empty($NewWippli))
-                                                   @foreach($NewWippli as $wippli)
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <?php
-                                                            $uId = $wippli->userId;
-                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
-                                                            ?>
-                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
-                                                         </div>
-                                                      </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">11:48 AM</span>
-                                                            <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   @endforeach
-                                                   @endif
-                                                   
-
-                                                </div>
-                                             </div>
-                                          </div>
-                                       </div>
-                                       <!-- Accordion card -->
-                                       <!-- Accordion card -->
-                                       <div class="card">
-                                          <!-- Card header -->
-                                          <div class="card-header" role="tab" id="headingTwo2">
-                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseTwo21"
-                                                aria-expanded="false" aria-controls="collapseTwo21">
-                                                <h5 class="mb-0">
-                                                   To Do <i class="fas fa-angle-down rotate-icon"></i>
-                                                </h5>
-                                             </a>
-                                          </div>
-                                          <!-- Card body -->
-                                          <div id="collapseTwo21" class="collapse in" role="tabpanel" aria-labelledby="headingTwo21"
-                                             data-parent="#accordionEx1">
-                                             <div class="card-body">
-                                                <div class="card-txt">
-                                                   @if(!empty($NewWippli))
-                                                   @foreach($NewWippli as $wippli)
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <?php
-                                                            $uId = $wippli->userId;
-                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
-                                                            ?>
-                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
-                                                         </div>
-                                                      </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">11:48 AM</span>
-                                                            <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   @endforeach
-                                                   @endif
-                                                </div>
-                                             </div>
-                                          </div>
-                                       </div>
-                                       <!-- Accordion card -->
-                                       <!-- Accordion card -->
-                                       <div class="card">
-                                          <!-- Card header -->
-                                          <div class="card-header" role="tab" id="headingThree31">
-                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseThree31"
-                                                aria-expanded="false" aria-controls="collapseThree31">
-                                                <h5 class="mb-0">
-                                                   WIP <i class="fas fa-angle-down rotate-icon"></i>
-                                                </h5>
-                                             </a>
-                                          </div>
-                                          <!-- Card body -->
-                                          <div id="collapseThree31" class="collapse in" role="tabpanel" aria-labelledby="headingThree31"
-                                             data-parent="#accordionEx1">
-                                             <div class="card-body">
-                                                <div class="card-txt">
-                                                  
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -226,7 +103,152 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo2">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseTwo21"
+                                                aria-expanded="false" aria-controls="collapseTwo21">
+                                                <h5 class="mb-0">
+                                                   Today <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo21" class="collapse in" role="tabpanel" aria-labelledby="headingTwo21"
+                                             data-parent="#accordionEx1">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingThree31">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseThree31"
+                                                aria-expanded="false" aria-controls="collapseThree31">
+                                                <h5 class="mb-0">
+                                                   Today <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseThree31" class="collapse in" role="tabpanel" aria-labelledby="headingThree31"
+                                             data-parent="#accordionEx1">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -238,7 +260,7 @@ section.header {
                                  <!--****-->   
                                  <div class="col-lg-4">
                                     <div class="sec_head">
-                                       APPROVED
+                                       What's on
                                        <p class="Text-right"><i class=" fa fa-ellipsis-v"></i></p>
                                     </div>
                                     <!--Accordion wrapper 6-->
@@ -259,7 +281,6 @@ section.header {
                                              data-parent="#accordionEx2">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                   
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -273,10 +294,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-
-                                                   
-
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -289,7 +332,7 @@ section.header {
                                              <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx2" href="#collapseTwo5"
                                                 aria-expanded="false" aria-controls="collapseTwo5">
                                                 <h5 class="mb-0">
-                                                   THIS WEEK <i class="fas fa-angle-down rotate-icon"></i>
+                                                   Today <i class="fas fa-angle-down rotate-icon"></i>
                                                 </h5>
                                              </a>
                                           </div>
@@ -298,50 +341,6 @@ section.header {
                                              data-parent="#accordionEx2">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                   @if(!empty($NewWippli))
-                                                   @foreach($NewWippli as $wippli)
-                                                   <div class="row">
-                                                      <div class="col-lg-3">
-                                                         <div class="small_company_logo">
-                                                            <?php
-                                                            $uId = $wippli->userId;
-                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
-                                                            ?>
-                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
-                                                         </div>
-                                                      </div>
-                                                      <div class="col-lg-9">
-                                                         <div class="company_txt">
-                                                            <span class="time">PROJECT</span>
-                                                            <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   @endforeach
-                                                   @endif
-                                                
-                                                </div>
-                                             </div>
-                                          </div>
-                                       </div>
-                                       <!-- Accordion card -->
-                                       <!-- Accordion card -->
-                                       <div class="card">
-                                          <!-- Card header -->
-                                          <div class="card-header" role="tab" id="headingThree61">
-                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx2" href="#collapseThree6"
-                                                aria-expanded="false" aria-controls="collapseThree6">
-                                                <h5 class="mb-0">
-                                                   TO DELIVERED <i class="fas fa-angle-down rotate-icon"></i>
-                                                </h5>
-                                             </a>
-                                          </div>
-                                          <!-- Card body -->
-                                          <div id="collapseThree6" class="collapse in" role="tabpanel" aria-labelledby="headingThree6"
-                                             data-parent="#accordionEx2">
-                                             <div class="card-body">
-                                                <div class="card-txt">
-                                                   
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -355,8 +354,92 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                   
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingThree61">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx2" href="#collapseThree6"
+                                                aria-expanded="false" aria-controls="collapseThree6">
+                                                <h5 class="mb-0">
+                                                   Today <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseThree6" class="collapse in" role="tabpanel" aria-labelledby="headingThree6"
+                                             data-parent="#accordionEx2">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -389,7 +472,6 @@ section.header {
                                              data-parent="#accordionEx3">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                  
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -403,8 +485,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                  
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -426,7 +532,6 @@ section.header {
                                              data-parent="#accordionEx3">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                 
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -440,9 +545,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                  
-
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -464,7 +592,6 @@ section.header {
                                              data-parent="#accordionEx3">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                   
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -478,8 +605,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                  
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -492,10 +643,6 @@ section.header {
                               </div>
                                
                            </div>
-
-
-
-
                            <!--********************************************************************************************-->
                            <div id="menu1" class="tab-pane fade">
                               <h3>2</h3>
@@ -538,8 +685,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                  
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -561,7 +732,6 @@ section.header {
                                              data-parent="#accordionEx5">
                                              <div class="card-body">
                                                 <div class="card-txt">
-                                                   
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -575,8 +745,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                   
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -598,7 +792,6 @@ section.header {
                                              data-parent="#accordionEx6">
                                              <div class="card-body">
                                                 <div class="card-txt">
-
                                                    <div class="row">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
@@ -612,8 +805,32 @@ section.header {
                                                          </div>
                                                       </div>
                                                    </div>
-
-                                                   
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="img/logo-icn.png" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
                                                 </div>
                                              </div>
                                           </div>
@@ -2187,9 +2404,8 @@ section.header {
             </div>
          </div>
       </section>
-      <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
-      <script src="{{ url('public/wippli/js/custom-dashboard.js') }}"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
    </body>
 </html>

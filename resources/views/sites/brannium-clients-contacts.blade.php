@@ -6,11 +6,7 @@
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <meta name="route" content="{{ url('/') }}">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="{{ url('public/wippli/css/bootstrap.min.css') }}">
-      <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>    
-      <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
-      <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>  
       <!-- <script src="js/slider.js"></script> -->
       <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
       <link rel="stylesheet" href="{{ url('public/wippli/css/main.css') }}">
@@ -27,6 +23,12 @@
                            <a href="#">
                               <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="logo"> 
                               <h3>People <span>Setting</span></h3>
+                                                      
+                        @if(session()->has('message.level'))
+                           <div class="alert alert-{{ session('message.level') }}"> 
+                           {!! session('message.content') !!}
+                           </div>
+                        @endif
                            </a>
                         </div>
                      </div>
@@ -151,6 +153,9 @@
                            <!--********************************************************************************************13 19-->
                            <div id="menu2" class="tab-pane fade">
                               <h3>3</h3>
+                              
+                              @if(!empty($ContactDetails))
+                              @foreach($ContactDetails as $cDetails)
                               <div class="box-wht">
                                  <div class="row white-bg">
                                     <div class="col-lg-3">
@@ -160,7 +165,7 @@
                                     </div>
                                     <div class="col-lg-4">
                                        <div class="logo-inner-txt">
-                                          <b>Brannium PTY LTD</b>
+                                          <b>{{$cDetails->first_name}}</b>
                                           <p>19 114 North Steyne, Manly, NSW, 2095 <br>ABN 1234567</p>
                                        </div>
                                     </div>
@@ -174,70 +179,14 @@
                                              <li><i class="fas fa-ellipsis-v"></i></li>
                                           </ul>
                                           <b>Agency</b>
-                                          <p>{TBC}</p>
-                                          <p>{TBC}</p>
+                                          <p>{ {{$cDetails->tbc1}} }</p>
+                                          <p>{ {{$cDetails->tbc}} }</p>
                                        </div>
                                     </div>
                                  </div>
                               </div>
-                              <div class="box-wht">
-                                 <div class="row white-bg">
-                                    <div class="col-lg-3">
-                                       <div class="logo-inner">
-                                          <img src="{{url('public/wippli/img/bimmo_logo.jpg')}}" alt="innerlogo">
-                                       </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                       <div class="logo-inner-txt">
-                                          <b>Brannium PTY LTD</b>
-                                          <p>19 114 North Steyne, Manly, NSW, 2095 <br>ABN 1234567</p>
-                                       </div>
-                                    </div>
-                                    <div class="col-lg-5">
-                                       <div class="logo-inner-txt">
-                                          <ul>
-                                             <li><i class="fab fa-linkedin-in"></i></li>
-                                             <li><i class="fab fa-twitter"></i></li>
-                                             <li><i class="fas fa-pencil-alt"></i></li>
-                                             <li><i class="fas fa-trash"></i></li>
-                                             <li><i class="fas fa-ellipsis-v"></i></li>
-                                          </ul>
-                                          <b>Agency</b>
-                                          <p>{TBC}</p>
-                                          <p>{TBC}</p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="box-wht">
-                                 <div class="row white-bg">
-                                    <div class="col-lg-3">
-                                       <div class="logo-inner">
-                                          <img src="{{url('public/wippli/img/bimmo_logo.jpg')}}" alt="innerlogo">
-                                       </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                       <div class="logo-inner-txt">
-                                          <b>Brannium PTY LTD</b>
-                                          <p>19 114 North Steyne, Manly, NSW, 2095 <br>ABN 1234567</p>
-                                       </div>
-                                    </div>
-                                    <div class="col-lg-5">
-                                       <div class="logo-inner-txt">
-                                          <ul>
-                                             <li><i class="fab fa-linkedin-in"></i></li>
-                                             <li><i class="fab fa-twitter"></i></li>
-                                             <li><i class="fas fa-pencil-alt"></i></li>
-                                             <li><i class="fas fa-trash"></i></li>
-                                             <li><i class="fas fa-ellipsis-v"></i></li>
-                                          </ul>
-                                          <b>Agency</b>
-                                          <p>{TBC}</p>
-                                          <p>{TBC}</p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
+                              @endforeach
+                              @endif
                            </div>
                            <!--********************************************************************************************22 27-->
                            <div id="menu3" class="tab-pane fade">
@@ -356,7 +305,7 @@
                                                 <img src="{{url('public/wippli/img/logo-icn-inner.png')}}" alt="logo"> 
                                                 </a>
                                              </div>
-                                             <div class="grid-inner-txt">{{$cDetails->business_name}}</div>
+                                             <div class="grid-inner-txt">{{$cDetails->first_name}}</div>
                                           </div>
                                        </li>
                                        <li>Director</li>
@@ -407,9 +356,9 @@
             </div>
          </div>
       </section>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>
+      <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>
+      <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
       <script src="{{ url('public/wippli/js/custom-dashboard.js') }}"></script>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
    </body>
 </html>
