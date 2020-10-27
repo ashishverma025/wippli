@@ -162,19 +162,23 @@ function readURL(input, divID) {
 
 $(document).on('click', '#generateFolder', function (e) {
   var wippliId = $(this).attr('data-id');
+  // alert('sdjhjkshdfkjs')
   $("#generateFolder").text('Generating ...')
   $("#generateFolder").prop('disabled',true)
-
-  $.ajax({
-    url: "generateFolderStructure",
-    type: 'POST',
-    data: {'wippli_id':wippliId},
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    success: function (response) {
-        $("#generateFolder").text('Generate Folder')
-        $("#generateFolder").prop('disabled',false)
-    }
-  })
+  if(wippliId !== '' ){
+    $.ajax({
+      url: "generateFolderStructure",
+      type: 'POST',
+      data: {'wippli_id':wippliId},
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function (response) {
+          $("#generateFolder").text('Generate Folder')
+          $("#generateFolder").prop('disabled',false)
+      }
+    })
+  }
 })
+
+

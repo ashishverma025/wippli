@@ -32,7 +32,14 @@ class AjaxController extends Controller {
     public function generateFolderStructure(Request $request) {
         $postData = $request->post();
         $wippli_id = $postData['wippli_id'];
-        $NewWippli =  NewWippli::where('status','active')->where('id',$wippli_id)->first();
+        $NewWippli =  DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name')
+        ->leftJoin('users as u', 'u.id', 'nw.user_id')
+        ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
+        ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
+        ->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
+        ->get()->toArray();
+        $NewWippli = $NewWippli[0];
+        // prd($NewWippli);
 
         $folderStruct = ['Admin'=>'Admin','Misc'=>'Misc','BRAND AND ASSETS'=>'ND AND ASSETS','firstname+lastname'=>
         ['CN'=>'Type'],
@@ -52,10 +59,9 @@ class AjaxController extends Controller {
             ]
           ]
         ]];
-        $folderSrruct[$NewWippli->project_name] = $folderStruct;
+        $folderSrruct[$NewWippli->name] = $folderStruct;
         $folderSrruct = generatePlanFolder($NewWippli,$folderSrruct);
-
-    } 
+    }
     
     
     public function getTypesByCategory(Request $request) {
@@ -145,8 +151,11 @@ class AjaxController extends Controller {
         $response = [];
         $postData = $_REQUEST;
         $wippli_id = $postData['wippli_id'];
-        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
-        ->leftJoin('users as u', 'u.id', 'nw.user_id')->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
+        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name')
+        ->leftJoin('users as u', 'u.id', 'nw.user_id')
+        ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
+        ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
+        ->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
         ->first();
         // prd($NewWippli);
 
@@ -201,166 +210,8 @@ class AjaxController extends Controller {
         }
     }
 
-    public function saveAnswered(Request $request) {
-        $postData = $request->all();
-        $userDetails = getUserDetails();
-        $studentAnswered = new StudentAnswer();
-        if (!empty($postData)) {
-            if (!empty($postData['possibilityAnswer'])) {
-                $possibilityAnswer = json_decode($postData['possibilityAnswer']);
-                $answer = strtolower(preg_replace('/\s+/', '', $postData['openAnswered']));
-                if (in_array("$answer", $possibilityAnswer)) {
-                    return "correct";
-                } else {
-                    return "wrong";
-                }
-            }
-            $studentAnswered->user_id = $userDetails['id'];
-            $studentAnswered->student_name = $userDetails['name'];
-            $studentAnswered->student_email = $userDetails['email'];
-            $studentAnswered->paper_id = isset($postData['pid']) ? $postData['pid'] : 'Paper A';
-            $studentAnswered->question_id = $postData['question_id'];
-            $studentAnswered->answered = $postData['open_answered'];
-            $studentAnswered->student_type = 'seamo';
-            //$studentAnswered->save();
-            return 'success';
-        }
-    }
 
-    public function questionAttempt(Request $request) {
-        $postData = $request->all();
-        $userDetails = getUserDetails();
-        if (!empty($postData)) {
 
-            $SubscribeDetails = Subscriber::where(['user_id' => $userDetails['id'], 'status' => 'active'])->where('subscription_id', '!=', 1)->first();
-            if (!empty($SubscribeDetails)) {
-                $diff = DateDiff(date('Y-m-d'), $SubscribeDetails['end_date'], 'days');
-                if ($diff == '-1 days') {
-                    DB::table('subscribers')
-                            ->where(['user_id' => $userDetails['id']])
-                            ->update(['status' => 'expired']);
-                }
-            }
-            $exist = QuestionAttempt::where(['user_id' => $userDetails['id']])->first();
-            $QuestionAttempt = (empty($exist)) ? new QuestionAttempt() : QuestionAttempt::where(['user_id' => $userDetails['id']])->first();
-
-            if (empty($exist)) {
-                $QuestionAttempt->user_id = $userDetails['id'];
-                $QuestionAttempt->user_name = $userDetails['name'];
-                $QuestionAttempt->user_email = $userDetails['email'];
-                $QuestionAttempt->question_id = $postData['question_id'];
-                $QuestionAttempt->question_attempt = 1;
-                $QuestionAttempt->ip_address = $_SERVER['REMOTE_ADDR'];
-                $QuestionAttempt->save();
-            } else {
-                if ($exist['question_id'] != $postData['question_id']) {
-// prd($postData['question_id']);
-                    $QuestionAttempt->ip_address = $_SERVER['REMOTE_ADDR'];
-                    $QuestionAttempt->question_id = $postData['question_id'];
-                    $QuestionAttempt->question_attempt = $QuestionAttempt->question_attempt + 1;
-                    $QuestionAttempt->update();
-                }
-            }
-//             prd($exist['question_attempt']);
-
-            return @$exist['question_attempt'] + 1;
-        }
-    }
-
-    public function progressStatus(Request $request) {
-        $postData = $request->all();
-        $userDetails = getUserDetails();
-        $ExamprogressbarDetails = new ExamprogressbarDetails();
-        if (!empty($postData)) {
-            $exist = ExamprogressbarDetails::where(['user_id' => $userDetails['id'], 'paper_id' => $postData['pid']])->first();
-            $ExamprogressbarDetails = (empty($exist)) ? new ExamprogressbarDetails() : ExamprogressbarDetails::where(['user_id' => $userDetails['id'], 'paper_id' => $postData['pid']])->first();
-            if (empty($exist)) {
-                $ExamprogressbarDetails->user_id = $userDetails['id'];
-                $ExamprogressbarDetails->user_name = $userDetails['name'];
-                $ExamprogressbarDetails->user_email = $userDetails['email'];
-                $ExamprogressbarDetails->paper_id = $postData['pid'];
-                $ExamprogressbarDetails->progress = $postData['progress'];
-                $ExamprogressbarDetails->score_now = ($postData['checkedVal'] == 'Yes') ? $postData['qMark'] : 0;
-                $ExamprogressbarDetails->created_at = date('Y-m-d H:i:s');
-                $ExamprogressbarDetails->ip_address = $_SERVER['REMOTE_ADDR'];
-
-                $ExamprogressbarDetails->save();
-            } else {
-                if ($postData['progress']) {
-// echo 'update';
-                    $scoreNow = $ExamprogressbarDetails->score_now;
-                    $ExamprogressbarDetails->ip_address = $_SERVER['REMOTE_ADDR'];
-                    $ExamprogressbarDetails->updated_at = date('Y-m-d H:i:s');
-                    $ExamprogressbarDetails->progress = $postData['progress'];
-                    $ExamprogressbarDetails->score_now = (@$postData['checkedVal'] == 'Yes') ? $scoreNow + $postData['qMark'] : $scoreNow;
-
-                    $ExamprogressbarDetails->update();
-                }
-            }
-// prd($exist);
-
-            return round((100 / $postData['totalQuestion']) * $postData['progress']);
-        }
-    }
-
-    public function saveTransaction(Request $request) {
-        $postData = $request->all();
-        $userDetails = getUserDetails();
-        if ($request->isMethod('post')) {
-            $sId = $postData['sId'];
-            $transDetails = $postData['details'];
-            $amount = $postData['amt'];
-
-            if (!empty($transDetails)) {
-                $currency = $postData['cur'];
-
-                $Payment = new Payment();
-                $Payment->user_id = $userDetails['id'];
-                $Payment->subscription_id = $sId;
-                $Payment->transaction_id = $transDetails['id'];
-                $Payment->amount = $amount;
-                $Payment->currency = $currency;
-                $Payment->payment_status = $transDetails['status'];
-                $Payment->transaction_time = $transDetails['create_time'];
-                $Payment->created_at = date('Y-m-d H:i:s');
-                $Payment->save();
-            }
-
-            if (!empty($sId)) {
-                $subscribers = Subscriber::where(['user_id' => $userDetails['id']])->first();
-
-                $plans = Subscription::where(['id' => $sId])->first();
-                if (!empty($plans)) {
-                    //BEFORE ADD NEW SUBSCRIBER INACTIVE ALL EXISTING SUBSCRIPTION
-                    $duration = '7 days';
-                    if (!empty($subscribers)) {
-                        DB::table('subscribers')
-                                ->where(['user_id' => $userDetails['id']])
-                                ->update(['status' => 'inactive']);
-                        $duration = $plans['duration'];
-                    }
-                    $directPaymentId = "";
-                    if (empty($transDetails)) {
-                        $directPaymentId = $this->directPayment($request, $postData, $userDetails);
-                    }
-                    $subscribers = new Subscriber();
-                    $subscribers->subscription_id = $sId;
-                    $subscribers->directpayment_id = !empty($directPaymentId) ? $directPaymentId : "";
-                    $subscribers->transaction_id = @$transDetails['id'];
-                    $subscribers->payment_id = @$Payment->id;
-                    $subscribers->user_id = $userDetails['id'];
-                    $subscribers->amount = $amount;
-                    $subscribers->payment_status = @$transDetails['status'] ? @$transDetails['status'] : (!empty($directPaymentId) ? 'success' : "failed");
-                    $subscribers->start_date = date('Y-m-d');
-                    $subscribers->end_date = createDate(date('Y-m-d'), "+" . $duration, 'Y-m-d');
-                    $subscribers->created_at = date('Y-m-d H:i:s');
-//                        set_flash_message('Congratulation! you have subscribe successfully', 'alert-success');
-                    $subscribers->save();
-                }
-                return 'success';
-            }
-        }
-    }
 
     public function directPayment($request, $postData, $userDetails) {
         if (!empty($postData)) {
