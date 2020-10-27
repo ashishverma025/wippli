@@ -44,8 +44,7 @@ section.header {
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Wippli</h4>
         </div>
-        <div class="modal-body" id="popupFormModal">
-        </div>
+        <div class="modal-body" id="popupFormModal"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
@@ -53,9 +52,6 @@ section.header {
       
     </div>
   </div>
-
-
-
 
       <section class="header">
          <div class="container">
@@ -83,6 +79,9 @@ section.header {
                   <div class="row">
                      <div class="col-lg-3">
                         <div class="logo">
+                           <a href="{{url('logout')}}">
+                              <span>Logout</span>
+                           </a>
                            <a href="#">
                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="logo">
                               <h3>Hi {{@$userDetails->name}}! <span>Brannium</span></h3>
@@ -155,7 +154,7 @@ section.header {
                                                    
                                                    @if(!empty($NewWippli))
                                                    @foreach($NewWippli as $wippli)
-                                                   <div class="row">
+                                                   <div class="row previewToday" data-id="{{$wippli->id}}">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
                                                             <?php
@@ -174,8 +173,7 @@ section.header {
                                                    </div>
                                                    @endforeach
                                                    @endif
-                                                   
-
+                                                
                                                 </div>
                                              </div>
                                           </div>
@@ -211,7 +209,7 @@ section.header {
                                                 <div class="card-txt">
                                                    @if(!empty($NewWippli))
                                                    @foreach($NewWippli as $wippli)
-                                                   <div class="row">
+                                                   <div class="row previewDetails" data-id="{{$wippli->id}}">
                                                       <div class="col-lg-3">
                                                          <div class="small_company_logo">
                                                             <?php

@@ -45,7 +45,7 @@
                         <p class="header_txt">Please complete all the required information</p>
                         <ul class="nav nav-tabs">
                            <li class="active"><a data-toggle="tab" href="#home">Business</a></li>
-                           <li><a data-toggle="tab" href="#menu1">Contact</a></li>
+                           <li id="{{empty($businessList)?'notAllowed':''}}"><a data-toggle="tab" href="#menu1" >Contact</a></li>
                         </ul>
                         <form action="save-business-details" method="post">
                            @csrf
@@ -363,9 +363,7 @@
                            </div>
                         </form>   
                         
-                        
-                        
-                        <div id="menu1" class="tab-pane fade">
+                        <div id="{{!empty($businessList)?'menu1':''}}" class="tab-pane fade">
                           <div class="row row-border-dash">
                              <div class="col-lg-12">
                                <h3>Afiliation</h3>
@@ -378,7 +376,13 @@
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <label>Organisation <span></span></label>
-                                 <input type="text" name="organisation" class="form-control"  placeholder="{contactorganisation}">
+                                 <select name="organisation"  class="form-control">
+                                    @if(!empty($businessList))
+                                    @foreach($businessList as $k=>$bDetails)
+                                    <option value="{{$bDetails->id}}">{{$bDetails->business_name}}</option>
+                                    @endforeach
+                                    @endif
+                                 </select>
                               </div>
                            </div>
                            <div class="col-lg-6">
@@ -727,8 +731,14 @@
 </div>
 </div>
 </section>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+   $("#notAllowed").click(function(){
+   alert('Add Business to save contacts !');
+   })
+</script>
 </body>
 </html>

@@ -28,10 +28,11 @@ class WelcomeController extends Controller {
 
     public function userDashboard() {
         if (Auth::check()) {
-            $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
-            ->leftJoin('users as u', 'u.id', 'nw.user_id')->orderBy('nw.id','DESC')
-            ->get();
             $userDetails = getUserDetails();
+            $userId =  $userDetails['id'];
+            $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
+            ->leftJoin('users as u', 'u.id', 'nw.user_id')->where('user_id',$userId)->orderBy('nw.id','DESC')
+            ->get();
             // prd($NewWippli);
             return view('sites.user-dashboard',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
         }
@@ -42,10 +43,10 @@ class WelcomeController extends Controller {
     public function branniumClientsContacts() {
         if (Auth::check()) {
             $businessDetails = DB::table('business_details as bd')->select('u.name','u.id as userId','bd.*')
-            ->leftJoin('users as u', 'u.id', 'bd.user_id')->where('business_name','like','%Brannium%')->orderBy('bd.id','DESC')
-            ->get();
+          ->leftJoin('users as u', 'u.id', 'bd.user_id')->where('business_name','like','%Brannium%')->orderBy('bd.id','DESC')
+            ->get();  
             $ContactDetails = DB::table('contact_details as cd')->select('u.name','u.id as userId','cd.*')
-            ->leftJoin('users as u', 'u.id', 'cd.user_id')->orderBy('cd.id','DESC')
+            ->leftJoin('users as u', 'u.id', 'cd.parent_id')->orderBy('cd.id','DESC')
             ->get();
             $userDetails = getUserDetails();
             // prd($businessDetails);
@@ -61,12 +62,19 @@ class WelcomeController extends Controller {
 
     public function businessDetails() {
         if (Auth::check()) {
+            $userDetails = getUserDetails();
             $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
             ->leftJoin('users as u', 'u.id', 'nw.user_id')->orderBy('nw.id','DESC')
             ->get();
-            $userDetails = getUserDetails();
-            // prd($NewWippli);
-            return view('sites.business-details',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
+            $businessList = DB::table('business_details')->select(['id','business_name'])
+            ->where('user_id',$userDetails->id)->orderBy('id','DESC')
+              ->get()->toArray();  
+            // pr($businessList);
+            return view('sites.business-details',[
+                'userDetails'=>$userDetails,
+                'NewWippli'=>$NewWippli,
+                'businessList'=>$businessList
+                ]);
         }
         return redirect("/login");
     }

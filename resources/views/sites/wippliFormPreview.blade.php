@@ -216,7 +216,7 @@
                </div>
                <div class="form-ftr">
                   <p>Powerd By
-                     <img src="img/Group%201087.png" alt="ftr-logo">
+                     <img src="{{url('public/wippli/img/Group%201087.png')}}" alt="ftr-logo">
                   </p>
                </div>
             </div>

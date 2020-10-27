@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\BusinessDetail;
 use App\ContactDetail;
+use App\User;
 use Auth,
 DB,
 Hash,
@@ -17,20 +18,24 @@ use DataTables;
 class UsersController extends Controller {
 
     public function saveContactDetails( Request $request ) {
+
         if ( Auth::check() ) {
+            // prd( $request->post() );
+
             $userDetails = getUserDetails();
             $postData = $request->post();
-            // prd($postData);
 
-            if(empty($postData)){
-                $request->session()->flash('message.level', 'danger');
-                $request->session()->flash('message.content', 'Error!');
-                return redirect( '/business-details' ); 
+            if ( empty( $postData ) ) {
+                $request->session()->flash( 'message.level', 'danger' );
+                $request->session()->flash( 'message.content', 'Error!' );
+                return redirect( '/business-details' );
+
             }
             $contactId = !empty( $postData['contact_id'] ) ? $postData['contact_id'] : '';
             $contactDetails = empty( $postData['contact_id'] ) ? new ContactDetail() : ContactDetail::where( ['id' => $contactId] )->first();
+            // prd( $postData );
 
-            $contactDetails->user_id = !empty( $userDetails['id'] ) ? $userDetails['id'] :'';
+            $contactDetails->parent_id = !empty( $userDetails['id'] ) ? $userDetails['id'] :'';
             $contactDetails->first_name = !empty( $postData['first_name'] ) ? $postData['first_name'] : $contactDetails->first_name;
             $contactDetails->surname = $postData['surname'] ? $postData['surname'] : $contactDetails->surname;
             $contactDetails->known_as = $postData['known_as'] ? $postData['known_as'] : $contactDetails->known_as;
@@ -66,21 +71,53 @@ class UsersController extends Controller {
             $contactDetails->dropbox_dir = @$postData['dropbox_dir'] ? $postData['dropbox_dir']: $contactDetails->dropbox_dir;
             $contactDetails->organisation = @$postData['organisation'] ? $postData['organisation']: $contactDetails->organisation;
             $contactDetails->branch = @$postData['branch'] ? $postData['branch']: $contactDetails->branch;
-            // prd($postData);
+            // prd( $contactDetails );
             if ( empty( $postData['contact_id'] ) ) {
                 $contactDetails->created_at = date( 'Y-m-d H:i:s' );
                 $contactDetails->save();
-                $request->session()->flash('message.level', 'success');
-                $request->session()->flash('message.content', 'Contact added successfully!');
+
+                $userID = $this->createUser( $postData, $contactDetails->id, $userDetails['id'] );
+                if ( $userID != 'error') {
+                    $contactDetail = ContactDetail::where(['id' => $contactDetails->id])->first();
+                    $contactDetail->user_id = $userID;
+                    $contactDetail->update();
+                    $request->session()->flash( 'message.level', 'success' );
+                    $request->session()->flash( 'message.content', 'Contact added successfully!' );
+                }else{
+                    $request->session()->flash( 'message.level', 'error' );
+                    $request->session()->flash( 'message.content', 'User not created !' );
+                }
             } else {
                 $contactDetails->updated_at = date( 'Y-m-d H:i:s' );
                 $contactDetails->update();
-                $request->session()->flash('message.level', 'success');
-                $request->session()->flash('message.content', 'Contact updated successfully!');
+                $request->session()->flash( 'message.level', 'success' );
+                $request->session()->flash( 'message.content', 'Contact updated successfully!' );
 
             }
 
             return redirect( '/brannium-clients-contacts' );
+        }
+    }
+
+    public function createUser( $postData, $lastInsertId, $userId ) {
+        $User = new User();
+        $User->name     = $postData['first_name'] ? $postData['first_name'] . ' ' . $postData['surname'] : $User->name;
+        $User->fname = $postData['first_name'] ? $postData['first_name'] : $User->fname;
+        $User->lname = $postData['surname'] ? $postData['surname'] : $User->lname;
+        $User->password = Hash::make( 'wippli@123' );
+        $User->email = $postData['email'] ? $postData['email'] : $User->email;
+        $User->phone = $postData['phone'] ? $postData['phone'] : $User->phone;
+        $User->address = $postData['address1'] ? $postData['address1'] : $User->address;
+        $User->contact_id = $lastInsertId;
+        $User->user_type = 5;
+        $User->email_verified_at =  date( 'Y-m-d H:i:s' );
+        $User->created_at = date( 'Y-m-d H:i:s' );
+
+        // prd( $postData );
+        if ( $User->save() ) {
+            return $User->id;
+        } else {
+            return 'error';
         }
     }
 
@@ -89,15 +126,16 @@ class UsersController extends Controller {
 
             $userDetails = getUserDetails();
             $postData = $request->post();
-            if(empty($postData)){
-                $request->session()->flash('message.level', 'danger');
-                $request->session()->flash('message.content', 'Error!');
-                return redirect( '/business-details' ); 
+            if ( empty( $postData ) ) {
+                $request->session()->flash( 'message.level', 'danger' );
+                $request->session()->flash( 'message.content', 'Error!' );
+                return redirect( '/business-details' );
+
             }
             $businesId = !empty( $postData['business_id'] ) ? $postData['business_id'] : '';
             $businessDetails = empty( $postData['business_id'] ) ? new BusinessDetail() : BusinessDetail::where( ['id' => $businesId] )->first();
 
-            $businessDetails->user_id = !empty( $userDetails['user_id'] ) ? $userDetails['user_id'] :'';
+            $businessDetails->user_id = !empty( $userDetails['id'] ) ? $userDetails['id'] :'';
             $businessDetails->business_name = !empty( $postData['business_name'] ) ? $postData['business_name'] : $businessDetails->business_name;
             $businessDetails->business_legal_name = $postData['business_legal_name'] ? $postData['business_legal_name'] : $businessDetails->business_legal_name;
             $businessDetails->business_branch = $postData['business_branch'] ? $postData['business_branch'] : $businessDetails->business_branch;
@@ -140,14 +178,14 @@ class UsersController extends Controller {
                 $businessDetails->created_at = date( 'Y-m-d H:i:s' );
                 $businessDetails->save();
 
-                $request->session()->flash('message.level', 'success');
-                $request->session()->flash('message.content', 'Contact added successfully!');
+                $request->session()->flash( 'message.level', 'success' );
+                $request->session()->flash( 'message.content', 'Contact added successfully!' );
             } else {
                 $businessDetails->updated_at = date( 'Y-m-d H:i:s' );
                 $businessDetails->update();
 
-                $request->session()->flash('message.level', 'success');
-                $request->session()->flash('message.content', 'Contact updated successfully!');
+                $request->session()->flash( 'message.level', 'success' );
+                $request->session()->flash( 'message.content', 'Contact updated successfully!' );
             }
             return redirect( '/brannium-clients-contacts' );
         }
