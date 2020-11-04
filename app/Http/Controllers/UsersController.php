@@ -27,7 +27,7 @@ class UsersController extends Controller {
 
             if ( empty( $postData ) ) {
                 $request->session()->flash( 'message.level', 'danger' );
-                $request->session()->flash( 'message.content', 'Error!' );
+                $request->session()->flash( 'message.content', 'Please fill all required fields!' );
                 return redirect( '/business-details' );
 
             }
@@ -42,7 +42,7 @@ class UsersController extends Controller {
             $contactDetails->initials = $postData['initials'] ? $postData['initials'] : $contactDetails->initials;
             $contactDetails->positions = $postData['positions'] ? ( $postData['positions'] ) : $contactDetails->positions;
             $contactDetails->department = @$postData['department'] ? $postData['department'] : $contactDetails->department;
-            $contactDetails->email = @$postData['email'] ? $postData['email'] : $contactDetails->email;
+            $contactDetails->email = $email = @$postData['email'] ? $postData['email'] : $contactDetails->email;
             $contactDetails->phone = @$postData['phone'] ? $postData['phone'] : $contactDetails->phone;
             $contactDetails->mobile =  @$postData['mobile'] ? $postData['mobile'] : $contactDetails->mobile;
             $contactDetails->tbc =  @$postData['tbc'] ? $postData['tbc'] : $contactDetails->tbc;
@@ -71,7 +71,8 @@ class UsersController extends Controller {
             $contactDetails->dropbox_dir = @$postData['dropbox_dir'] ? $postData['dropbox_dir']: $contactDetails->dropbox_dir;
             $contactDetails->organisation = @$postData['organisation'] ? $postData['organisation']: $contactDetails->organisation;
             $contactDetails->branch = @$postData['branch'] ? $postData['branch']: $contactDetails->branch;
-            // prd( $contactDetails );
+        
+
             if ( empty( $postData['contact_id'] ) ) {
                 $contactDetails->created_at = date( 'Y-m-d H:i:s' );
                 $contactDetails->save();
@@ -81,6 +82,12 @@ class UsersController extends Controller {
                     $contactDetail = ContactDetail::where(['id' => $contactDetails->id])->first();
                     $contactDetail->user_id = $userID;
                     $contactDetail->update();
+
+                    $subject = "Wippli Client Login Credentials";
+                    $message = "Username : ".$email.' '."Password: ".'wippli@123';
+                    mailSend($email,$subject,$message);
+                    // prd( $contactDetails );
+
                     $request->session()->flash( 'message.level', 'success' );
                     $request->session()->flash( 'message.content', 'Contact added successfully!' );
                 }else{
@@ -126,9 +133,9 @@ class UsersController extends Controller {
 
             $userDetails = getUserDetails();
             $postData = $request->post();
-            if ( empty( $postData ) ) {
+            if ( empty( $postData['business_name'] ) ) {
                 $request->session()->flash( 'message.level', 'danger' );
-                $request->session()->flash( 'message.content', 'Error!' );
+                $request->session()->flash( 'message.content', 'Please fill all Required fields!' );
                 return redirect( '/business-details' );
 
             }
@@ -174,111 +181,35 @@ class UsersController extends Controller {
             $businessDetails->businessdrive = @$postData['businessdrive'] ? $postData['businessdrive']: $businessDetails->businessdrive;
             $businessDetails->businessdropbox = @$postData['businessdropbox'] ? $postData['businessdropbox']: $businessDetails->businessdropbox;
 
+
+            if ( $file = $request->hasFile('logocolours') ) {
+                $file = $request->file('logocolours');
+                $businessDetails->logocolours = upload_wippli_images($file, 'BusinessLogo');
+            }
+            // prd($businessDetails);
+
+            if ( $file = $request->hasFile('coloricon') ) {
+                $file = $request->file('coloricon');
+                $businessDetails->coloricon = upload_wippli_images($file, 'BusinessIcon');
+            }
+
             if ( empty( $postData['business_id'] ) ) {
                 $businessDetails->created_at = date( 'Y-m-d H:i:s' );
                 $businessDetails->save();
 
                 $request->session()->flash( 'message.level', 'success' );
-                $request->session()->flash( 'message.content', 'Contact added successfully!' );
+                $request->session()->flash( 'message.content', 'Business added successfully!' );
             } else {
                 $businessDetails->updated_at = date( 'Y-m-d H:i:s' );
                 $businessDetails->update();
 
                 $request->session()->flash( 'message.level', 'success' );
-                $request->session()->flash( 'message.content', 'Contact updated successfully!' );
+                $request->session()->flash( 'message.content', 'Business updated successfully!' );
             }
             return redirect( '/brannium-clients-contacts' );
         }
     }
 
-    /**
-    * Show the application dashboard.
-    *
-    * @return \Illuminate\Contracts\Support\Renderable
-    */
-
-    public function becomeTutor() {
-        if ( Auth::check() ) {
-            $LcId = getUser_Detail_ByParam( 'id' );
-            $SubjectSyllabus = DB::table( 'subjects' )->get()->toArray();
-            $BecomeaTutor = BecomeaTutor::where( ['user_id' => $LcId] )->first();
-            $Institute = new Institute();
-            $Institutes = $Institute->getAllInstitute();
-            //            pr( $Institutes );
-            $BecomeaTutor = !empty( $BecomeaTutor ) ? $BecomeaTutor : '';
-            $SyllabusDetails = isset( $BecomeaTutor->syllabus_details ) ? json_decode( $BecomeaTutor->syllabus_details ) : '';
-
-            $ResumeDetails = isset( $BecomeaTutor->resume_details ) ? json_decode( $BecomeaTutor->resume_details ) : [];
-            $Services = isset( $BecomeaTutor->lession_ids ) ? json_decode( $BecomeaTutor->lession_ids ) : [];
-            $TeachingLocations = isset( $BecomeaTutor->loc_ids ) ? json_decode( $BecomeaTutor->loc_ids ) : [];
-            $FeeCollection = isset( $BecomeaTutor->fee_collect_id ) ? json_decode( $BecomeaTutor->fee_collect_id ) : [];
-            $Languages = isset( $BecomeaTutor->language_id ) ? json_decode( $BecomeaTutor->language_id ) : [];
-            //            pr( $insData );
-
-            return view( 'sites.become-tutor', [
-                'Tutordetail' => $BecomeaTutor,
-                'SyllabusDetails' => $SyllabusDetails,
-                'Services' => $Services,
-                'teachingLocations' => $TeachingLocations,
-                'feeCollection' => $FeeCollection,
-                'languages' => $Languages,
-                'tutorId' => $LcId,
-                'SubjectSyllabus' => $SubjectSyllabus,
-                'active' => 'profile',
-                'sideActive' => 'becomeTutor',
-                'Institutes' => $Institutes,
-                'ResumeDetails' => $ResumeDetails,
-            ] );
-        }
-        return redirect( '/' );
-    }
-
-    public function becomeaTutor( Request $request ) {
-
-        $userId = getUser_Detail_ByParam( 'id' );
-        $isExist = BecomeaTutor::where( ['user_id' => $userId] )->first();
-        $postData = $request->all();
-
-        $BecomeaTutor = empty( $isExist ) ? new BecomeaTutor() : BecomeaTutor::where( ['user_id' => $userId] )->first();
-        $BecomeaTutor->user_id = empty( $isExist ) ? $userId : $BecomeaTutor->user_id;
-
-        /* Save Summary */
-        if ( $postData['saveButton'] == 'saveSummary' ) {
-            $BecomeaTutor->profile_description = $request->input( 'profile_desc' ) ? $request->input( 'profile_desc' ) : $BecomeaTutor->profile_description;
-            $BecomeaTutor->teaching_style = $request->input( 'teaching-style' ) ? $request->input( 'teaching-style' ) : $BecomeaTutor->teaching_style;
-        }
-        /* Save Resume */
-        if ( $postData['saveButton'] == 'saveResume' ) {
-
-            $BecomeaTutor->qualification_title = $request->input( 'qualification_title' ) ? $request->input( 'qualification_title' ) : $BecomeaTutor->qualification_title;
-            $BecomeaTutor->resume_details = $request->input( 'Qualification' ) ? json_encode( $request->input( 'Qualification' ) ) : $BecomeaTutor->resume_details;
-        }
-
-        /* Save Subject */
-        if ( $postData['saveButton'] == 'saveSubject' ) {
-            $BecomeaTutor->syllabus_details = $request->input( 'syllabus_details' ) ? json_encode( $request->input( 'syllabus_details' ) ) : $BecomeaTutor->syllabus_details;
-            $BecomeaTutor->subjects = $request->input( 's_id' ) ? json_encode( $request->input( 's_id' ) ) : $BecomeaTutor->subjects;
-        }
-        /* Save Option */
-        if ( $postData['saveButton'] == 'saveOption' ) {
-            $BecomeaTutor->lession_ids = $request->input( 'lession_ids' ) ? json_encode( $request->input( 'lession_ids' ) ) : $BecomeaTutor->lession_ids;
-            $BecomeaTutor->loc_ids = $request->input( 'loc_ids' ) ? json_encode( $request->input( 'loc_ids' ) ) : $BecomeaTutor->loc_ids;
-            $BecomeaTutor->fee_collect_id = $request->input( 'fee_collect_id' ) ? json_encode( $request->input( 'fee_collect_id' ) ) : $BecomeaTutor->fee_collect_id;
-            $BecomeaTutor->language_id = $request->input( 'language_id' ) ? json_encode( $request->input( 'language_id' ) ) : $BecomeaTutor->language_id;
-        }
-        //        prd( $BecomeaTutor->resume_details );
-
-        if ( empty( $isExist ) ) {
-            $BecomeaTutor->created_at = date( 'Y-m-d H:i:s' );
-            $BecomeaTutor->save();
-            set_flash_message( 'Become a tutor added successfully', 'alert-success' );
-        } else {
-            $BecomeaTutor->updated_at = date( 'Y-m-d H:i:s' );
-            $BecomeaTutor->update();
-            set_flash_message( 'Become a tutor updated successfully', 'alert-success' );
-        }
-        return redirect( '/becometutor' );
-    }
 
     public function editprofile( Request $request, $LcId = null ) {
         if ( Auth::check() ) {
@@ -381,7 +312,7 @@ class UsersController extends Controller {
             //            prd( $userDetails );
             if ( $file = $request->hasFile( 'user_image' ) ) {
                 $file = $request->file( 'user_image' );
-                $User->avatar = upload_site_images( $userDetails['user_id'], $file, $imgFolder );
+                $User->avatar = upload_site_images( $userDetails['id'], $file, $imgFolder );
             }
 
             if ( $User->update() ) {
@@ -406,108 +337,7 @@ class UsersController extends Controller {
         return view( 'ratesaller', compact( 'user' ) );
     }
 
-    //GET SUBJECT SYLLABUS LIST DATA BY SUBJECT ID AJAX REQUEST
 
-    public function getSubjectSyllabusListById( Request $request ) {
-        $response = [];
-        $subjectSyllabus = $request->post();
-        $subject_id = $subjectSyllabus['subject_id'];
-        $subject_name = $subjectSyllabus['subject_name'];
-        $html = 'not found';
-        $data = DB::table( 'subjects' )->where( 'subjects_name', $subject_name )->where( 'id', $subject_id )->first();
-        if ( !empty( $data ) ) {
-            $response['c_id'] = $data->id;
-            $response['c_name'] = $data->subjects_name;
-            $syllabus = DB::table( 'syllabuslists' )->where( 'subject_id', $subject_id )->select( 'id AS s_id', 'syllabus_name AS s_name' )->pluck( 's_name', 's_id' );
-            if ( count( $syllabus ) != 0 ) {
-                //            prd( count( $syllabus ) );
-                $html = View::make( 'sites.syllabus-rendor', compact( ['syllabus', 'subject_name', 'subject_id'] ) )->render();
-            }
-            $response['syllabus'] = $syllabus;
-        }
-        return $html;
-        //        return response()->json( [$response] );
-    }
-
-    //BECOME A EDUCATION PARTNER BY GET REQUEST
-
-    public function becomeaEducationPartner( Request $request, $type = null ) {
-        if ( Auth::check() ) {
-            $uType = getUser_Detail_ByParam( 'user_type' );
-
-            $LcId = getUser_Detail_ByParam( 'id' );
-            $LearningCenterDetails = findData( 'learning_centers', '*', 'user_id', $LcId );
-            $tutorStudents = TutorStudents::where( ['student_id' => $LcId] )->first();
-            //            pr( $tutorStudents );
-            $BecomeaTutor = findData( 'learningcenter_details', '*', 'user_id', $LcId );
-            if ( ( $uType == 4 ) && !empty( $tutorStudents ) ) {
-                return redirect( 'student/dashboard' );
-            }
-            //            if ( !empty( $BecomeaTutor ) ) {
-            //                return redirect( '/becometutor' );
-            //            }
-
-            $EducationButtons = [];
-            $EducationButtons['Button']['FreeTutor'] = 'I am a Freelance Tutor';
-            $EducationButtons['Button']['LearningCentre'] = 'I manage a Learning Centre';
-            $EducationButtons['FormShow'] = ( $type == 'LearningCentre' ) ? 'LearningCentre' : '';
-            $EducationButtons['LearningCenterDetails'] = isset( $LearningCenterDetails[0] ) ? $LearningCenterDetails[0] : '';
-
-            return view( 'sites.become-education-partner-step1', ['EducationButtons' => $EducationButtons, 'active' => 'profile', 'sideActive' => 'becomeEdu'] );
-        }
-        return redirect( '/' );
-    }
-
-    //SAVE LEARNING CENTER DATA BY POST REQUEST
-
-    public function createLearningCenter( Request $request ) {
-        //        prd( $request->all() );
-        if ( Auth::check() ) {
-            $LcId = getUser_Detail_ByParam( 'id' );
-            $isExist = findData( 'learning_centers', '*', 'user_id', $LcId );
-            if ( empty( $isExist ) ) {
-                // New record, save it
-                $LearningCenter = new LearningCenter();
-                $LearningCenter->user_id = $LcId;
-                $LearningCenter->lc_name = $request->input( 'lc_name' );
-                $LearningCenter->lc_address = $request->input( 'lc_address' );
-                $LearningCenter->lc_contact = $request->input( 'lc_contact' );
-                $LearningCenter->lc_description = $request->input( 'lc_description' );
-                $LearningCenter->lc_status = 1;
-                $LearningCenter->created_at = date( 'Y-m-d H:i:s' );
-
-                if ( $file = $request->hasFile( 'tutor_logo' ) ) {
-                    $file = $request->file( 'tutor_logo' );
-                    $LearningCenter->tutor_logo = upload_site_images( $LcId, $file, 'tutor' );
-                }
-                if ( !empty( $LcId ) ) {
-                    $LcUser = User::where( ['id' => $LcId] )->first();
-                    $LcUser->user_type = 2;
-                    $LcUser->update();
-                }
-                set_flash_message( 'Thank you for collaborating with us.You are now registered as a Learning Center.', 'alert-success' );
-                $LearningCenter->save();
-            } else {
-                $LearningCenter = LearningCenter::where( ['user_id' => $LcId] )->first();
-                $LearningCenter->user_id = $LcId;
-                $LearningCenter->lc_name = $request->input( 'lc_name' );
-                $LearningCenter->lc_address = $request->input( 'lc_address' );
-                $LearningCenter->lc_contact = $request->input( 'lc_contact' );
-                $LearningCenter->lc_description = $request->input( 'lc_description' );
-                $LearningCenter->lc_status = 1;
-                $LearningCenter->updated_at = date( 'Y-m-d H:i:s' );
-
-                if ( $file = $request->hasFile( 'tutor_logo' ) ) {
-                    $file = $request->file( 'tutor_logo' );
-                    $LearningCenter->tutor_logo = upload_site_images( $LcId, $file, 'tutor' );
-                }
-                $LearningCenter->update();
-                set_flash_message( 'Learning Center Updated successfully', 'alert-success' );
-            }
-            return redirect( '/becomeaeducation_partner/LearningCentre' );
-        }
-        return redirect( '/' );
-    }
 
     //GET TUTOR STUDENTS LIST POST REQUEST
 

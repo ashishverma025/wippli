@@ -19,16 +19,18 @@ Route::post('/signin', 'Auth\LoginController@signIn');
 Route::get('/login', 'WelcomeController@landing_index');
 Route::get('/', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
+
 Route::post('/popupForm', 'AjaxController@popupForm');
 Route::post('/newWippliSave', 'AjaxController@newWippliSave');
 Route::post('/wippliPreview', 'AjaxController@wippliPreview');
 Route::post('/getTypesByCategory', 'AjaxController@getTypesByCategory');
 Route::post('/generateFolderStructure', 'AjaxController@generateFolderStructure');
+Route::post('/checkExistEmail', 'AjaxController@checkExistEmail');
+
 Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
 Route::get('/business-details', 'WelcomeController@businessDetails');
-
-
-
+Route::get('/folderView/{id}', 'WelcomeController@folderView');
+Route::get('/downloadZip/{fileName}', 'ZipController@downloadZip')->name('createZip');
 
 // Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
