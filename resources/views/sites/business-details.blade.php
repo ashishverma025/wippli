@@ -12,6 +12,8 @@
    <link rel="stylesheet" href="{{ url('public/wippli/css/main.css') }}">
 </head>
 <body>
+<style>.has-error{color:red}</style>
+
    <!--------------------------  form1  -------------------------->
    <section class="form1 form business_form">
       <div class="container">
@@ -47,7 +49,7 @@
                            <li class="active"><a data-toggle="tab" href="#home">Business</a></li>
                            <li id="{{empty($businessList)?'notAllowed':''}}"><a data-toggle="tab" href="#menu1" >Contact</a></li>
                         </ul>
-                        <form action="save-business-details" method="post">
+                        <form action="save-business-details" id="businessForm"  method="post" enctype="multipart/form-data">
                            @csrf
                            <div class="tab-content">
                              
@@ -179,7 +181,7 @@
                                  <div class="col-lg-4">
                                     <div class="form-group">
                                        <label>Post code <span>*</span></label>
-                                       <input type="text" name="post_code" class="form-control"  placeholder="{businesspostcode}">
+                                       <input type="number" name="post_code" class="form-control"  placeholder="{businesspostcode}">
 
                                     </div>
                                  </div>
@@ -188,8 +190,8 @@
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label>Business E-mail</label>
-                                       <input type="text" name="email" class="form-control"  placeholder="{businessemail}">
-
+                                       <input type="text" name="email" id="contactEmail" class="form-control"  placeholder="{businessemail}">
+                                       <span id="contactEmailErr" style="color:red"></span>
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
@@ -208,7 +210,11 @@
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label>Type of Business <span>*</span></label>
-                                       <input type="text" name="business_type" class="form-control"  placeholder="{Businesstype}">
+                                       <select name="business_type" id="" class="form-control" >
+                                          <option disabled>{Businesstype}</option>
+                                          <option value="Agencies">Agencies</option>
+                                          <option value="Client">Client</option>
+                                       </select>
 
                                     </div>
                                  </div>
@@ -277,13 +283,13 @@
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label>Colour Logo file(png,svg-600x400px)</label>
-                                       <input type="text" name="logocolours" class="form-control"  placeholder="{businesslogocolours}">
+                                       <input type="file" name="logocolours" class="form-control"  placeholder="{businesslogocolours}">
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label>Color icon file(png,svg-600x400px)</label>
-                                       <input type="text" name="coloricon" class="form-control"  placeholder="{businessiconcolours}">
+                                       <input type="file" name="coloricon" class="form-control"  placeholder="{businessiconcolours}">
                                     </div>
                                  </div>
                               </div>
@@ -291,13 +297,13 @@
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label>Negative Logo file(png,svg-600x400px)</label>
-                                       <input type="text" class="form-control"  placeholder="{businesslogonegative}">
+                                       <input type="file" name="negativelogo" class="form-control"  placeholder="{businesslogonegative}">
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label>Negative icon file(png,svg-600x400px)</label>
-                                       <input type="text" name="iconnegative" class="form-control"  placeholder="{businessiconnegative}">
+                                       <input type="file" name="iconnegative" class="form-control"  placeholder="{businessiconnegative}">
                                     </div>
                                  </div>
                               </div>
@@ -353,7 +359,7 @@
                                     <button type="button" class="btn form-btn">Cancel</button>
                                  </div>
                                  <div class="col-lg-4">
-                                    <button type="submit" class="btn form-btn">Save</button>
+                                    <button type="submit" id="contactSaveBtn" class="btn form-btn">Save</button>
                                  </div>
                                  <div class="col-lg-4">
                                     <button type="button" class="btn form-btn">New branch</button>
@@ -362,7 +368,7 @@
                               
                            </div>
                         </form>   
-                        
+
                         <div id="{{!empty($businessList)?'menu1':''}}" class="tab-pane fade">
                           <div class="row row-border-dash">
                              <div class="col-lg-12">
@@ -370,8 +376,8 @@
                             </div>
                          </div>
                          
-                         <form action="save-contact-details" method="post">
-                              @csrf
+                         <form action="save-contact-details" id="contactForm" method="post" enctype="multipart/form-data">
+                           @csrf
                          <div class="row">
                            <div class="col-lg-6">
                               <div class="form-group">
@@ -428,7 +434,7 @@
                            <div class="col-lg-3">
                               <div class="form-group">
                                  <label>TBC1 <span>*</span></label>
-                                 <input type="text" class="form-control" name="initials"  placeholder="{Ctbc1}">
+                                 <input type="text" class="form-control" name="tbc1"  placeholder="{Ctbc1}">
 
                                  
                               </div>
@@ -462,7 +468,7 @@
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <label>Phone Number <span></span></label>
-                                 <input type="nimber" class="form-control" name="phone"  placeholder="{contactphonenumber}">
+                                 <input type="number" class="form-control" name="phone"  placeholder="{contactphonenumber}">
                               </div>
                            </div>
                         </div>
@@ -626,13 +632,13 @@
                   <div class="col-lg-6">
                      <div class="form-group">
                         <label>Colour Logo file(png,svg-600x400px)</label>
-                        <input type="text" class="form-control" name="colorlogo_file"  placeholder="{businesslogocolours}">
+                        <input type="file" class="form-control" name="colorlogo_file"  placeholder="{businesslogocolours}">
                      </div>
                   </div>
                   <div class="col-lg-6">
                      <div class="form-group">
                         <label>Color icon file(png,svg-600x400px)</label>
-                        <input type="text" class="form-control" name="coloricon_file" placeholder="{businessiconcolours}">
+                        <input type="file" class="form-control" name="coloricon_file" placeholder="{businessiconcolours}">
                      </div>
                   </div>
                </div>
@@ -640,13 +646,13 @@
                   <div class="col-lg-6">
                      <div class="form-group">
                         <label>Negative Logo file(png,svg-600x400px)</label>
-                        <input type="text" class="form-control" name="negativelogo_file"  placeholder="{businesslogonegative}">
+                        <input type="file" class="form-control" name="negativelogo_file"  placeholder="{businesslogonegative}">
                      </div>
                   </div>
                   <div class="col-lg-6">
                      <div class="form-group">
                         <label>Negative icon file(png,svg-600x400px)</label>
-                        <input type="text" class="form-control" name="negativeicon_file"  placeholder="{businessiconnegative}">
+                        <input type="file" class="form-control" name="negativeicon_file"  placeholder="{businessiconnegative}">
                      </div>
                   </div>
                </div>
@@ -685,9 +691,7 @@
                </div>
               </form> 
             </div>
-            
          </div>
-         
       </div>
    </div>
    <div class="form-ftr">
@@ -735,10 +739,167 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+<script>
+$(document).ready(function() {
+   var validator = $("#contactForm").validate({
+      errorClass: "has-error",
+      ignore: ".ignore",
+      // Specify validation rules
+      rules: {
+         "email": {
+            required:true,
+            remote: {
+                url: 'checkExistEmail',
+                type: 'post',
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               },
+                data: {
+                  email: function(){
+                     return $('#contactForm :input[name="email"]').val();
+                  }
+                } 
+            }
+         },
+         "phone":{
+            required:true,
+            rangelength: [6,10]
+         },
+         "first_name":{
+            required:true,
+         },
+         "surname":{
+            required:true,
+         },
+         "known_as":{
+            required:true,
+         },
+         "initials":{
+            required:true,
+         },
+         "tbc1":{
+            required:true,
+         },
+         "country":{
+            required:true
+         },
+         "state":{
+            required:true
+         },
+         "address1":{
+            required:true
+         },
+         "address2":{
+            required:true
+         },
+         "city":{
+            required:true
+         },
+         "post_code":{
+            required:true
+         },
+
+         "type":{
+            required:true
+         },
+         "role":{
+            required:true
+         },
+         "email_notification":{
+            required:true
+         },
+         "tbc1":{
+            required:true
+         }
+         
+      
+
+      },
+      messages: {
+         email:{
+            required: "Please enter your email address.",
+            email: "Please enter a valid email address.",
+            remote: jQuery.validator.format("{0} is already taken.")
+         },
+         phone:{
+            required:'Please enter phone number',
+            rangelength:'Please enter valid phone number',
+         },
+      },
+   });
+
+
+   var validator = $("#businessForm").validate({
+      errorClass: "has-error",
+      ignore: ".ignore",
+      // Specify validation rules
+      rules: {
+         "business_name":{
+            required:true,
+         },
+         "business_branch":{
+            required:true
+         },
+         "industry":{
+            required:true
+         },
+         "business_sort_name":{
+            required:true
+         },
+         "business_initials":{
+            required:true
+         },
+         "business_number":{
+            required:true
+         },
+         "business_number_type":{
+            required:true
+         },
+         "tax_number":{
+            required:true
+         },
+         "tax_number_type":{
+            required:true
+         },
+         "country":{
+            required:true
+         },
+         "state":{
+            required:true
+         },
+         "address1":{
+            required:true
+         },
+         "address2":{
+            required:true
+         },
+         "city":{
+            required:true
+         },
+         "post_code":{
+            required:true
+         },
+         "afiliation":{
+            required:true
+         }
+         
+      },
+      messages: {
+         business_name:{
+            required:'Please enter Business Name',
+         },
+      },
+   });
+});
+
+</script>
+
 <script>
    $("#notAllowed").click(function(){
-   alert('Add Business to save contacts !');
-   })
+      alert('Add Business to save contacts !');
+   });
 </script>
 </body>
 </html>

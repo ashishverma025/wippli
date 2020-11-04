@@ -171,7 +171,7 @@
                                             <a id="generateFolder" data-id="{{@$NewWippli->id}}">Generate Folders</a>
                                             </div>
                                              <div class="col-lg-3 col-sm-3">
-                                            <a href="#">Save</a>
+                                            <a href="{{url('downloadZip')}}/{{$NewWippli->business_name.'-'.$NewWippli->first_name.' '.$NewWippli->surname}}">Save</a>
                                             </div>
                                         </div>
                                     </div>

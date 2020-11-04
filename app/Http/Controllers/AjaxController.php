@@ -13,6 +13,10 @@ use App\NewWippli;
 use App\Type;
 use App\Category;
 
+use App\Http\Requests;
+use File;
+use ZipArchive;
+
 class AjaxController extends Controller {
 
 //CHECK UNIQUE EMAIL 
@@ -32,37 +36,96 @@ class AjaxController extends Controller {
     public function generateFolderStructure(Request $request) {
         $postData = $request->post();
         $wippli_id = $postData['wippli_id'];
-        $NewWippli =  DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name')
+        $NewWippli =  DB::table('new_wipplis as nw')->select('bd.business_name','cd.first_name','cd.surname','cd.initials','nw.category as jobtype','nw.type as joboutcome','nw.id as AJN','u.name as CN')
         ->leftJoin('users as u', 'u.id', 'nw.user_id')
         ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
         ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
         ->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
         ->get()->toArray();
-        $NewWippli = $NewWippli[0];
-        // prd($NewWippli);
 
-        $folderStruct = ['Admin'=>'Admin','Misc'=>'Misc','BRAND AND ASSETS'=>'ND AND ASSETS','firstname+lastname'=>
-        ['CN'=>'Type'],
-        'CN-JobType'=>['CN-JOBOUTCOME'=>[
-            'BSN_JOBNAME_JOBOUTCOME_FORMAT_DATE_BI_CN_AJN_PVN'=>
+        $NewWippli = $NewWippli[0];
+        $CN = initials($NewWippli->CN);
+        $FnLn = $NewWippli->first_name.' '.$NewWippli->surname;
+        $jobName = getCategory($NewWippli->jobtype);
+        $jobOutcome = $NewWippli->joboutcome;
+        $businessInitials = $NewWippli->initials;
+        $dateFormat = date('Ymd');
+        $autoJobNumber = 'AJN'.$NewWippli->AJN;
+        $BSN = 'BSN_';
+
+        $folderStruct =
+        [
+        'Admin'=>'Admin',
+        'Misc'=>'Misc',
+        'BRAND AND ASSETS'=>'ND AND ASSETS',
+        "$FnLn"=> ["$CN"=>'Type'],
+        "$CN-$jobName"=>["$CN-$jobOutcome"=>[
+            "BSN_".$jobName."_".$jobOutcome."_".$dateFormat."_".$businessInitials."_".$CN."_".$autoJobNumber."_Pv1"=>
             [
-                'MASTER_JOBNAME_JOBOUTCOME_DATE',
-                'PROOFS_JOBNAME_JOBOUTCOME_DATE',
-                'FINAL_JOBNAME_JOBOUTCOME_DATE',
-                'ASSETS_JOBNAME_JOBOUTCOME_DATE',
-                'PACKAGE_JOBNAME_JOBOUTCOME_DATE',
-                'OTHERS_JOBNAME_JOBOUTCOME_DATE',
-                'BRIEF&Specs_JOBNAME_JOBOUTCOME_DATE',
-                'REFERENCE_JOBNAME_JOBOUTCOME_DATE',
-                'OLD_JOBNAME_JOBOUTCOME_DATE',
-                'ATTACHMENTS_JOBNAME_JOBOUTCOME_DATE',
+                "MASTER_".$jobName."_".$jobOutcome."_$dateFormat",
+                "PROOFS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "FINAL_".$jobName."_".$jobOutcome."_$dateFormat",
+                "ASSETS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "PACKAGE_".$jobName."_".$jobOutcome."_$dateFormat",
+                "OTHERS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "BRIEF&Specs_".$jobName."_".$jobOutcome."_$dateFormat",
+                "REFERENCE_".$jobName."_".$jobOutcome."_$dateFormat",
+                "OLD_".$jobName."_".$jobOutcome."_$dateFormat",
+                "ATTACHMENTS_".$jobName."_".$jobOutcome."_$dateFormat",
             ]
           ]
         ]];
-        $folderSrruct[$NewWippli->name] = $folderStruct;
-        $folderSrruct = generatePlanFolder($NewWippli,$folderSrruct);
+        // prd($folderStruct);
+
+        $folderSrruct[$NewWippli->business_name] = $folderStruct;
+        $gfolderStatus = generatePlanFolder($NewWippli,$folderSrruct);
+        if($gfolderStatus == 'success'){
+            $folderToZip = $NewWippli->business_name;
+            $zipFileName = $NewWippli->business_name.'-'.$FnLn;
+
+            // prd($gfolderStatus);
+
+            $this->createZipFiles($folderToZip,$zipFileName);
+            // return view('sites.generateFolderView',['NewWippli'=>$folderSrruct]);
+        }
+        echo $gfolderStatus;
     }
     
+    public function createZipFiles($folderToZip,$zipFileName){
+        $public_dir = public_path();
+        $pathInfo = ['dirname'=>$public_dir.'/ZipFiles/','basename'=>$zipFileName];
+        $parentPath = $pathInfo['dirname'];
+        $dirName = $pathInfo['basename'];
+        $outZipPath = $public_dir.'/ZipFiles/'.$zipFileName.'.zip';
+        $sourcePath =  $public_dir.'/business-contacts/'.$folderToZip;
+    
+        $z = new ZipArchive;
+        $z->open($outZipPath, ZIPARCHIVE::CREATE);
+        $z->addEmptyDir($dirName);
+        self::folderToZip($sourcePath, $z, strlen("$parentPath/"));
+        $z->close();
+    }
+
+
+    private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
+        $handle = opendir($folder);
+        while (false !== $f = readdir($handle)) {
+          if ($f != '.' && $f != '..') {
+            $filePath = "$folder/$f";
+            // Remove prefix from file path before add to zip.
+            $localPath = substr($filePath, $exclusiveLength);
+            if (is_file($filePath)) {
+              $zipFile->addFile($filePath, $localPath);
+            } elseif (is_dir($filePath)) {
+              // Add sub-directory.
+              $zipFile->addEmptyDir($localPath);
+              self::folderToZip($filePath, $zipFile, $exclusiveLength);
+            }
+          }
+        }
+        closedir($handle);
+      }
+
     
     public function getTypesByCategory(Request $request) {
         $response = [];
@@ -96,7 +159,6 @@ class AjaxController extends Controller {
             $wippliDetails['wippli_id'] = "";
             $wippli_id = !empty( $wippliDetails['wippli_id'] ) ? $wippliDetails['wippli_id'] : '';
             $NewWippli = empty( $wippliDetails['wippli_id'] ) ? new NewWippli() : NewWippli::where( ['id' => $wippli_id] )->first();
-
             $NewWippli->project_name = !empty($wippliDetails['project_name']) ? $wippliDetails['project_name'] : $NewWippli->project_name;
             $NewWippli->deadline = $wippliDetails['deadline'] ? $wippliDetails['deadline'] : $NewWippli->deadline;
             $NewWippli->type = $wippliDetails['type'] ? $wippliDetails['type'] : $NewWippli->type;
@@ -115,7 +177,7 @@ class AjaxController extends Controller {
             $NewWippli->landscape = @$wippliDetails['landscape'] ? $wippliDetails['landscape']: $NewWippli->landscape;
             $NewWippli->comment = @$wippliDetails['comment'] ? $wippliDetails['comment']: $NewWippli->comment;
             $NewWippli->target_audience = @$wippliDetails['target_audience'] ? $wippliDetails['target_audience']: $NewWippli->target_audience;
-            $NewWippli->tone_of_voice	 = @$wippliDetails['tone_of_voice	'] ? $wippliDetails['tone_of_voice	']: $NewWippli->tone_of_voice	;
+            $NewWippli->tone_of_voice	 = @$wippliDetails['tone_of_voice'] ? $wippliDetails['tone_of_voice	']: $NewWippli->tone_of_voice	;
             $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment']: $NewWippli->attachment;
             $NewWippli->user_id = $userDetails['id'];
 
@@ -124,7 +186,6 @@ class AjaxController extends Controller {
             if ( $file = $request->hasFile('attachment' ) ) {
                 $file = $request->file( 'attachment' );
                 // prd($userDetails['id']);
-
                 $NewWippli->attachment = upload_site_images( $userDetails['id'], $file, 'wippli-image' );
             }
             if ( empty( $wippliDetails['wippli_id'] ) ) {
@@ -151,7 +212,7 @@ class AjaxController extends Controller {
         $response = [];
         $postData = $_REQUEST;
         $wippli_id = $postData['wippli_id'];
-        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name')
+        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name','cd.first_name','cd.surname')
         ->leftJoin('users as u', 'u.id', 'nw.user_id')
         ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
         ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')

@@ -110,11 +110,11 @@
                                                 <img src="{{url('public/wippli/img/logo-icn-inner.png')}}" alt="logo"> 
                                                 </a>
                                              </div>
-                                             <div class="grid-inner-txt">{{$bDetails->business_name}}</div>
+                                             <div class="grid-inner-txt">{{$bDetails->user_name}}</div>
                                           </div>
                                        </li>
                                        <li>Director</li>
-                                       <li>Brannium</li>
+                                       <li>{{$bDetails->business_name}}</li>
                                        <li>{{$bDetails->email}}</li>
                                        <li>
                                           <select id="inputState" class="form-control">
@@ -154,19 +154,23 @@
                            <div id="menu2" class="tab-pane fade">
                               <h3>3</h3>
                               
-                              @if(!empty($ContactDetails))
-                              @foreach($ContactDetails as $cDetails)
+                              @if(!empty($ClientDetails))
+                              @foreach($ClientDetails as $cDetails)
                               <div class="box-wht">
                                  <div class="row white-bg">
                                     <div class="col-lg-3">
                                        <div class="logo-inner">
+                                          @if(!empty($cDetails->logocolours))
+                                          <img src="{{url('public/wippli/images/BusinessLogo')}}/{{$cDetails->logocolours}}" data-id="{{$cDetails->id}}" width="50" height="50">
+                                          @else
                                           <img src="{{url('public/wippli/img/bimmo_logo.jpg')}}" alt="innerlogo">
+                                          @endif
                                        </div>
                                     </div>
                                     <div class="col-lg-4">
                                        <div class="logo-inner-txt">
-                                          <b>{{$cDetails->first_name}}</b>
-                                          <p>19 114 North Steyne, Manly, NSW, 2095 <br>ABN 1234567</p>
+                                          <b>{{$cDetails->business_name}}</b>
+                                          <p>{{$cDetails->address1.' '.$cDetails->address2.' '.$cDetails->state.' '.$cDetails->city.' '.$cDetails->country}} <br>{{$cDetails->post_code}}</p>
                                        </div>
                                     </div>
                                     <div class="col-lg-5">
@@ -179,8 +183,10 @@
                                              <li><i class="fas fa-ellipsis-v"></i></li>
                                           </ul>
                                           <b>Agency</b>
-                                          <p>{ {{$cDetails->tbc1}} }</p>
-                                          <p>{ {{$cDetails->tbc}} }</p>
+                                          <!-- <p>{ {{@$cDetails->tbc1}} }</p>
+                                          <p>{ {{@$cDetails->tbc}} }</p> -->
+                                          <p>{ TBC1 }</p>
+                                          <p>{ TBC }</p>
                                        </div>
                                     </div>
                                  </div>
@@ -232,11 +238,11 @@
                                                 <img src="{{url('public/wippli/img/logo-icn-inner.png')}}" alt="logo"> 
                                                 </a>
                                              </div>
-                                             <div class="grid-inner-txt">{{$bDetails->business_name}}</div>
+                                             <div class="grid-inner-txt">{{$bDetails->user_name}}</div>
                                           </div>
                                        </li>
                                        <li>Director</li>
-                                       <li>Brannium</li>
+                                       <li>{{$bDetails->business_name}}</li>
                                        <li>{{$bDetails->email}}</li>
                                        <li>
                                           <select id="inputState" class="form-control">
@@ -308,8 +314,8 @@
                                              <div class="grid-inner-txt">{{$cDetails->first_name}}</div>
                                           </div>
                                        </li>
-                                       <li>Director</li>
-                                       <li>Brannium</li>
+                                       <li>{{$cDetails->positions}}</li>
+                                       <li>{{$cDetails->business_name}}</li>
                                        <li>{{$cDetails->email}}</li>
                                        <li>
                                           <select id="inputState" class="form-control">

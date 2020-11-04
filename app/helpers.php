@@ -9,6 +9,9 @@
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Category;
+use App\Type;
+
 
 if (!function_exists('PPHttpPost')) {
     function PPHttpPost($methodName_, $nvpStr_) {
@@ -205,6 +208,32 @@ if (!function_exists('upload_admin_images')) {
 
 }
 
+if (!function_exists('upload_wippli_images')) {
+
+    function upload_wippli_images($file, $folder) {
+        if (!empty($folder) && !empty($file)) {
+            $today = date("Ymds");
+            $fileName = $today . $file->getClientOriginalName();
+
+            $destinationPath = config('common.SITES_IMG_URL');
+            if (!empty($folder)) {
+                $image_dir = $destinationPath . $folder . "/";
+            } else {
+                $image_dir = $destinationPath . 'dummy.jpg';
+            }
+
+            $destinationPath = public_path() . $image_dir;
+            $file->move($destinationPath, $fileName);
+            return $fileName;
+        } else {
+            return "Please pass a valid parameter's !";
+        }
+    }
+
+}
+
+
+
 if (!function_exists('upload_site_images')) {
 
     function upload_site_images($userID, $file, $folder) {
@@ -219,7 +248,6 @@ if (!function_exists('upload_site_images')) {
             return "Please pass a valid parameter's !";
         }
     }
-
 }
 if (!function_exists('find_file_on_directories')) {
 
@@ -487,8 +515,8 @@ if (!function_exists('is_email_exist')) {
                 $response['msg'] = 'Email id "' . $email . '" already exist.';
                 $response['id'] = $User[0]->id;
             }
-            return $response;
         }
+        return $response;
     }
 
 }
@@ -643,21 +671,23 @@ if (!function_exists('userRolePermissionCheck')) {
 }
 
 
+function mailSend($toMail,$subject,$message){
+    if(!empty($toMail)){
+        $to = $toMail;
+        $headers = "From: wippli@mail.com" . "\r\n";
+        mail($to,$subject,$message,$headers);
+    }
+}
+
+
 if (!function_exists('sendMail')) {
 
     function sendMail($request, $bodyData, $message, $email, $subject, $fromName, $templateName) {
         Mail::send("Email-Templates.$templateName", ['data' => $bodyData], function ($message) use ($email, $fromName, $subject) {
-            $message->from('myemail@gmail.com', $fromName);
+            $message->from('wippli@mail.com', $fromName);
             $message->to($email)->subject($subject);
         });
     }
-
-
-
-
-
-    
-
 }
 if (!function_exists('randomPassword')) {
 
@@ -710,13 +740,30 @@ if (!function_exists('getSubjectNameById')) {
 
 }
 
-
+if (!function_exists('initials')) {
+    function initials($str) {
+        $ret = '';
+        foreach (explode(' ', $str) as $word)
+            $ret .= strtoupper($word[0]);
+        return $ret;
+    }
+}
+if (!function_exists('getCategory')) {
+    function getCategory($catId) {
+        if(!empty($catId)){
+        $Category = Category::where('id',$catId)->first();
+            return $Category->cat_name;
+        }
+        return 'JOBName';
+    }
+}
 
 if (!function_exists('generatePlanFolder')) {
 
     function generatePlanFolder($wippliData,$folderSrruct) {
-  // prd($folderSrruct);
+//   prd($folderSrruct);
       foreach ($folderSrruct as $k1 => $first) {
+        //   prd($k1);
         $path = public_path() .'/business-contacts/'. $k1;
         if (!file_exists($path)) {
           mkdir($path,0755, true);
@@ -759,6 +806,7 @@ if (!function_exists('generatePlanFolder')) {
           }
         }
       }
+      return 'success';
     }
   }
 

@@ -174,8 +174,10 @@ $(document).on('click', '#generateFolder', function (e) {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       success: function (response) {
-          $("#generateFolder").text('Generate Folder')
+        if(response == 'success'){
+          $("#generateFolder").text('Folder Generated')
           $("#generateFolder").prop('disabled',false)
+        }
       }
     })
   }
