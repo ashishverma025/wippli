@@ -43,17 +43,14 @@
                                  <input type="text" class="form-control" name="project_name" id="project_name" placeholder="Type here">
                               </div>
                            </div>
+
+                           
                            <div class="col-lg-6">
                               <div class="form-group">
                                  <div class="form-group">
                                     <label>Deadline <span>*</span></label>
-                                    <select class="form-control" name="deadline" id="deadline">
-                                       <option>Select</option>
-                                       <option>2</option>
-                                       <option>3</option>
-                                       <option>4</option>
-                                       <option>5</option>
-                                    </select>
+                                    <input type="date" class="form-control" name="deadline"  id="deadline">
+
                                  </div>
                               </div>
                            </div>

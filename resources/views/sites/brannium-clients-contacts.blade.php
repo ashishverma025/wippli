@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <title>Forms Third</title>
-      <meta charset="utf-8">
-      <meta name="csrf-token" content="{{ csrf_token() }}">
-      <meta name="route" content="{{ url('/') }}">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="{{ url('public/wippli/css/bootstrap.min.css') }}">
-      <!-- <script src="js/slider.js"></script> -->
-      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-      <link rel="stylesheet" href="{{ url('public/wippli/css/main.css') }}">
-   </head>
-   <body>
+@include('sites.common-header')
+
+
       <!--------------------------  form1  -------------------------->
       <section class="form1 form form_third">
          <div class="container">
@@ -362,9 +351,4 @@
             </div>
          </div>
       </section>
-      <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
-      <script src="{{ url('public/wippli/js/custom-dashboard.js') }}"></script>
-   </body>
-</html>
+      @include('sites.common-footer')
