@@ -1,8 +1,11 @@
 /node_modules
-/public/hot
-/public/storage
+/public/hot/
+/public/storage/
+/storage
+/storage/logs/
 /storage/*.key
 /vendor
+/mysql/index.html/
 .env
 .env.backup
 .phpunit.result.cache
@@ -10,3 +13,4 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.gitignore

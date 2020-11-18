@@ -180,13 +180,13 @@ class UsersController extends Controller {
             $businessDetails->primarylightcolour2 = @$postData['primarylightcolour2'] ? $postData['primarylightcolour2']: $businessDetails->primarylightcolour2;
             $businessDetails->businessdrive = @$postData['businessdrive'] ? $postData['businessdrive']: $businessDetails->businessdrive;
             $businessDetails->businessdropbox = @$postData['businessdropbox'] ? $postData['businessdropbox']: $businessDetails->businessdropbox;
+            // prd($businessDetails);
 
 
             if ( $file = $request->hasFile('logocolours') ) {
                 $file = $request->file('logocolours');
                 $businessDetails->logocolours = upload_wippli_images($file, 'BusinessLogo');
             }
-            // prd($businessDetails);
 
             if ( $file = $request->hasFile('coloricon') ) {
                 $file = $request->file('coloricon');

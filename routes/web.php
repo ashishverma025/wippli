@@ -26,6 +26,7 @@ Route::post('/wippliPreview', 'AjaxController@wippliPreview');
 Route::post('/getTypesByCategory', 'AjaxController@getTypesByCategory');
 Route::post('/generateFolderStructure', 'AjaxController@generateFolderStructure');
 Route::post('/checkExistEmail', 'AjaxController@checkExistEmail');
+Route::post('/getBusinessById', 'AjaxController@getBusinessById');
 
 Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
 Route::get('/business-details', 'WelcomeController@businessDetails');

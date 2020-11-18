@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <title>Forms Third</title>
-      <meta charset="utf-8">
-      <meta name="csrf-token" content="{{ csrf_token() }}">
-      <meta name="route" content="{{ url('/') }}">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="{{ url('public/wippli/css/bootstrap.min.css') }}">
-      <!-- <script src="js/slider.js"></script> -->
-      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-      <link rel="stylesheet" href="{{ url('public/wippli/css/main.css') }}">
-   </head>
-   <body>
+@include('sites.common-header')
+
+
       <!--------------------------  form1  -------------------------->
       <section class="form1 form form_third">
          <div class="container">
@@ -51,12 +40,12 @@
                         </ul>
                         <div class="tab-content">
                            <div id="home" class="tab-pane">
-                              <h3>1</h3>
+                              <!-- <h3>1</h3> -->
 
                            </div>
                            <!--********************************************************************************************-->
                            <div id="menu1" class="tab-pane fade in active">
-                              <h3>2</h3>
+                              <!-- <h3>2</h3> -->
                               <div class="box-wht">
                                  <div class="row white-bg">
                                     <div class="col-lg-3 bdr-rit">
@@ -152,7 +141,7 @@
                            </div>
                            <!--********************************************************************************************13 19-->
                            <div id="menu2" class="tab-pane fade">
-                              <h3>3</h3>
+                              <!-- <h3>3</h3> -->
                               
                               @if(!empty($ClientDetails))
                               @foreach($ClientDetails as $cDetails)
@@ -196,7 +185,7 @@
                            </div>
                            <!--********************************************************************************************22 27-->
                            <div id="menu3" class="tab-pane fade">
-                              <h3>4</h3>
+                              <!-- <h3>4</h3> -->
                                <div class="people-seting-contact">
                                    <div class="tabs">
                               <ul class="nav nav-tabs contact-nav ">
@@ -362,9 +351,4 @@
             </div>
          </div>
       </section>
-      <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
-      <script src="{{ url('public/wippli/js/custom-dashboard.js') }}"></script>
-   </body>
-</html>
+      @include('sites.common-footer')

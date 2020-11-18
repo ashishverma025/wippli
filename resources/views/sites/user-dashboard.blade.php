@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <title>Forms Third</title>
-      <meta charset="utf-8">
-      <meta name="csrf-token" content="{{ csrf_token() }}">
-      <meta name="route" content="{{ url('/') }}">
-      <meta name="viewport" content="width=device-width, initial-scale=1">      
-      <link rel="stylesheet" href="{{ url('public/wippli/css/bootstrap.min.css') }}">
-      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-      <link rel="stylesheet" href="{{ url('public/wippli/css/main.css') }}">
+@include('sites.common-header')
 
-   </head>
-   <body>
       <!--------------------------  form1  -------------------------->
 <style>
 section.header img {
@@ -52,25 +40,6 @@ section.header {
       
     </div>
   </div>
-
-      <section class="header">
-         <div class="container">
-             <div class="row">
-                 <div class="col-lg-2">
-             <img src="{{url('public/wippli/img/Group%201087.png')}}" alt="logo">
-                     </div>
-                 <div class="col-lg-10">
-                     <ul>
-                     <li><a href="#"><i class="fas fa-comment"></i></a> 
-                         <li><a href="#"><i class="fas fa-search"></i></a> 
-                         </li><li><a href="#"><i class="far fa-bell"></i></a> 
-                         </li><li><a href="{{url('brannium-clients-contacts')}}"><i class="fas fa-user"></i></a> </li>
-                         <li><a href="#"><i class="fas fa-ellipsis-v"></i></a> </li>
-                     </ul>
-                 </div>
-             </div>
-                 </div>
-       </section>
        
       <section class="form1 form form_third">
          <div class="container">
@@ -118,16 +87,14 @@ section.header {
                   <div class="tabs">
                      <form>
                         <ul class="nav nav-tabs third-tab">
-                           <li class="active" id="popUpform"><a data-toggle="tab" >New Wippli</a></li>
-                           <li><a data-toggle="tab" href="#menu1">With Brannium</a></li>
+                           <li  id="popUpform"><a data-toggle="tab" >New Wippli</a></li>
+                           <li class="active"><a data-toggle="tab" href="#menu1">With Brannium</a></li>
                            <li><a data-toggle="tab" href="#menu2">With My Team</a></li>
                            <li><a data-toggle="tab" href="#menu3">With Brannium</a></li>
                         </ul>
                         <div class="tab-content">
-                           <div id="home" class="tab-pane fade in active">
-                              <h3>1</h3>
-                               
-                              <div class="row">
+                           <div id="home" class="tab-pane fade in ">
+                             <div class="row">
                                  <div class="col-lg-3">
                                     <div class="sec_head">
                                        What's on
@@ -415,24 +382,305 @@ section.header {
                                     <!-- Accordion wrapper -->
                                  </div>
                                  <!--****--> 
-
-
-
-
-
                               </div>
-                               
                            </div>
 
 
+                           <div id="menu1" class="tab-pane fade in active">
+                             <div class="row">
+                                 <div class="col-lg-3">
+                                    <div class="sec_head">
+                                       What's on
+                                       <p class="Text-right"><i class=" fa fa-ellipsis-v"></i></p>
+                                    </div>
+                                    <!--Accordion wrapper-->
+                                    <div class="accordion md-accordion" id="accordionEx1" role="tablist" aria-multiselectable="true">
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo1">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseTwo1"
+                                                aria-expanded="false" aria-controls="collapseTwo1">
+                                                <h5 class="mb-0">
+                                                   Today <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo1" class="collapse in" role="tabpanel" aria-labelledby="headingTwo1"
+                                             data-parent="#accordionEx1">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                   
+                                                   @if(!empty($NewWippli))
+                                                   @foreach($NewWippli as $wippli)
+                                                   <div class="row previewToday" data-id="{{$wippli->id}}">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <?php
+                                                            $uId = $wippli->userId;
+                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                            ?>
+                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   @endforeach
+                                                   @endif
+                                                
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                    </div>
+                                    <!-- Accordion wrapper -->
+                                 </div>
+                                 <!--****-->   
+                                 <div class="col-lg-3">
+                                    <div class="sec_head">
+                                       TO DO
+                                       <p class="Text-right"><i class=" fa fa-ellipsis-v"></i></p>
+                                    </div>
+                                    <!--Accordion wrapper 6-->
+                                    <div class="accordion md-accordion" id="accordionEx2" role="tablist" aria-multiselectable="true">
+                                     
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo5">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx2" href="#collapseTwo5"
+                                                aria-expanded="false" aria-controls="collapseTwo5">
+                                                <h5 class="mb-0">
+                                                   To ALLOCATE <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo5" class="collapse in" role="tabpanel" aria-labelledby="headingTwo5"
+                                             data-parent="#accordionEx2">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                   @if(!empty($NewWippli))
+                                                   @foreach($NewWippli as $wippli)
+                                                   <div class="row previewDetails" data-id="{{$wippli->id}}">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <?php
+                                                            $uId = $wippli->userId;
+                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                            ?>
+                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">PROJECT</span>
+                                                            <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   @endforeach
+                                                   @endif
+                                                
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                      
+                                    </div>
+                                    <!-- Accordion wrapper -->
+                                 </div>
+                                 <!--****--> 
+                                 <div class="col-lg-3">
+                                    <div class="sec_head">
+                                       WIP
+                                       <p class="Text-right"><i class=" fa fa-ellipsis-v"></i></p>
+                                    </div>
+                                    <!--Accordion wrapper 9-->
+                                    <div class="accordion md-accordion" id="accordionEx3" role="tablist" aria-multiselectable="true">
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo1">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx3" href="#collapseTwo7"
+                                                aria-expanded="false" aria-controls="collapseTwo7">
+                                                <h5 class="mb-0">
+                                                   ALLOCATED <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo7" class="collapse in" role="tabpanel" aria-labelledby="headingTwo7"
+                                             data-parent="#accordionEx3">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                  
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
 
+                                                  
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                        <!-- Accordion card -->
+                                        <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo2">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseTwo21"
+                                                aria-expanded="false" aria-controls="collapseTwo21">
+                                                <h5 class="mb-0">
+                                                   THIS WEEK <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo21" class="collapse in" role="tabpanel" aria-labelledby="headingTwo21"
+                                             data-parent="#accordionEx1">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                   @if(!empty($NewWippli))
+                                                   @foreach($NewWippli as $wippli)
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <?php
+                                                            $uId = $wippli->userId;
+                                                            $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                            ?>
+                                                            <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   @endforeach
+                                                   @endif
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                    </div>
+                                    <!-- Accordion wrapper -->
+
+
+                                    
+                                 </div>
+                                 <!--****--> 
+
+                                 <!--****--> 
+                                 <div class="col-lg-3">
+                                    <div class="sec_head">
+                                       APPROVED
+                                       <p class="Text-right"><i class=" fa fa-ellipsis-v"></i></p>
+                                    </div>
+                                    <!--Accordion wrapper 9-->
+                                    <div class="accordion md-accordion" id="accordionEx3" role="tablist" aria-multiselectable="true">
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo1">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx3" href="#collapseTwo7"
+                                                aria-expanded="false" aria-controls="collapseTwo7">
+                                                <h5 class="mb-0">
+                                                   DELIVERED <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo7" class="collapse in" role="tabpanel" aria-labelledby="headingTwo7"
+                                             data-parent="#accordionEx3">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                  
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                       <!-- Accordion card -->
+                                       <div class="card">
+                                          <!-- Card header -->
+                                          <div class="card-header" role="tab" id="headingTwo1">
+                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx3" href="#collapseTwo7"
+                                                aria-expanded="false" aria-controls="collapseTwo7">
+                                                <h5 class="mb-0">
+                                                   TO DELIVERED <i class="fas fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                             </a>
+                                          </div>
+                                          <!-- Card body -->
+                                          <div id="collapseTwo7" class="collapse in" role="tabpanel" aria-labelledby="headingTwo7"
+                                             data-parent="#accordionEx3">
+                                             <div class="card-body">
+                                                <div class="card-txt">
+                                                  
+                                                   <div class="row">
+                                                      <div class="col-lg-3">
+                                                         <div class="small_company_logo">
+                                                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-lg-9">
+                                                         <div class="company_txt">
+                                                            <span class="time">11:48 AM</span>
+                                                            <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <!-- Accordion card -->
+                                    </div>
+                                    <!-- Accordion wrapper -->
+                                 </div>
+                                 <!--****--> 
+                              </div>
+                           </div>
 
                            <!--********************************************************************************************-->
-                           <div id="menu1" class="tab-pane fade">
-                              <h3>2</h3>
-                               
-                                                              
-                              <div class="row">
+                           <div id="menu11" class="tab-pane fade">
+                               <div class="row">
                                  <div class="col-lg-4">
                                     <div class="sec_head">
                                        What's on
@@ -942,10 +1190,6 @@ section.header {
                            </div>
                            <!--********************************************************************************************13 19-->
                            <div id="menu2" class="tab-pane fade">
-                              <h3>3</h3>
-                             
-                               
-                                                                                             
                               <div class="row">
                                  <div class="col-lg-4">
                                     <div class="sec_head">
@@ -1527,10 +1771,6 @@ section.header {
                            </div>
                            <!--********************************************************************************************22 27-->
                            <div id="menu3" class="tab-pane fade">
-                              <h3>4</h3>
-                              
-                               
-                                                                                                                            
                               <div class="row">
                                  <div class="col-lg-4">
                                     <div class="sec_head">
@@ -2114,9 +2354,5 @@ section.header {
             </div>
          </div>
       </section>
-      <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>
-      <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
-      <script src="{{ url('public/wippli/js/custom-dashboard.js') }}"></script>
-   </body>
-</html>
+      @include('sites.common-footer')
+

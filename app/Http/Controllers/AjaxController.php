@@ -62,16 +62,16 @@ class AjaxController extends Controller {
         "$CN-$jobName"=>["$CN-$jobOutcome"=>[
             "BSN_".$jobName."_".$jobOutcome."_".$dateFormat."_".$businessInitials."_".$CN."_".$autoJobNumber."_Pv1"=>
             [
-                "MASTER_".$jobName."_".$jobOutcome."_$dateFormat",
-                "PROOFS_".$jobName."_".$jobOutcome."_$dateFormat",
-                "FINAL_".$jobName."_".$jobOutcome."_$dateFormat",
-                "ASSETS_".$jobName."_".$jobOutcome."_$dateFormat",
-                "PACKAGE_".$jobName."_".$jobOutcome."_$dateFormat",
-                "OTHERS_".$jobName."_".$jobOutcome."_$dateFormat",
-                "BRIEF&Specs_".$jobName."_".$jobOutcome."_$dateFormat",
-                "REFERENCE_".$jobName."_".$jobOutcome."_$dateFormat",
-                "OLD_".$jobName."_".$jobOutcome."_$dateFormat",
-                "ATTACHMENTS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "MASTER_".$jobName."_".$jobOutcome."_$dateFormat"."_1",
+                "PROOFS_".$jobName."_".$jobOutcome."_$dateFormat"."_2",
+                "FINAL_".$jobName."_".$jobOutcome."_$dateFormat"."_3",
+                "ASSETS_".$jobName."_".$jobOutcome."_$dateFormat"."_4",
+                "PACKAGE_".$jobName."_".$jobOutcome."_$dateFormat"."_5",
+                "OTHERS_".$jobName."_".$jobOutcome."_$dateFormat"."_6",
+                "BRIEF&Specs_".$jobName."_".$jobOutcome."_$dateFormat"."_7",
+                "REFERENCE_".$jobName."_".$jobOutcome."_$dateFormat"."_8",
+                "OLD_".$jobName."_".$jobOutcome."_$dateFormat"."_9",
+                "ATTACHMENTS_".$jobName."_".$jobOutcome."_$dateFormat"."_10",
             ]
           ]
         ]];
@@ -224,6 +224,15 @@ class AjaxController extends Controller {
         return view('sites.wippliFormPreview',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
     }
 
+
+    public function getBusinessById(Request $request){
+        $postData = $request->post();
+        $businessId = $postData['organisationId'];
+        $businessData =  DB::table('business_details as bd')->select('bd.*')
+        ->where('bd.id',$businessId)
+        ->first();
+        return response()->json($businessData);
+    }
 
 
 //CHECK UNIQUE EMAIL
