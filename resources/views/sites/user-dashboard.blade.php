@@ -52,7 +52,11 @@ section.header {
                               <span>Logout</span>
                            </a>
                            <a href="#">
+                           @if(!empty($bDetails->logocolours))
+                           <img src="{{url('public/wippli/images/BusinessLogo')}}/{{$bDetails->logocolours}}" width="80" height="50" alt="logo">
+                           @else
                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="logo">
+                           @endif
                               <h3>Hi {{@$userDetails->name}}! <span>Brannium</span></h3>
                            </a>
                         </div>

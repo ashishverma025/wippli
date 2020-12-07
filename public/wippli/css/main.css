@@ -438,26 +438,49 @@ div#menu1 h2 {
     text-align: left;   
     background-color: #fff; 
 }
-.accordion .card {
+.tab-pane .accordion .card {
     margin-bottom: 15px;
-    border-bottom: 1px solid rgba(0,0,0,.125) !important;
-    border-radius: .25rem !important;
+  /*  border-bottom: 1px solid rgba(0,0,0,.125) !important; */
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+ul.third-tab {
+    padding-bottom: 30px;
 }
 .accordion .card-header h5 i {
     float: right;
     clear: both;
+}
+.accordion .card {
+    margin-bottom: 15px;
+ /* border-bottom: 1px solid rgba(0,0,0,.125) !important; */
+    border-radius: .25rem !important;
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
 }
 .form-txt-third .card-header h5, .form-txt-third .card-header a {
     text-transform: uppercase;
     color: #808080;
     font-weight: 600;
     text-align: left;
+    margin-top: 10px;
 }
 .card-txt .row {
     border-bottom: 1px solid #c1c1c1;
     margin: 10px 0;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+.logo {
+    position: relative;
 }
 .card-txt .row:last-child {
     border-bottom: 0;
@@ -743,14 +766,32 @@ section.business_form .form_inner {
     border-right: 1px solid #bcbcbc;
 }
 .box-wht {
-    width: 97%;
+  /*  width: 97%; */
     margin: auto;
+}
+section.header img {
+    width: 50%;
+}
+section.header ul {
+    margin: 0;
+    text-align: right;
+}
+section.header li {
+    display: inline-flex;
+    padding: 0 7px;
+}
+section.header {
+    padding: 10px 0;
+}
+section.header li i {
+    color: #848484;
 }
 .grid_header li, .grids_box_white li {
     display: inline-block;
     width: 12%;
     background: #d2d2d2;
-    text-align: center;
+    text-align: left;
+    padding-left: 15px;
 }
 .grid_header {
     background: #d2d2d2;
@@ -763,10 +804,17 @@ section.business_form .form_inner {
 }
 .grids_box_white{
     background: #fff;
-    padding: 8px 0;    
+    padding: 8px 0px;    
 }
-.grids_box_white li{
+.people-seting .tab-content {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: hidden;
+}
+.grids_box_white li {
     background-color: transparent;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .grid-inner .form-control {
     padding: 0;
@@ -775,7 +823,7 @@ section.business_form .form_inner {
     box-shadow: 0 0 black;
     font-size: 12px;
     width: auto;
-    margin: auto;
+  /*  margin: auto; */
 }
 .grid-iner-div {
     display: flex;
@@ -821,6 +869,20 @@ ul.contact-nav li {
 
 
 
+
+.accordion .card .card-header {
+    background: #edf1f2;
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+    background: #edf1f2;
+}
+
+
+
+
+
 .third-tab ul.nav-tabs li:nth-of-type(1n+2) {
     padding: 0 0;
     margin-bottom: 2px;
@@ -846,3 +908,62 @@ ul.contact-nav li {
 }
 
 
+@media only screen and (max-width: 1024px) {
+section.header img {
+    width: 110px !important;
+}  
+section.header .row {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+section.header .row .col-lg-10 {
+    width: 100%;
+}    
+}
+
+@media only screen and (max-width: 768px) {
+section.header img {
+    width: 110px !important;
+}    
+    .third-tab li:first-child {
+    width: 100%;
+    margin-bottom: 20px;          
+}
+    ul.nav-tabs li:nth-of-type(2) {
+    margin-left: 0;  
+}
+.third-tab li:first-child a {
+    background: #535353;
+    margin-right: 0px !important;
+    width: fit-content;
+}    
+}
+
+@media only screen and (max-width: 767px) {
+.bdr-rit {
+    width: 100%;
+    text-align: left;
+    margin: 10px 0;
+}
+.border-left {
+    margin: 20px 0;
+}
+.logo-inner-txt ul {
+    margin: 0 0 20px;
+    position: static;
+    }
+.third-tab li:first-child a {
+    width: 100%;
+    border-radius: 0px !important;
+}    
+ul.nav-tabs li {
+    /* border-radius: 25px !important; */
+    display: contents;
+}
+.grid_header li, .grids_box_white li {
+    width: 100%;
+    padding-left: 15px;
+    margin: 10px 0;
+}    
+}

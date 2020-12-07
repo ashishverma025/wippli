@@ -764,38 +764,38 @@ if (!function_exists('generatePlanFolder')) {
 //   prd($folderSrruct);
       foreach ($folderSrruct as $k1 => $first) {
         //   prd($k1);
-        $path = public_path() .'/business-contacts/'. $k1;
+        $path = public_path() .'/BContacts/'. $k1;
         if (!file_exists($path)) {
-          mkdir($path,0755, true);
+          mkdir($path,0777, true);
         }else{
             echo "Already Exist";
         }
   
         foreach ($first as $k2 => $second) {
-          $path = public_path() .'/business-contacts/'. $k1.'/'.$k2;
+          $path = public_path() .'/BContacts/'. $k1.'/'.$k2;
           if (!file_exists($path)) {
-            mkdir($path, 0755, true);
+            mkdir($path, 0777, true);
           }
           if(is_array($second)){
             foreach ($second as $k3 => $third) {
-              $path = public_path() .'/business-contacts/'. $k1.'/'.$k2.'/'.$k3;
+              $path = public_path() .'/BContacts/'. $k1.'/'.$k2.'/'.$k3;
               if (!file_exists($path)) {
-                mkdir($path, 0755, true);
+                mkdir($path, 0777, true);
               }
 
               if(is_array($third)){
                 foreach ($third as $k4 => $fourth) {
-                  $path = public_path() .'/business-contacts/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4;
+                  $path = public_path() .'/BContacts/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4;
                   if (!file_exists($path)) {
-                    mkdir($path, 0755, true);
+                    mkdir($path, 0777, true);
                   }
 
                   if(is_array($fourth)){
                     foreach ($fourth as $k5 => $fifth) {
                         // pr($fifth);
-                      $path = public_path() .'/business-contacts/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4.'/'.$fifth;
+                      $path = public_path() .'/BContacts/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4.'/'.$fifth;
                       if (!file_exists($path)) {
-                        mkdir($path, 0755, true);
+                        mkdir($path, 0777, true);
                       }
                     }
                   }

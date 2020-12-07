@@ -36,7 +36,7 @@ class AjaxController extends Controller {
     public function generateFolderStructure(Request $request) {
         $postData = $request->post();
         $wippli_id = $postData['wippli_id'];
-        $NewWippli =  DB::table('new_wipplis as nw')->select('bd.business_name','cd.first_name','cd.surname','cd.initials','nw.category as jobtype','nw.type as joboutcome','nw.id as AJN','u.name as CN')
+        $NewWippli =  DB::table('new_wipplis as nw')->select('bd.business_name','cd.first_name','cd.surname','cd.initials','nw.project_name','nw.category as jobtype','nw.type as joboutcome','nw.id as AJN','u.name as CN')
         ->leftJoin('users as u', 'u.id', 'nw.user_id')
         ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
         ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
@@ -45,8 +45,10 @@ class AjaxController extends Controller {
 
         $NewWippli = $NewWippli[0];
         $CN = initials($NewWippli->CN);
-        $FnLn = $NewWippli->first_name.' '.$NewWippli->surname;
-        $jobName = getCategory($NewWippli->jobtype);
+        $FnLn = $NewWippli->first_name.'-'.$NewWippli->surname;
+//        $jobName = getCategory($NewWippli->jobtype); 
+        $jobName = $NewWippli->project_name;
+
         $jobOutcome = $NewWippli->joboutcome;
         $businessInitials = $NewWippli->initials;
         $dateFormat = date('Ymd');
@@ -62,16 +64,16 @@ class AjaxController extends Controller {
         "$CN-$jobName"=>["$CN-$jobOutcome"=>[
             "BSN_".$jobName."_".$jobOutcome."_".$dateFormat."_".$businessInitials."_".$CN."_".$autoJobNumber."_Pv1"=>
             [
-                "MASTER_".$jobName."_".$jobOutcome."_$dateFormat"."_1",
-                "PROOFS_".$jobName."_".$jobOutcome."_$dateFormat"."_2",
-                "FINAL_".$jobName."_".$jobOutcome."_$dateFormat"."_3",
-                "ASSETS_".$jobName."_".$jobOutcome."_$dateFormat"."_4",
-                "PACKAGE_".$jobName."_".$jobOutcome."_$dateFormat"."_5",
-                "OTHERS_".$jobName."_".$jobOutcome."_$dateFormat"."_6",
-                "BRIEF&Specs_".$jobName."_".$jobOutcome."_$dateFormat"."_7",
-                "REFERENCE_".$jobName."_".$jobOutcome."_$dateFormat"."_8",
-                "OLD_".$jobName."_".$jobOutcome."_$dateFormat"."_9",
-                "ATTACHMENTS_".$jobName."_".$jobOutcome."_$dateFormat"."_10",
+                "1_MASTER_".$jobName."_".$jobOutcome."_$dateFormat",
+                "2_PROOFS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "3_FINAL_".$jobName."_".$jobOutcome."_$dateFormat",
+                "4_ASSETS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "5_PACKAGE_".$jobName."_".$jobOutcome."_$dateFormat",
+                "6_OTHERS_".$jobName."_".$jobOutcome."_$dateFormat",
+                "7_BRIEF&Specs_".$jobName."_".$jobOutcome."_$dateFormat",
+                "8_REFERENCE_".$jobName."_".$jobOutcome."_$dateFormat",
+                "9_OLD_".$jobName."_".$jobOutcome."_$dateFormat"."_9",
+                "10_ATTACHMENTS_".$jobName."_".$jobOutcome."_$dateFormat"
             ]
           ]
         ]];
@@ -81,7 +83,7 @@ class AjaxController extends Controller {
         $gfolderStatus = generatePlanFolder($NewWippli,$folderSrruct);
         if($gfolderStatus == 'success'){
             $folderToZip = $NewWippli->business_name;
-            $zipFileName = $NewWippli->business_name.'-'.$FnLn;
+            $zipFileName = $NewWippli->business_name.'_'.$FnLn;
 
             // prd($gfolderStatus);
 
@@ -97,7 +99,7 @@ class AjaxController extends Controller {
         $parentPath = $pathInfo['dirname'];
         $dirName = $pathInfo['basename'];
         $outZipPath = $public_dir.'/ZipFiles/'.$zipFileName.'.zip';
-        $sourcePath =  $public_dir.'/business-contacts/'.$folderToZip;
+        $sourcePath =  $public_dir.'/BContacts/'.$folderToZip;
     
         $z = new ZipArchive;
         $z->open($outZipPath, ZIPARCHIVE::CREATE);
@@ -212,7 +214,7 @@ class AjaxController extends Controller {
         $response = [];
         $postData = $_REQUEST;
         $wippli_id = $postData['wippli_id'];
-        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name','cd.first_name','cd.surname')
+        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name','bd.business_branch','cd.first_name','cd.surname','cd.department')
         ->leftJoin('users as u', 'u.id', 'nw.user_id')
         ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
         ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')

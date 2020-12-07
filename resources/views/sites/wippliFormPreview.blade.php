@@ -9,7 +9,11 @@
                   <div class="row">
                      <div class="col-lg-12">
                         <div class="logo">
-                           <img src="{{ url('public/wippli/img/bimmo_logo.jpg') }}" alt="logo"> 
+                        @if(!empty($NewWippli->business_name))
+                           <img src="{{ url('public/wippli/img/bimmo_logo.jpg') }}" alt="logo">
+                        @else
+                           <img src="{{ url('public/wippli/images/BusinessLogo') }}/{{$NewWippli->business_name}}" alt="logo"> 
+                        @endif
                         </div>
                         <div class="wipl_logo">
                            Wippli
@@ -20,11 +24,11 @@
                <div class="row">
                   <div class="col-lg-12">
                      <div class="form-txt boomi_txt">
-                        <em>Dell Boomi - Australia</em>
-                        <h3>Task: Forrester Banners - adjust</h3>
+                        <em>{{ $NewWippli->business_name }} - {{ $NewWippli->business_branch }}</em>
+                        <h3>Task: {{$NewWippli->project_name}}</h3>
                         <span>
                            <p>VQ</p>
-                           Vicky Quinlan - Marketing
+                           {{ $NewWippli->first_name }} {{ $NewWippli->surname }} - {{ $NewWippli->department }}
                         </span>
                      </div>
                   </div>
@@ -171,7 +175,7 @@
                                             <a id="generateFolder" data-id="{{@$NewWippli->id}}">Generate Folders</a>
                                             </div>
                                              <div class="col-lg-3 col-sm-3">
-                                            <a href="{{url('downloadZip')}}/{{$NewWippli->business_name.'-'.$NewWippli->first_name.' '.$NewWippli->surname}}">Save</a>
+                                            <a href="{{url('downloadZip')}}/{{$NewWippli->business_name.'_'.$NewWippli->first_name.' '.$NewWippli->surname}}">Save</a>
                                             </div>
                                         </div>
                                     </div>
@@ -215,7 +219,7 @@
                   <!-- Accordion wrapper -->
                </div>
                <div class="form-ftr">
-                  <p>Powerd By
+                  <p>POWERED BY
                      <img src="{{url('public/wippli/img/Group%201087.png')}}" alt="ftr-logo">
                   </p>
                </div>

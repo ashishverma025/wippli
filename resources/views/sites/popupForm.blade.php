@@ -339,7 +339,7 @@
          
       </div>
       <div class="form-ftr">
-         <p>Powerd By
+         <p>POWERED BY
             <img src="{{ url('public/wippli/img/Group%201087.png')}}" alt="ftr-logo">
          </p>
       </div>
