@@ -17,7 +17,7 @@ Route::get('/facebook-callback', 'SocialAuthFacebookController@callback');
 //SITE INDEX PAGE ROUTE
 Route::post('/signin', 'Auth\LoginController@signIn');
 Route::get('/login', 'WelcomeController@landing_index');
-Route::get('/', 'WelcomeController@landing_index');
+Route::get('', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 
 Route::post('/popupForm', 'AjaxController@popupForm');

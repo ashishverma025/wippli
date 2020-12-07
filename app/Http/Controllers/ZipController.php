@@ -18,11 +18,11 @@ class ZipController extends Controller {
     public function createZip( Request $request,$folderName ) {
        
         $public_dir = public_path();
-        $pathInfo = ['dirname'=>$public_dir,'basename'=>'business-contacts'];
+        $pathInfo = ['dirname'=>$public_dir,'basename'=>'BContacts'];
         $parentPath = $pathInfo['dirname'];
         $dirName = $pathInfo['basename'];
         $outZipPath = $public_dir.'/ZipFiles/ABCD.zip';
-        $sourcePath =  $public_dir.'/business-contacts';
+        $sourcePath =  $public_dir.'/BContacts';
     
         $z = new ZipArchive;
         $z->open($outZipPath, ZIPARCHIVE::CREATE);
@@ -30,7 +30,6 @@ class ZipController extends Controller {
         self::folderToZip($sourcePath, $z, strlen("$parentPath/"));
         // prd($z);
         $z->close();
-
 
         // return redirect( 'user-dashboard' );
     }

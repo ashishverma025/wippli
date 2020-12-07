@@ -33,8 +33,16 @@ class WelcomeController extends Controller {
             $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*')
             ->leftJoin('users as u', 'u.id', 'nw.user_id')->where('user_id',$userId)->orderBy('nw.id','DESC')
             ->get();
-            // prd($NewWippli);
-            return view('sites.user-dashboard',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
+
+
+            $bDetails = DB::table('contact_details as cd')
+            ->select('u.name','u.id as userId','bd.id as bId','bd.logocolours')
+            ->leftJoin('users as u', 'u.id', 'cd.user_id')
+            ->leftJoin('business_details as bd', 'bd.id', 'cd.organisation')
+            ->where('cd.user_id',$userId)
+            ->get()->first();
+            // prd($bDetails);
+            return view('sites.user-dashboard',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli,'bDetails'=>$bDetails]);
         }
         return redirect("/login");
     }

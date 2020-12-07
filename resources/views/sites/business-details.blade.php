@@ -759,6 +759,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
 <script src="{{ url('public/wippli/js/jquery.min.js') }}"></script>
+<script src="{{ url('public/wippli/js/jquery.validate.min.js') }}"></script>
 <script src="{{ url('public/wippli/js/bootstrap.min.js') }}"></script>
 <script src="{{ url('public/wippli/js/popper.min.js') }}"></script>   
 <script src="{{ url('public/wippli/js/custom-dashboard.js') }}"></script>
