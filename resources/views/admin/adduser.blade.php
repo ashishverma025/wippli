@@ -80,15 +80,16 @@
                                 <div class="form-group">
                                     <label> User Role</label>
                                     <select class="form-control" name="user_role" id="gender">
-                                        <option value="1" <?= ($userDetails->user_type == '1') ? 'selected' : '' ?>>Admin</option>
-                                        <option value="2" <?= ($userDetails->user_type == '2') ? 'selected' : '' ?>>Manager</option>
-                                        <option value="3" <?= ($userDetails->user_type == '3') ? 'selected' : '' ?>>Salesman</option>
-                                        <option value="4" <?= ($userDetails->user_type == '4') ? 'selected' : '' ?>>Employee</option>
+                                        @if(!empty($Roles))
+                                        @foreach($Roles as $role)
+                                        <option value="{{$role['id']}}">{{$role['name']}}</option>
+                                        @endforeach
+                                        @endif
                                     </select>
                                 </div>
 
 
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <label> Password</label>
                                     <input type="password" class="form-control" name="password" id="password">
                                 </div>
@@ -101,7 +102,7 @@
                                 </div>
                                 <div class="form-group">  <label>&nbsp;</label>
                                     <div class="row"><div class="col-md-4">
-                                    <button type="submit" id="edit_profile" class="btn btn-primary">Save</button></div></div>
+                                            <button type="submit" id="edit_profile" class="btn btn-primary">Save</button></div></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mgt10">

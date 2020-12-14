@@ -17,7 +17,7 @@
    	<div class="container">
    		<div class="row">
    			<div class="col-lg-2">
-   				<img src="{{url('public/wippli/img/Group%201087.png')}}" alt="logo">
+                            <a href="{{url('user-dashboard')}}"><img src="{{url('public/wippli/img/Group%201087.png')}}" alt="logo"></a>
    			</div>
    			<div class="col-lg-10">
    				<ul>

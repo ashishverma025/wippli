@@ -12,8 +12,8 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\Type;
 
-
 if (!function_exists('PPHttpPost')) {
+
     function PPHttpPost($methodName_, $nvpStr_) {
 
         $environment = 'sandbox';
@@ -68,8 +68,59 @@ if (!function_exists('PPHttpPost')) {
 
         return $httpParsedResponseAr;
     }
+
 }
 
+
+if (!function_exists('checkBusinessPermission')) {
+
+    function checkBusinessPermission($roleId) {
+//        echo $roleId;die;
+        if ($roleId == 1 || $roleId == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+if (!function_exists('checkContactPermission')) {
+
+    function checkContactPermission($roleId) {
+        if ($roleId == 1 || $roleId == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+if (!function_exists('checkWippliPermission')) {
+
+    function checkWippliPermission($roleId) {
+        if ($roleId == 1 || $roleId == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+if (!function_exists('changeRolePermission')) {
+
+    function changeRolePermission($roleId) {
+//        prd($roleId);
+        if ($roleId == 1 || $roleId == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
 
 if (!function_exists('pr')) {
 
@@ -105,10 +156,10 @@ if (!function_exists('createDate')) {
 
 if (!function_exists('DateDiff')) {
 
-    function DateDiff($curdate, $d , $form) {
-        $date1=date_create($d);
-        $date2=date_create($curdate);
-        $diff=date_diff($date2,$date1);
+    function DateDiff($curdate, $d, $form) {
+        $date1 = date_create($d);
+        $date2 = date_create($curdate);
+        $diff = date_diff($date2, $date1);
         // prd($diff->format("%R%a days"));
         return $diff->format("%R%a days");
     }
@@ -248,6 +299,7 @@ if (!function_exists('upload_site_images')) {
             return "Please pass a valid parameter's !";
         }
     }
+
 }
 if (!function_exists('find_file_on_directories')) {
 
@@ -321,14 +373,15 @@ if (!function_exists('getRoleNameById')) {
 
     function getRoleNameById($roleId) {
         $Role = "";
-        if(!empty($roleId)){
+        if (!empty($roleId)) {
             $Role = DB::table('roles as r')
                     ->select('*')
-                    ->where('r.id',$roleId)
+                    ->where('r.id', $roleId)
                     ->first();
         }
         return $Role ? $Role->name : "";
     }
+
 }
 
 
@@ -349,9 +402,9 @@ if (!function_exists('findData')) {
 
     function findData($table, $columns, $whereclm, $value) {
         $result = DB::table($table)
-        ->select($columns)
-        ->where($whereclm, '=', $value)
-        ->get()->toArray();
+                        ->select($columns)
+                        ->where($whereclm, '=', $value)
+                        ->get()->toArray();
         return $result;
     }
 
@@ -389,9 +442,9 @@ if (!function_exists('get_currentuser_roles')) {
         $userId = getUser_Detail_ByParam('id');
 //        $sql = "select GROUP_CONCAT(r.id) as role_id from roles as r LEFT JOIN users_roles as ur ON ur.role_id = r.id WHERE ur.user_id = $userId";
         $data = DB::table('roles as r')
-        ->join('users_roles as ur', 'ur.role_id', '=', 'r.id')
-        ->selectRaw('GROUP_CONCAT(r.id) as role_id')->where('ur.user_id', $userId)
-        ->get()->toArray();
+                        ->join('users_roles as ur', 'ur.role_id', '=', 'r.id')
+                        ->selectRaw('GROUP_CONCAT(r.id) as role_id')->where('ur.user_id', $userId)
+                        ->get()->toArray();
         $data = $data[0]->role_id;
         return $data;
     }
@@ -401,8 +454,8 @@ if (!function_exists('get_institute_details')) {
 
     function get_institute_details($data) {
         $data = DB::table('institutes')
-        ->select('*')->where('institute_name', $data)
-        ->get()->toArray();
+                        ->select('*')->where('institute_name', $data)
+                        ->get()->toArray();
         $data[0]->institute_logo = !empty($data[0]->institute_logo) ? '/public/admin/upload/institute/' . $data[0]->institute_logo : '/public/sites/images/dummy.jpg';
         return isset($data[0]) ? $data[0]->institute_logo : [];
     }
@@ -416,10 +469,10 @@ if (!function_exists('get_rolesByUserId')) {
         if (!empty($userId) && is_numeric($userId)) {
 //            $sql = "select GROUP_CONCAT(r.id) as role_id from roles as r LEFT JOIN users_roles as ur ON ur.role_id = r.id WHERE ur.user_id = $userId";
             $data = DB::table('roles as r')
-            ->join('users_roles as ur', 'ur.role_id', '=', 'r.id')
-            ->selectRaw('GROUP_CONCAT(r.id) as role_id')
-            ->where('ur.user_id', $userId)
-            ->get()->toArray();
+                            ->join('users_roles as ur', 'ur.role_id', '=', 'r.id')
+                            ->selectRaw('GROUP_CONCAT(r.id) as role_id')
+                            ->where('ur.user_id', $userId)
+                            ->get()->toArray();
             $data = $data[0]->role_id;
         }
         return $data;
@@ -432,11 +485,11 @@ if (!function_exists('get_currentuser_permissions')) {
     function get_currentuser_permissions() {
         $search = get_currentuser_roles();
         $data = DB::table('permissions as p')
-        ->join('roles_permissions as rp', 'rp.permission_id', '=', 'p.id')
-        ->selectRaw('GROUP_CONCAT(p.name) as permission_name', 'p.id')
-        ->whereRaw("find_in_set(rp.role_id,'" . $search . "')")
-        ->groupBy('rp.permission_id')
-        ->get()->toArray();
+                        ->join('roles_permissions as rp', 'rp.permission_id', '=', 'p.id')
+                        ->selectRaw('GROUP_CONCAT(p.name) as permission_name', 'p.id')
+                        ->whereRaw("find_in_set(rp.role_id,'" . $search . "')")
+                        ->groupBy('rp.permission_id')
+                        ->get()->toArray();
         $data = $data;
         return $data;
     }
@@ -450,9 +503,9 @@ if (!function_exists('get_rolesByUserId')) {
         if (!empty($userId) && is_numeric($userId)) {
             $search = get_rolesByUserId($userId);
             $data = DB::table('roles_permissions as rp')
-            ->selectRaw('GROUP_CONCAT(rp.permission_id) as permission_id')
-            ->whereRaw("find_in_set(rp.role_id,'" . $search . "')")
-            ->get()->toArray();
+                            ->selectRaw('GROUP_CONCAT(rp.permission_id) as permission_id')
+                            ->whereRaw("find_in_set(rp.role_id,'" . $search . "')")
+                            ->get()->toArray();
             $data = $data[0]->permission_id;
         }
         return $data;
@@ -615,8 +668,8 @@ if (!function_exists('getStudentClases')) {
         $response = [];
         if (!empty($studentIid) && !empty($teacherId)) {
             $classes = DB::table('class_students')->select(DB::raw('group_concat(class_id) as class_ids'))
-            ->where(['lc_id' => $teacherId, 'student_id' => $studentIid])
-            ->get();
+                    ->where(['lc_id' => $teacherId, 'student_id' => $studentIid])
+                    ->get();
             if (isset($classes[0]) && !empty($classes)) {
                 return explode(',', $classes[0]->class_ids);
             }
@@ -632,9 +685,9 @@ if (!function_exists('getStudentClasesNames')) {
         $response = [];
         if (!empty($studentIid) && !empty($teacherId)) {
             $classes = DB::table('class_students as cs')->select(DB::raw('group_concat(tc.class_name) as class_names'))
-            ->leftJoin('tutorclasses as tc', 'tc.id', 'cs.class_id')
-            ->where(['cs.lc_id' => $teacherId, 'cs.student_id' => $studentIid])
-            ->get();
+                    ->leftJoin('tutorclasses as tc', 'tc.id', 'cs.class_id')
+                    ->where(['cs.lc_id' => $teacherId, 'cs.student_id' => $studentIid])
+                    ->get();
             if (isset($classes[0]) && !empty($classes)) {
                 return explode(',', $classes[0]->class_names);
             }
@@ -670,15 +723,13 @@ if (!function_exists('userRolePermissionCheck')) {
 
 }
 
-
-function mailSend($toMail,$subject,$message){
-    if(!empty($toMail)){
+function mailSend($toMail, $subject, $message) {
+    if (!empty($toMail)) {
         $to = $toMail;
         $headers = "From: wippli@mail.com" . "\r\n";
-        mail($to,$subject,$message,$headers);
+        mail($to, $subject, $message, $headers);
     }
 }
-
 
 if (!function_exists('sendMail')) {
 
@@ -688,6 +739,7 @@ if (!function_exists('sendMail')) {
             $message->to($email)->subject($subject);
         });
     }
+
 }
 if (!function_exists('randomPassword')) {
 
@@ -732,81 +784,85 @@ if (!function_exists('getSubjectNameById')) {
 //         syllabus as s ON s.subject_id = sl.id
 
         $subjectName = DB::table('subjects')
-        ->select('subjects_name', 'id')
-        ->where('id', $subId)
-        ->get();
+                ->select('subjects_name', 'id')
+                ->where('id', $subId)
+                ->get();
         return isset($subjectName[0]->subjects_name) ? @$subjectName[0]->subjects_name : "";
     }
 
 }
 
 if (!function_exists('initials')) {
+
     function initials($str) {
         $ret = '';
         foreach (explode(' ', $str) as $word)
             $ret .= strtoupper($word[0]);
         return $ret;
     }
+
 }
 if (!function_exists('getCategory')) {
+
     function getCategory($catId) {
-        if(!empty($catId)){
-        $Category = Category::where('id',$catId)->first();
+        if (!empty($catId)) {
+            $Category = Category::where('id', $catId)->first();
             return $Category->cat_name;
         }
         return 'JOBName';
     }
+
 }
 
 if (!function_exists('generatePlanFolder')) {
 
-    function generatePlanFolder($wippliData,$folderSrruct) {
+    function generatePlanFolder($wippliData, $folderSrruct) {
 //   prd($folderSrruct);
-      foreach ($folderSrruct as $k1 => $first) {
-        //   prd($k1);
-        $path = public_path() .'/BContacts/'. $k1;
-        if (!file_exists($path)) {
-          mkdir($path,0777, true);
-        }else{
-            echo "Already Exist";
-        }
-  
-        foreach ($first as $k2 => $second) {
-          $path = public_path() .'/BContacts/'. $k1.'/'.$k2;
-          if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-          }
-          if(is_array($second)){
-            foreach ($second as $k3 => $third) {
-              $path = public_path() .'/BContacts/'. $k1.'/'.$k2.'/'.$k3;
-              if (!file_exists($path)) {
+        foreach ($folderSrruct as $k1 => $first) {
+            //   prd($k1);
+            $path = public_path() . '/BContacts/' . $k1;
+            if (!file_exists($path)) {
                 mkdir($path, 0777, true);
-              }
-
-              if(is_array($third)){
-                foreach ($third as $k4 => $fourth) {
-                  $path = public_path() .'/BContacts/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4;
-                  if (!file_exists($path)) {
-                    mkdir($path, 0777, true);
-                  }
-
-                  if(is_array($fourth)){
-                    foreach ($fourth as $k5 => $fifth) {
-                        // pr($fifth);
-                      $path = public_path() .'/BContacts/'. $k1.'/'.$k2.'/'.$k3.'/'.$k4.'/'.$fifth;
-                      if (!file_exists($path)) {
-                        mkdir($path, 0777, true);
-                      }
-                    }
-                  }
-
-                }
-              }
+            } else {
+                echo "Already Exist";
             }
-          }
+
+            foreach ($first as $k2 => $second) {
+                $path = public_path() . '/BContacts/' . $k1 . '/' . $k2;
+                if (!file_exists($path)) {
+                    mkdir($path, 0777, true);
+                }
+                if (is_array($second)) {
+                    foreach ($second as $k3 => $third) {
+                        $path = public_path() . '/BContacts/' . $k1 . '/' . $k2 . '/' . $k3;
+                        if (!file_exists($path)) {
+                            mkdir($path, 0777, true);
+                        }
+
+                        if (is_array($third)) {
+                            foreach ($third as $k4 => $fourth) {
+                                $path = public_path() . '/BContacts/' . $k1 . '/' . $k2 . '/' . $k3 . '/' . $k4;
+                                if (!file_exists($path)) {
+                                    mkdir($path, 0777, true);
+                                }
+
+                                if (is_array($fourth)) {
+                                    foreach ($fourth as $k5 => $fifth) {
+                                        // pr($fifth);
+                                        $path = public_path() . '/BContacts/' . $k1 . '/' . $k2 . '/' . $k3 . '/' . $k4 . '/' . $fifth;
+                                        if (!file_exists($path)) {
+                                            mkdir($path, 0777, true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
-      return 'success';
+        return 'success';
     }
-  }
+
+}
 

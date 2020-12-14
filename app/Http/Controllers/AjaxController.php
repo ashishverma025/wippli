@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth,DB;
+use Auth,
+    DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Hash;
@@ -12,8 +13,9 @@ use App\User;
 use App\NewWippli;
 use App\Type;
 use App\Category;
-
 use App\Http\Requests;
+use App\Role;
+use App\ContactDetail;
 use File;
 use ZipArchive;
 
@@ -21,86 +23,127 @@ class AjaxController extends Controller {
 
 //CHECK UNIQUE EMAIL 
 
+    public function recordUpdateForm(Request $request) {
+        $response = [];
+        $postData = $request->post();
+        $id = $postData['id'];
+        $type = $postData['type'];
+        $roleId = $postData['role'];
+        $Roles = Role::where(['status' => 'Active'])->where('id', '!=', 1)->get()->toArray();
+
+        return view('sites/recordUpdatepopupForm', [
+            'Roles' => $Roles ? $Roles : "",
+            'roleId' => $roleId ? $roleId : "",
+        ]);
+    }
+
+    public function roleChange(Request $request) {
+        $response = [];
+        $postData = $request->post();
+        $id = $postData['id'];
+        $type = $postData['type'];
+        $roleId = $postData['role'];
+        $userId = $postData['userId'];
+        if ($type == 'Agency') {
+            $ContactDetail = ContactDetail::where('user_id', $userId)->first();
+            if (!empty($ContactDetail)) {
+                $ContactDetail->role = $roleId;
+                $ContactDetail->save();
+            }
+            $User = User::where('id', $userId)->first();
+            $User->user_type = $roleId;
+            $User->save();
+        } else {
+            $ContactDetail = ContactDetail::where('user_id', $userId)->first();
+            if (!empty($ContactDetail)) {
+                $ContactDetail->role = $roleId;
+                $ContactDetail->save();
+            }
+
+            $User = User::where('id', $userId)->first();
+            $User->user_type = $roleId;
+            $User->save();
+        }
+        return 'success';
+    }
+
     public function popupForm(Request $request) {
         $response = [];
         $postData = $request->post();
-        $categories = Category::where('status','active')->get();
-        
-        return view('sites/popupForm',[
-            'categories'=> $categories ? $categories : "",
-        ]);
+        $categories = Category::where('status', 'active')->get();
 
+        return view('sites/popupForm', [
+            'categories' => $categories ? $categories : "",
+        ]);
     }
-    
 
     public function generateFolderStructure(Request $request) {
         $postData = $request->post();
         $wippli_id = $postData['wippli_id'];
-        $NewWippli =  DB::table('new_wipplis as nw')->select('bd.business_name','cd.first_name','cd.surname','cd.initials','nw.project_name','nw.category as jobtype','nw.type as joboutcome','nw.id as AJN','u.name as CN')
-        ->leftJoin('users as u', 'u.id', 'nw.user_id')
-        ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
-        ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
-        ->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
-        ->get()->toArray();
+        $NewWippli = DB::table('new_wipplis as nw')->select('bd.business_name', 'cd.first_name', 'cd.surname', 'cd.initials', 'nw.project_name', 'nw.category as jobtype', 'nw.type as joboutcome', 'nw.id as AJN', 'u.name as CN')
+                        ->leftJoin('users as u', 'u.id', 'nw.user_id')
+                        ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
+                        ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
+                        ->where('nw.id', $wippli_id)->orderBy('nw.id', 'DESC')
+                        ->get()->toArray();
 
         $NewWippli = $NewWippli[0];
         $CN = initials($NewWippli->CN);
-        $FnLn = $NewWippli->first_name.'-'.$NewWippli->surname;
+        $FnLn = $NewWippli->first_name . '-' . $NewWippli->surname;
 //        $jobName = getCategory($NewWippli->jobtype); 
         $jobName = $NewWippli->project_name;
 
         $jobOutcome = $NewWippli->joboutcome;
         $businessInitials = $NewWippli->initials;
         $dateFormat = date('Ymd');
-        $autoJobNumber = 'AJN'.$NewWippli->AJN;
+        $autoJobNumber = 'AJN' . $NewWippli->AJN;
         $BSN = 'BSN_';
 
-        $folderStruct =
-        [
-        'Admin'=>'Admin',
-        'Misc'=>'Misc',
-        'BRAND AND ASSETS'=>'ND AND ASSETS',
-        "$FnLn"=> ["$CN"=>'Type'],
-        "$CN-$jobName"=>["$CN-$jobOutcome"=>[
-            "BSN_".$jobName."_".$jobOutcome."_".$dateFormat."_".$businessInitials."_".$CN."_".$autoJobNumber."_Pv1"=>
-            [
-                "1_MASTER_".$jobName."_".$jobOutcome."_$dateFormat",
-                "2_PROOFS_".$jobName."_".$jobOutcome."_$dateFormat",
-                "3_FINAL_".$jobName."_".$jobOutcome."_$dateFormat",
-                "4_ASSETS_".$jobName."_".$jobOutcome."_$dateFormat",
-                "5_PACKAGE_".$jobName."_".$jobOutcome."_$dateFormat",
-                "6_OTHERS_".$jobName."_".$jobOutcome."_$dateFormat",
-                "7_BRIEF&Specs_".$jobName."_".$jobOutcome."_$dateFormat",
-                "8_REFERENCE_".$jobName."_".$jobOutcome."_$dateFormat",
-                "9_OLD_".$jobName."_".$jobOutcome."_$dateFormat"."_9",
-                "10_ATTACHMENTS_".$jobName."_".$jobOutcome."_$dateFormat"
-            ]
-          ]
+        $folderStruct = [
+            'Admin' => 'Admin',
+            'Misc' => 'Misc',
+            'BRAND AND ASSETS' => 'ND AND ASSETS',
+            "$FnLn" => ["$CN" => 'Type'],
+            "$CN-$jobName" => ["$CN-$jobOutcome" => [
+                    "BSN_" . $jobName . "_" . $jobOutcome . "_" . $dateFormat . "_" . $businessInitials . "_" . $CN . "_" . $autoJobNumber . "_Pv1" =>
+                    [
+                        "1_MASTER_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "2_PROOFS_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "3_FINAL_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "4_ASSETS_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "5_PACKAGE_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "6_OTHERS_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "7_BRIEF&Specs_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "8_REFERENCE_" . $jobName . "_" . $jobOutcome . "_$dateFormat",
+                        "9_OLD_" . $jobName . "_" . $jobOutcome . "_$dateFormat" . "_9",
+                        "10_ATTACHMENTS_" . $jobName . "_" . $jobOutcome . "_$dateFormat"
+                    ]
+                ]
         ]];
         // prd($folderStruct);
 
         $folderSrruct[$NewWippli->business_name] = $folderStruct;
-        $gfolderStatus = generatePlanFolder($NewWippli,$folderSrruct);
-        if($gfolderStatus == 'success'){
+        $gfolderStatus = generatePlanFolder($NewWippli, $folderSrruct);
+        if ($gfolderStatus == 'success') {
             $folderToZip = $NewWippli->business_name;
-            $zipFileName = $NewWippli->business_name.'_'.$FnLn;
+            $zipFileName = $NewWippli->business_name . '_' . $FnLn;
 
             // prd($gfolderStatus);
 
-            $this->createZipFiles($folderToZip,$zipFileName);
+            $this->createZipFiles($folderToZip, $zipFileName);
             // return view('sites.generateFolderView',['NewWippli'=>$folderSrruct]);
         }
         echo $gfolderStatus;
     }
-    
-    public function createZipFiles($folderToZip,$zipFileName){
+
+    public function createZipFiles($folderToZip, $zipFileName) {
         $public_dir = public_path();
-        $pathInfo = ['dirname'=>$public_dir.'/ZipFiles/','basename'=>$zipFileName];
+        $pathInfo = ['dirname' => $public_dir . '/ZipFiles/', 'basename' => $zipFileName];
         $parentPath = $pathInfo['dirname'];
         $dirName = $pathInfo['basename'];
-        $outZipPath = $public_dir.'/ZipFiles/'.$zipFileName.'.zip';
-        $sourcePath =  $public_dir.'/BContacts/'.$folderToZip;
-    
+        $outZipPath = $public_dir . '/ZipFiles/' . $zipFileName . '.zip';
+        $sourcePath = $public_dir . '/BContacts/' . $folderToZip;
+
         $z = new ZipArchive;
         $z->open($outZipPath, ZIPARCHIVE::CREATE);
         $z->addEmptyDir($dirName);
@@ -108,37 +151,35 @@ class AjaxController extends Controller {
         $z->close();
     }
 
-
     private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
         $handle = opendir($folder);
         while (false !== $f = readdir($handle)) {
-          if ($f != '.' && $f != '..') {
-            $filePath = "$folder/$f";
-            // Remove prefix from file path before add to zip.
-            $localPath = substr($filePath, $exclusiveLength);
-            if (is_file($filePath)) {
-              $zipFile->addFile($filePath, $localPath);
-            } elseif (is_dir($filePath)) {
-              // Add sub-directory.
-              $zipFile->addEmptyDir($localPath);
-              self::folderToZip($filePath, $zipFile, $exclusiveLength);
+            if ($f != '.' && $f != '..') {
+                $filePath = "$folder/$f";
+                // Remove prefix from file path before add to zip.
+                $localPath = substr($filePath, $exclusiveLength);
+                if (is_file($filePath)) {
+                    $zipFile->addFile($filePath, $localPath);
+                } elseif (is_dir($filePath)) {
+                    // Add sub-directory.
+                    $zipFile->addEmptyDir($localPath);
+                    self::folderToZip($filePath, $zipFile, $exclusiveLength);
+                }
             }
-          }
         }
         closedir($handle);
-      }
+    }
 
-    
     public function getTypesByCategory(Request $request) {
         $response = [];
         $postData = $request->post();
         $category_id = $postData['category'];
-        $types =  Type::where('status','active')->where('cat_id',$category_id)->get();
+        $types = Type::where('status', 'active')->where('cat_id', $category_id)->get();
         $str = "";
         $str .= "<select class='form-control' name='type' id='type'>";
-        if(!empty($types)){
+        if (!empty($types)) {
             foreach ($types as $key => $val) {
-                $str .= "<option class='' value='".$val->name."'>$val->name</option>";
+                $str .= "<option class='' value='" . $val->name . "'>$val->name</option>";
             }
         }
         $str .= "</select>";
@@ -146,21 +187,19 @@ class AjaxController extends Controller {
         return $str;
     }
 
-
-
     public function newWippliSave(Request $request) {
         // Get the formData
         $response = [];
-        if ( !empty( $_POST ) ) {
+        if (!empty($_POST)) {
             $userDetails = getUserDetails();
             $wippliDetails = $request->post();
-            $this->validate( $request, [
-                //'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id . ',id',
-            ] );
+            $this->validate($request, [
+                    //'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id . ',id',
+            ]);
             $imgFolder = 'wippli';
             $wippliDetails['wippli_id'] = "";
-            $wippli_id = !empty( $wippliDetails['wippli_id'] ) ? $wippliDetails['wippli_id'] : '';
-            $NewWippli = empty( $wippliDetails['wippli_id'] ) ? new NewWippli() : NewWippli::where( ['id' => $wippli_id] )->first();
+            $wippli_id = !empty($wippliDetails['wippli_id']) ? $wippliDetails['wippli_id'] : '';
+            $NewWippli = empty($wippliDetails['wippli_id']) ? new NewWippli() : NewWippli::where(['id' => $wippli_id])->first();
             $NewWippli->project_name = !empty($wippliDetails['project_name']) ? $wippliDetails['project_name'] : $NewWippli->project_name;
             $NewWippli->deadline = $wippliDetails['deadline'] ? $wippliDetails['deadline'] : $NewWippli->deadline;
             $NewWippli->type = $wippliDetails['type'] ? $wippliDetails['type'] : $NewWippli->type;
@@ -170,28 +209,28 @@ class AjaxController extends Controller {
             $NewWippli->print = @$wippliDetails['print'] ? $wippliDetails['print'] : $NewWippli->print;
             $NewWippli->video = @$wippliDetails['video'] ? $wippliDetails['video'] : $NewWippli->video;
             $NewWippli->other = @$wippliDetails['other'] ? $wippliDetails['other'] : $NewWippli->other;
-            $NewWippli->objective =  @$wippliDetails['objective'] ? $wippliDetails['objective'] : $NewWippli->objective;
-            $NewWippli->dimensions = @$wippliDetails['dimensions'] ? $wippliDetails['dimensions']: $NewWippli->dimensions;
-            $NewWippli->width = @$wippliDetails['width'] ? $wippliDetails['width']: $NewWippli->width;
-            $NewWippli->height = @$wippliDetails['height'] ? $wippliDetails['height']: $NewWippli->height;
-            $NewWippli->units = @$wippliDetails['units'] ? $wippliDetails['units']: $NewWippli->units;
-            $NewWippli->portrait = @$wippliDetails['portrait'] ? $wippliDetails['portrait']: $NewWippli->portrait;
-            $NewWippli->landscape = @$wippliDetails['landscape'] ? $wippliDetails['landscape']: $NewWippli->landscape;
-            $NewWippli->comment = @$wippliDetails['comment'] ? $wippliDetails['comment']: $NewWippli->comment;
-            $NewWippli->target_audience = @$wippliDetails['target_audience'] ? $wippliDetails['target_audience']: $NewWippli->target_audience;
-            $NewWippli->tone_of_voice	 = @$wippliDetails['tone_of_voice'] ? $wippliDetails['tone_of_voice	']: $NewWippli->tone_of_voice	;
-            $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment']: $NewWippli->attachment;
+            $NewWippli->objective = @$wippliDetails['objective'] ? $wippliDetails['objective'] : $NewWippli->objective;
+            $NewWippli->dimensions = @$wippliDetails['dimensions'] ? $wippliDetails['dimensions'] : $NewWippli->dimensions;
+            $NewWippli->width = @$wippliDetails['width'] ? $wippliDetails['width'] : $NewWippli->width;
+            $NewWippli->height = @$wippliDetails['height'] ? $wippliDetails['height'] : $NewWippli->height;
+            $NewWippli->units = @$wippliDetails['units'] ? $wippliDetails['units'] : $NewWippli->units;
+            $NewWippli->portrait = @$wippliDetails['portrait'] ? $wippliDetails['portrait'] : $NewWippli->portrait;
+            $NewWippli->landscape = @$wippliDetails['landscape'] ? $wippliDetails['landscape'] : $NewWippli->landscape;
+            $NewWippli->comment = @$wippliDetails['comment'] ? $wippliDetails['comment'] : $NewWippli->comment;
+            $NewWippli->target_audience = @$wippliDetails['target_audience'] ? $wippliDetails['target_audience'] : $NewWippli->target_audience;
+            $NewWippli->tone_of_voice = @$wippliDetails['tone_of_voice'] ? $wippliDetails['tone_of_voice	'] : $NewWippli->tone_of_voice;
+            $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment'] : $NewWippli->attachment;
             $NewWippli->user_id = $userDetails['id'];
 
             // prd($NewWippli);
 
-            if ( $file = $request->hasFile('attachment' ) ) {
-                $file = $request->file( 'attachment' );
+            if ($file = $request->hasFile('attachment')) {
+                $file = $request->file('attachment');
                 // prd($userDetails['id']);
-                $NewWippli->attachment = upload_site_images( $userDetails['id'], $file, 'wippli-image' );
+                $NewWippli->attachment = upload_site_images($userDetails['id'], $file, 'wippli-image');
             }
-            if ( empty( $wippliDetails['wippli_id'] ) ) {
-                $NewWippli->created_at = date( 'Y-m-d H:i:s' );
+            if (empty($wippliDetails['wippli_id'])) {
+                $NewWippli->created_at = date('Y-m-d H:i:s');
                 // echo "create";
                 // prd( $wippliDetails );
                 $NewWippli->save();
@@ -209,33 +248,30 @@ class AjaxController extends Controller {
         return response()->json($response);
     }
 
-
     public function wippliPreview(Request $request) {
         $response = [];
         $postData = $_REQUEST;
         $wippli_id = $postData['wippli_id'];
-        $NewWippli = DB::table('new_wipplis as nw')->select('u.name','u.id as userId','nw.*','bd.business_name','bd.business_branch','cd.first_name','cd.surname','cd.department')
-        ->leftJoin('users as u', 'u.id', 'nw.user_id')
-        ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
-        ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
-        ->where('nw.id',$wippli_id)->orderBy('nw.id','DESC')
-        ->first();
+        $NewWippli = DB::table('new_wipplis as nw')->select('u.name', 'u.id as userId', 'nw.*', 'bd.business_name', 'bd.business_branch', 'cd.first_name', 'cd.surname', 'cd.department')
+                ->leftJoin('users as u', 'u.id', 'nw.user_id')
+                ->leftJoin('contact_details as cd', 'u.id', 'cd.user_id')
+                ->leftJoin('business_details as bd', 'cd.organisation', 'bd.id')
+                ->where('nw.id', $wippli_id)->orderBy('nw.id', 'DESC')
+                ->first();
         // prd($NewWippli);
 
         $userDetails = getUserDetails();
-        return view('sites.wippliFormPreview',['userDetails'=>$userDetails,'NewWippli'=>$NewWippli]);
+        return view('sites.wippliFormPreview', ['userDetails' => $userDetails, 'NewWippli' => $NewWippli]);
     }
 
-
-    public function getBusinessById(Request $request){
+    public function getBusinessById(Request $request) {
         $postData = $request->post();
         $businessId = $postData['organisationId'];
-        $businessData =  DB::table('business_details as bd')->select('bd.*')
-        ->where('bd.id',$businessId)
-        ->first();
+        $businessData = DB::table('business_details as bd')->select('bd.*')
+                ->where('bd.id', $businessId)
+                ->first();
         return response()->json($businessData);
     }
-
 
 //CHECK UNIQUE EMAIL
 
@@ -282,9 +318,6 @@ class AjaxController extends Controller {
         }
     }
 
-
-
-
     public function directPayment($request, $postData, $userDetails) {
         if (!empty($postData)) {
             $Directpayment = new Directpayment();
@@ -319,7 +352,7 @@ class AjaxController extends Controller {
             if (!empty($cardDetailexists)) {
                 DB::table('directpayments')->where(['user_id' => $userDetails['id']])->update(['status' => 'inactive']);
             }
-            
+
             $Directpayment->payment_status = 'SUCCESS';
             $Directpayment->save();
             return $Directpayment->id;
@@ -385,10 +418,6 @@ class AjaxController extends Controller {
 
         return $httpParsedResponseAr;
     }
-
-
-
-
 
 }
 
