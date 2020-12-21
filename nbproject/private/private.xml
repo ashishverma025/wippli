@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/var/www/html/wippli/resources/views/sites/branniumPopUp.blade.php</file>
             <file>file:/var/www/html/wippli/app/Http/Controllers/WelcomeController.php</file>
             <file>file:/var/www/html/wippli/resources/views/sites/brannium-clients-contacts.blade.php</file>
             <file>file:/var/www/html/wippli/app/Http/Controllers/AjaxController.php</file>
-            <file>file:/var/www/html/wippli/routes/web.php</file>
-            <file>file:/var/www/html/wippli/app/helpers.php</file>
         </group>
     </open-files>
 </project-private>

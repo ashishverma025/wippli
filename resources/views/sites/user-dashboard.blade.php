@@ -52,7 +52,7 @@
                             </a>
                             <a href="#">
                                 @if(!empty($bDetails->logocolours))
-                                <img src="{{url('public/wippli/images/BusinessLogo')}}/{{$bDetails->logocolours}}" width="80" height="50" alt="logo">
+                                <img src="{{url('public/sites/images/BusinessLogo')}}/{{$bDetails->logocolours}}" width="80" height="50" alt="logo">
                                 @else
                                 <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="logo">
                                 @endif

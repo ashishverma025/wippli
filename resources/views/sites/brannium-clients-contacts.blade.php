@@ -30,6 +30,11 @@
                     </div>
                 </div>
             </div>
+
+
+
+
+
             <div class="form-txt form-txt-third people-seting">
                 <div class="tabs">
                     <form>
@@ -148,21 +153,23 @@
                                 @foreach($ClientDetails as $cDetails)
                                 <div class="box-wht">
                                     <div class="row white-bg">
-                                        <div class="col-lg-3">
-                                            <div class="logo-inner">
-                                                @if(!empty($cDetails->logocolours))
-                                                <img src="{{url('public/wippli/images/BusinessLogo')}}/{{$cDetails->logocolours}}" data-id="{{$cDetails->id}}" width="50" height="50">
-                                                @else
-                                                <img src="{{url('public/wippli/img/bimmo_logo.jpg')}}" alt="innerlogo">
-                                                @endif
+                                        <a href="#" class="popUpBusinessform" data-toggle="modal" data-target="#businessModalpopup" data-business_id="{{$cDetails->id}}" >
+                                            <div class="col-lg-3">
+                                                <div class="logo-inner">
+                                                    @if(!empty($cDetails->logocolours))
+                                                    <img src="{{url('public/sites/images/BusinessLogo')}}/{{$cDetails->logocolours}}" data-id="{{$cDetails->id}}" width="50" height="50">
+                                                    @else
+                                                    <img src="{{url('public/wippli/img/bimmo_logo.jpg')}}" alt="innerlogo">
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="logo-inner-txt">
-                                                <b>{{$cDetails->business_name}}</b>
-                                                <p>{{$cDetails->address1.' '.$cDetails->address2.' '.$cDetails->state.' '.$cDetails->city.' '.$cDetails->country}} <br>{{$cDetails->post_code}}</p>
+                                            <div class="col-lg-4">
+                                                <div class="logo-inner-txt">
+                                                    <b>{{$cDetails->business_name}}</b>
+                                                    <p>{{$cDetails->address1.' '.$cDetails->address2.' '.$cDetails->state.' '.$cDetails->city.' '.$cDetails->country}} <br>{{$cDetails->post_code}}</p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="col-lg-5">
                                             <div class="logo-inner-txt">
                                                 <ul>
@@ -242,16 +249,14 @@
                                                                 </select>
                                                             </li>
                                                             <li>
-
-
-                                                                @if(changeRolePermission($userDetails->user_type))
+                                                                @if((changeRolePermission($userDetails->user_type)) && ($userDetails->id != $bDetails->user_id) )
                                                                 <select id="inputState" class="form-control" onchange="changeRole(this,'Boomi',{{$bDetails->id}},{{$bDetails->user_id}})">
                                                                     @foreach($Roles as $role)
                                                                     <option {{($role['id'] == $bDetails->user_type)?'selected':''}} value="{{$role['id']}}">{{$role['name']}}</option>
                                                                     @endforeach
                                                                 </select>
                                                                 @else
-                                                                <select id="inputState" class="form-control" onchange="confirm('You don\'t have permission to change role')">
+                                                                <select id="inputState" class="form-control" data-role="{{$bDetails->user_type}}" onchange="confirm('You don\'t have permission to change role')">
                                                                     @foreach($Roles as $role)
                                                                     <option {{($role['id'] == $bDetails->user_type)?'selected':''}} value="{{$role['id']}}">{{$role['name']}}</option>
                                                                     @endforeach
@@ -321,14 +326,14 @@
                                                             <li>{{$cDetails->email}}</li>
                                                             <li>{{$cDetails->type}}</li>
                                                             <li>
-                                                                @if(changeRolePermission($userDetails->user_type))
+                                                                @if(changeRolePermission($userDetails->user_type) && ($userDetails->id != $cDetails->user_id))
                                                                 <select id="inputState" class="form-control" onchange="changeRole(this,'Agency',{{$cDetails->id}},{{$cDetails->user_id}})">
                                                                     @foreach($Roles as $role)
                                                                     <option {{($role['id'] == $cDetails->user_type)?'selected':''}} value="{{$role['id']}}">{{$role['name']}}</option>
                                                                     @endforeach
                                                                 </select>
                                                                 @else
-                                                                <select id="inputState" class="form-control" onchange="confirm('You don\'t have permission to change role')">
+                                                                <select id="inputState" class="form-control" data-role="{{$bDetails->user_type}}" onchange="confirm('You don\'t have permission to change role')">
                                                                     @foreach($Roles as $role)
                                                                     <option {{($role['id'] == $cDetails->user_type)?'selected':''}} value="{{$role['id']}}">{{$role['name']}}</option>
                                                                     @endforeach

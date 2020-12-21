@@ -67,6 +67,28 @@ class AjaxController extends Controller {
         return 'success';
     }
 
+    public function popUpBusinessform(Request $request) {
+        $response = [];
+        $postData = $request->post();
+        $bId = $postData['business_id'];
+        $ClientDetails = DB::table('business_details as bd')->select('bd.*')
+                ->where('business_name', 'not like', '%Brannium%')
+                ->where('bd.id', $bId)
+                ->first();
+        $businessUsersLists = DB::table('contact_details as cd')->select('u.name', 'cd.positions', 'cd.email_notification', 'r.name as Role', 'bd.business_name', 'bd.business_type', 'u.email')
+                ->leftJoin('roles as r', 'r.id', 'cd.role')
+                ->leftJoin('users as u', 'u.id', 'cd.user_id')
+                ->leftJoin('business_details as bd', 'bd.id', 'cd.organisation')
+                ->where('bd.id', $bId)
+                ->get();
+//        prd($businessUsersLists);
+
+        return view('sites/branniumPopUp', [
+            'cDetails' => $ClientDetails,
+            'businessUsersLists' => $businessUsersLists
+        ]);
+    }
+
     public function popupForm(Request $request) {
         $response = [];
         $postData = $request->post();
@@ -219,15 +241,20 @@ class AjaxController extends Controller {
             $NewWippli->comment = @$wippliDetails['comment'] ? $wippliDetails['comment'] : $NewWippli->comment;
             $NewWippli->target_audience = @$wippliDetails['target_audience'] ? $wippliDetails['target_audience'] : $NewWippli->target_audience;
             $NewWippli->tone_of_voice = @$wippliDetails['tone_of_voice'] ? $wippliDetails['tone_of_voice	'] : $NewWippli->tone_of_voice;
-            $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment'] : $NewWippli->attachment;
+//            $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment'] : $NewWippli->attachment;
             $NewWippli->user_id = $userDetails['id'];
 
-            // prd($NewWippli);
+//             prd($_FILES);
 
             if ($file = $request->hasFile('attachment')) {
                 $file = $request->file('attachment');
                 // prd($userDetails['id']);
                 $NewWippli->attachment = upload_site_images($userDetails['id'], $file, 'wippli-image');
+            }
+            if ($file = $request->hasFile('type_file')) {
+                $file = $request->file('type_file');
+                // prd($userDetails['id']);
+                $NewWippli->file = upload_site_images($userDetails['id'], $file, 'wippli-image');
             }
             if (empty($wippliDetails['wippli_id'])) {
                 $NewWippli->created_at = date('Y-m-d H:i:s');
@@ -259,6 +286,12 @@ class AjaxController extends Controller {
                 ->where('nw.id', $wippli_id)->orderBy('nw.id', 'DESC')
                 ->first();
         // prd($NewWippli);
+        if (!empty($NewWippli->name)) {
+            $name = explode(' ', $NewWippli->name);
+            $n1 = isset($name[0])?$name[0]:'';
+            $n2 = isset($name[1])?$name[1]:'';
+        }
+        $NewWippli->name = $n1[0].' '.$n2[0];
 
         $userDetails = getUserDetails();
         return view('sites.wippliFormPreview', ['userDetails' => $userDetails, 'NewWippli' => $NewWippli]);

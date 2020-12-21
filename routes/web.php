@@ -20,6 +20,7 @@ Route::get('/login', 'WelcomeController@landing_index');
 Route::get('', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 
+Route::post('/popUpBusinessform', 'AjaxController@popUpBusinessform');
 Route::post('/popupForm', 'AjaxController@popupForm');
 Route::post('/newWippliSave', 'AjaxController@newWippliSave');
 Route::post('/wippliPreview', 'AjaxController@wippliPreview');

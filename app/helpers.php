@@ -274,6 +274,7 @@ if (!function_exists('upload_wippli_images')) {
             }
 
             $destinationPath = public_path() . $image_dir;
+//            echo $destinationPath;die;
             $file->move($destinationPath, $fileName);
             return $fileName;
         } else {

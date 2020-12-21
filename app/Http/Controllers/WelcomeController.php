@@ -138,8 +138,9 @@ class WelcomeController extends Controller {
                     ->get();
             $userDetails = getUserDetails();
 //            pr($userDetails);
+//            pr($boomiDetails);
 
-            $Roles = Role::where(['status' => 'Active'])->get()->toArray();
+            $Roles = Role::where('status','Active')->where('id','!=',1)->get()->toArray();
 
             return view('sites.brannium-clients-contacts', [
                 'userDetails' => $userDetails,
