@@ -3,15 +3,15 @@
 namespace Facade\Ignition\Views\Engines;
 
 use Exception;
-use Facade\Ignition\Exceptions\ViewException;
-use Facade\Ignition\Exceptions\ViewExceptionWithSolution;
-use Facade\Ignition\Views\Compilers\BladeSourceMapCompiler;
-use Facade\Ignition\Views\Concerns\CollectsViewExceptions;
-use Facade\IgnitionContracts\ProvidesSolution;
-use Illuminate\Filesystem\Filesystem;
+use ReflectionProperty;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use ReflectionProperty;
+use Illuminate\Filesystem\Filesystem;
+use Facade\Ignition\Exceptions\ViewException;
+use Facade\IgnitionContracts\ProvidesSolution;
+use Facade\Ignition\Exceptions\ViewExceptionWithSolution;
+use Facade\Ignition\Views\Concerns\CollectsViewExceptions;
+use Facade\Ignition\Views\Compilers\BladeSourceMapCompiler;
 
 class CompilerEngine extends \Illuminate\View\Engines\CompilerEngine
 {

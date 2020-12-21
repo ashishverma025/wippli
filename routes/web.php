@@ -20,6 +20,7 @@ Route::get('/login', 'WelcomeController@landing_index');
 Route::get('', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 
+Route::post('/popUpBusinessform', 'AjaxController@popUpBusinessform');
 Route::post('/popupForm', 'AjaxController@popupForm');
 Route::post('/newWippliSave', 'AjaxController@newWippliSave');
 Route::post('/wippliPreview', 'AjaxController@wippliPreview');
@@ -27,6 +28,8 @@ Route::post('/getTypesByCategory', 'AjaxController@getTypesByCategory');
 Route::post('/generateFolderStructure', 'AjaxController@generateFolderStructure');
 Route::post('/checkExistEmail', 'AjaxController@checkExistEmail');
 Route::post('/getBusinessById', 'AjaxController@getBusinessById');
+Route::post('/recordUpdateForm', 'AjaxController@recordUpdateForm');
+Route::post('/roleChange', 'AjaxController@roleChange');
 
 Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
 Route::get('/business-details', 'WelcomeController@businessDetails');

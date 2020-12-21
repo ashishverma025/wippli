@@ -116,7 +116,7 @@ class UsersController extends Controller {
         $User->phone = $postData['phone'] ? $postData['phone'] : $User->phone;
         $User->address = $postData['address1'] ? $postData['address1'] : $User->address;
         $User->contact_id = $lastInsertId;
-        $User->user_type = 5;
+        $User->user_type = $postData['role'] ? $postData['role'] : $User->role;;
         $User->email_verified_at =  date( 'Y-m-d H:i:s' );
         $User->created_at = date( 'Y-m-d H:i:s' );
 
@@ -180,7 +180,7 @@ class UsersController extends Controller {
             $businessDetails->primarylightcolour2 = @$postData['primarylightcolour2'] ? $postData['primarylightcolour2']: $businessDetails->primarylightcolour2;
             $businessDetails->businessdrive = @$postData['businessdrive'] ? $postData['businessdrive']: $businessDetails->businessdrive;
             $businessDetails->businessdropbox = @$postData['businessdropbox'] ? $postData['businessdropbox']: $businessDetails->businessdropbox;
-            // prd($businessDetails);
+//             prd($_FILES);
 
 
             if ( $file = $request->hasFile('logocolours') ) {
