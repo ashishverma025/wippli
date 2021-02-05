@@ -274,7 +274,7 @@ if (!function_exists('upload_wippli_images')) {
             }
 
             $destinationPath = public_path() . $image_dir;
-//            echo $destinationPath;die;
+//            echo $fileName;die;
             $file->move($destinationPath, $fileName);
             return $fileName;
         } else {
@@ -289,12 +289,14 @@ if (!function_exists('upload_wippli_images')) {
 if (!function_exists('upload_site_images')) {
 
     function upload_site_images($userID, $file, $folder) {
+//        echo $userID.' '.$folder;
         if (!empty($userID) && !empty($file)) {
             $today = date("Ymds");
             $fileName = $today . $file->getClientOriginalName();
             $destinationPath = public_path() . get_site_image_dir($userID, $folder);
 //            echo $destinationPath.'/'.$fileName;die;
             $file->move($destinationPath, $fileName);
+//            die;
             return $fileName;
         } else {
             return "Please pass a valid parameter's !";

@@ -9,6 +9,7 @@ use Auth,
 use App\NewWippli;
 use App\BusinessDetail;
 use App\Role;
+use App\UserAllocate;
 
 class WelcomeController extends Controller {
 
@@ -33,15 +34,26 @@ class WelcomeController extends Controller {
             $userDetails = getUserDetails();
             $userId = $userDetails['id'];
 
-            $NewWippli = DB::table('new_wipplis as nw')->select('u.name', 'u.id as userId', 'nw.*')
-                    ->leftJoin('users as u', 'u.id', 'nw.user_id')->where('user_id', $userId)->orderBy('nw.id', 'DESC')
+            $NewWippli = DB::table('new_wipplis as nw')->select('u.name', 'u.id as userId', 'nw.*','nw.business_id as bId')
+                    ->leftJoin('users as u', 'u.id', 'nw.user_id')
+                    ->leftJoin('business_details as bd', 'bd.id', 'nw.business_id')
+                    ->where('nw.user_id', $userId)->orderBy('nw.id', 'DESC')
                     ->get();
+            foreach ($NewWippli as $key => $value) {
+                $NewWippli[$key]->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
+            }
+//            pr($NewWippli);
 
-            $parentWippli = DB::table('new_wipplis as nw')->select('u.name', 'u.id as userId', 'nw.*')
+            $parentWippli = DB::table('new_wipplis as nw')->select('u.name', 'u.id as userId', 'nw.*','bd.id as bId')
                     ->leftJoin('contact_details as cd', 'cd.parent_id', 'nw.user_id')
+                    ->leftJoin('business_details as bd', 'bd.id', 'cd.organisation')
                     ->leftJoin('users as u', 'u.id', 'nw.user_id')
                     ->where('cd.user_id', $userId)->orderBy('nw.id', 'DESC')
                     ->get();
+            foreach ($parentWippli as $key => $value) {
+                $parentWippli[$key]->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
+            }
+//            prd($parentWippli);
 
             $bDetails = DB::table('contact_details as cd')
                             ->select('u.name', 'u.id as userId', 'bd.id as bId', 'bd.logocolours')
@@ -49,8 +61,16 @@ class WelcomeController extends Controller {
                             ->leftJoin('business_details as bd', 'bd.id', 'cd.organisation')
                             ->where('cd.user_id', $userId)
                             ->get()->first();
-//             prd($parentWippli);
-            return view('sites.user-dashboard', ['parentWippli' => $parentWippli, 'userDetails' => $userDetails, 'NewWippli' => $NewWippli, 'bDetails' => $bDetails]);
+
+            $userAllocate = DB::table('user_allocates as ua')
+                    ->select('u.name', 'u.id as userId', 'bd.id as bId', 'nw.id as id','nw.user_id as parent_id', 'nw.project_name', 'nw.attachment', 'nw.created_at')
+                    ->leftJoin('users as u', 'u.id', 'ua.user_id')
+                    ->leftJoin('business_details as bd', 'bd.id', 'ua.business_id')
+                    ->leftJoin('new_wipplis as nw', 'nw.id', 'ua.wippli_id')->orderBy('ua.id','DESC')
+                    ->where('ua.user_id', $userId)
+                    ->get();
+//            pr($userAllocate);
+            return view('sites.user-dashboard', ['parentWippli' => $parentWippli, 'userDetails' => $userDetails, 'NewWippli' => $NewWippli, 'bDetails' => $bDetails, 'userAllocate' => $userAllocate]);
         }
         return redirect("/login");
     }
@@ -119,7 +139,7 @@ class WelcomeController extends Controller {
                     ->where('business_name', 'like', '%Brannium%')->orderBy('bd.id', 'DESC')
                     ->get();
 
-            $boomiDetails = DB::table('business_details as bd')->select('u.name as user_name', 'u.id as userId','u.user_type', 'bd.*')
+            $boomiDetails = DB::table('business_details as bd')->select('u.name as user_name', 'u.id as userId', 'u.user_type', 'bd.*')
                     ->leftJoin('users as u', 'u.id', 'bd.user_id')
                     ->where('business_name', 'not like', '%Brannium%')->orderBy('bd.id', 'DESC')
                     ->get();
@@ -140,7 +160,7 @@ class WelcomeController extends Controller {
 //            pr($userDetails);
 //            pr($boomiDetails);
 
-            $Roles = Role::where('status','Active')->where('id','!=',1)->get()->toArray();
+            $Roles = Role::where('status', 'Active')->where('id', '!=', 1)->get()->toArray();
 
             return view('sites.brannium-clients-contacts', [
                 'userDetails' => $userDetails,
@@ -148,7 +168,7 @@ class WelcomeController extends Controller {
                 'ContactDetails' => $ContactDetails,
                 'ClientDetails' => $ClientDetails,
                 'Roles' => $Roles,
-                'boomiDetails'=>$boomiDetails
+                'boomiDetails' => $boomiDetails
             ]);
         }
         return redirect("/login");

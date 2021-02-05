@@ -12,7 +12,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="logo-right-txt text-right">
-                            <p>Powerd By
+                            <p>Powered By
                                 <img src="{{ url('public/wippli/img/Group%201087.png')}}" alt="ftr-logo">
                             </p>
                         </div>
@@ -83,6 +83,17 @@
                                         <div class="form-group text">
                                             <label>Instructions <span>.</span></label>
                                             <textarea class="form-control" rows="8" name="instruction" id="instruction" placeholder="Type here"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Company <span>*</span></label>
+                                            <select class="form-control" name="business_id" id="business_id">
+                                                <option>Select</option>
+                                                @foreach($businessList as $business)
+                                                <option value="{{$business->id}}">{{$business->business_name}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
