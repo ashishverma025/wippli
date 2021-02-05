@@ -14,7 +14,7 @@ class NewWippli extends Model {
      * @var array
      */
     protected $fillable = [
-        'project_name','deadline','type','instruction','digital','objective','message', 'dimensions	', 'width', 'height	',
+        'project_name','deadline','type','instruction','digital','objective','message', 'dimensions', 'width', 'height','created_at'
     ];
 
 

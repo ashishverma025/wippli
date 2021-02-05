@@ -45,11 +45,12 @@ $(document).on('click', '#simpleButton', function (e) {
     var form_data = new FormData();
 
     var file_data = $("#attachment").prop("files")[0];
-    form_data.append("file", file_data);
+    form_data.append("attachment", file_data);
     form_data.append('project_name', $("#project_name").val());
     form_data.append('deadline', $("#deadline").val());
     form_data.append('category', $("#category").val());
     form_data.append('deadline', $("#deadline").val());
+    form_data.append('business_id', $("#business_id").val());
     form_data.append('type', $("#type").val());
     form_data.append('instruction', $("#instruction").val());
 
@@ -152,10 +153,11 @@ $(document).on('click', '#category', function (e) {
 
 $(".previewToday,.previewDetails").click(function () {
     var wippliId = $(this).attr('data-id');
+    var bId = $(this).attr('data-bid');
     $.ajax({
         url: "wippliPreview",
-        type: 'POST',
-        data: 'wippli_id=' + wippliId,
+        type: 'post',
+        data: "wippli_id=" + wippliId + "&bId=" + bId,
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
@@ -163,6 +165,7 @@ $(".previewToday,.previewDetails").click(function () {
         success: function (response) {
             $("#popupFormModal").html(response)
             $("#myModal").modal();
+//            location.reload()
         }
     })
 });
@@ -203,4 +206,131 @@ $(document).on('click', '#generateFolder', function (e) {
     }
 })
 
+$(document).on('click', '#allocateBtn', function (e) {
+    var wippliId = $(this).attr('data-id');
+    var toUser = $('#toUser').find(":selected").val();
+    var email_address = $("#email_address").val();
+    var business_id = $("#business_id").val();
+    // alert('sdjhjkshdfkjs')
+    $("#allocateBtn").text('Allocating ...')
+    $("#allocateBtn").prop('disabled', true)
+    if (wippliId !== '') {
+        $.ajax({
+            url: "allocateUser",
+            type: 'POST',
+            data: {'wippli_id': wippliId, toUser: toUser, email_address: email_address, business_id: business_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if (response == 'success') {
+                    $("#allocateBtn").text('User Allocated')
+                    alert('User allocated successfully!')
+//                    $("#allocateBtn").prop('disabled', false)
+                    location.reload()
+
+                }
+            }
+        })
+    }
+})
+$(document).on('click', '#takeOn', function (e) {
+    var wippliId = $(this).attr('data-wid');
+    var toUser = $(this).attr('data-uid');
+    var email_address = $(this).attr('data-email');
+    var business_id = $("#business_id").val();
+    // alert('sdjhjkshdfkjs')
+    $("#takeOn").text('Taking ...')
+    $("#takeOn").prop('disabled', true)
+    if (wippliId !== '') {
+        $.ajax({
+            url: "allocateUser",
+            type: 'POST',
+            data: {'wippli_id': wippliId, toUser: toUser, email_address: email_address, business_id: business_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if (response == 'success') {
+                    $("#takeOn").text('Task Taken')
+                    alert('User allocated successfully!')
+//                    $("#takeOn").prop('disabled', false)
+                    location.reload()
+
+                }
+            }
+        })
+    }
+})
+
+$(document).on('change', '#toUser', function (e) {
+    var email = $('option:selected', this).data("email");
+    $("#email_address").val(email);
+})
+
+
+$(document).on('click', '#commentBtn', function (e) {
+    var wippliId = $(this).attr('data-id');
+    var business_id = $("#business_id").val();
+    var comment = $("#comment").val();
+    // alert('sdjhjkshdfkjs')
+    $("#commentBtn").text('Commenting ...')
+    $("#commentBtn").prop('disabled', true)
+    if (wippliId !== '') {
+        $.ajax({
+            url: "wippliComment",
+            type: 'POST',
+            data: {'wippli_id': wippliId, comment: comment, business_id: business_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if (response == 'success') {
+                    $("#commentBtn").text('Commented')
+                    alert('Wippli comment posted successfully!')
+//                    $("#allocateBtn").prop('disabled', false)
+                    location.reload()
+
+                }
+            }
+        })
+    }
+})
+
+
+$(document).on('click', '#incidentBtn', function (e) {
+    var form_data = new FormData();
+    var attachment = $("#attachment").prop("files")[0];
+    form_data.append("attachment", attachment);
+    form_data.append('business_id', $("#business_id").val());
+    form_data.append('incedent_type', $("#incedent_type").val());
+    form_data.append('description', $("#description").val());
+    form_data.append('implications', $("#implications").val());
+    form_data.append('wippli_id', $(this).attr('data-id'));
+
+
+    // alert('sdjhjkshdfkjs')
+    $("#incidentBtn").text('Sending ..')
+//    $("#incidentBtn").prop('disabled', true)
+    $.ajax({
+        url: "wippliIncident",
+        type: 'POST',
+        data: form_data,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if (response == 'success') {
+                $("#incidentBtn").text('Commented')
+                alert('Incident sended successfully!')
+//                    $("#allocateBtn").prop('disabled', false)
+                location.reload()
+
+            }
+        }
+    })
+
+})
 

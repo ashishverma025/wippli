@@ -30,6 +30,9 @@ Route::post('/checkExistEmail', 'AjaxController@checkExistEmail');
 Route::post('/getBusinessById', 'AjaxController@getBusinessById');
 Route::post('/recordUpdateForm', 'AjaxController@recordUpdateForm');
 Route::post('/roleChange', 'AjaxController@roleChange');
+Route::post('/allocateUser', 'AjaxController@allocateUser');
+Route::post('/wippliComment', 'AjaxController@wippliComment');
+Route::post('/wippliIncident', 'AjaxController@wippliIncident');
 
 Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
 Route::get('/business-details', 'WelcomeController@businessDetails');

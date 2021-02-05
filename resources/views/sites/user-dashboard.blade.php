@@ -140,7 +140,7 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$wippli->updated_at}}</span>
                                                                         <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
@@ -181,9 +181,11 @@
                                                      data-parent="#accordionEx2">
                                                     <div class="card-body">
                                                         <div class="card-txt">
+
+
                                                             @if(!empty($NewWippli))
                                                             @foreach($NewWippli as $wippli)
-                                                            <div class="row previewDetails" data-id="{{$wippli->id}}">
+                                                            <div class="row previewToday" data-id="{{$wippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -195,14 +197,13 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">PROJECT</span>
-                                                                        <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
+                                                                        <span class="time">{{$wippli->updated_at}}</span>
+                                                                        <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             @endforeach
                                                             @endif
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -287,7 +288,7 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$wippli->updated_at}}</span>
                                                                         <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
@@ -417,7 +418,7 @@
 
                                                             @if(!empty($parentWippli))
                                                             @foreach($parentWippli as $pwippli)
-                                                            <div class="row previewToday" data-id="{{$pwippli->id}}">
+                                                            <div class="row previewToday" data-bid="{{$pwippli->bId}}" data-id="{{$pwippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -429,7 +430,7 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$pwippli->updated_at}}</span>
                                                                         <p>{{$pwippli->name}} has created a New Wippli for {{$pwippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
@@ -438,7 +439,7 @@
                                                             @endif
                                                             @if(!empty($NewWippli))
                                                             @foreach($NewWippli as $wippli)
-                                                            <div class="row previewToday" data-id="{{$wippli->id}}">
+                                                            <div class="row previewToday" data-bid="{{$wippli->bId?$wippli->bId:0}}" data-id="{{$wippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -450,7 +451,7 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$wippli->updated_at}}</span>
                                                                         <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
@@ -494,7 +495,7 @@
 
                                                             @if(!empty($parentWippli))
                                                             @foreach($parentWippli as $pwippli)
-                                                            <div class="row previewToday" data-id="{{$pwippli->id}}">
+                                                            <div class="row previewToday" data-bid="{{$pwippli->bId}}" data-id="{{$pwippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -506,17 +507,16 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$pwippli->updated_at}}</span>
                                                                         <p>{{$pwippli->name}} has created a New Wippli for {{$pwippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             @endforeach
                                                             @endif
-
                                                             @if(!empty($NewWippli))
                                                             @foreach($NewWippli as $wippli)
-                                                            <div class="row previewDetails" data-id="{{$wippli->id}}">
+                                                            <div class="row previewToday" data-bid="{{$wippli->bId?$wippli->bId:0}}" data-id="{{$wippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -528,8 +528,8 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">PROJECT</span>
-                                                                        <p>{{$wippli->project_name}} - {{$wippli->name}} {{$wippli->created_at}}  </p>
+                                                                        <span class="time">{{$wippli->updated_at}}</span>
+                                                                        <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -570,19 +570,27 @@
                                                     <div class="card-body">
                                                         <div class="card-txt">
 
-                                                            <div class="row">
+                                                            @if(!empty($userAllocate))
+                                                            @foreach($userAllocate as $allocate)
+                                                            <div class="row previewDetails" data-bid="{{$allocate->bId}}" data-uid="{{$allocate->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
-                                                                        <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="icn">
+                                                                        <?php
+                                                                        $uId = $allocate->userId;
+                                                                        $wippliImage = !empty($allocate->attachment) ? "public/sites/images/wippli-image/$allocate->parent_id/$allocate->attachment" : 'public/wippli/img/logo-icn.png';
+                                                                        ?>
+                                                                        <img src="{{url($wippliImage)}}" alt="icn" height="50" width="50">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
-                                                                        <p>Jay Marcano has created a New Wippli for Latin America Prom - Poster to Brannium</p>
+                                                                        <span class="time">{{$allocate->created_at}}</span>
+                                                                        <p>{{$allocate->project_name}} - {{$allocate->name}} {{$allocate->created_at}}  </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            @endforeach
+                                                            @endif
 
 
                                                         </div>
@@ -608,7 +616,7 @@
                                                         <div class="card-txt">
                                                             @if(!empty($parentWippli))
                                                             @foreach($parentWippli as $pwippli)
-                                                            <div class="row previewToday" data-id="{{$pwippli->id}}">
+                                                            <div class="row previewToday" data-bid="{{$pwippli->bId}}" data-id="{{$pwippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -620,16 +628,17 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$pwippli->updated_at}}</span>
                                                                         <p>{{$pwippli->name}} has created a New Wippli for {{$pwippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             @endforeach
                                                             @endif
+
                                                             @if(!empty($NewWippli))
                                                             @foreach($NewWippli as $wippli)
-                                                            <div class="row">
+                                                            <div class="row" data-bid="{{$wippli->bId}}" data-id="{{$wippli->id}}">
                                                                 <div class="col-lg-3">
                                                                     <div class="small_company_logo">
                                                                         <?php
@@ -641,7 +650,7 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div class="company_txt">
-                                                                        <span class="time">11:48 AM</span>
+                                                                        <span class="time">{{$wippli->updated_at}}</span>
                                                                         <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
                                                                     </div>
                                                                 </div>
