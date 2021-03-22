@@ -51,11 +51,11 @@ use RegistersUsers;
         return Validator::make($data, [
                     'fname' => ['required', 'string', 'max:255'],
                     'lname' => ['required', 'string', 'max:255'],
-                    'city' => ['required', 'string', 'max:255'],
-                    'state' => ['required', 'string', 'max:255'],
-                    'country' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'dob' => ['required', 'string',  'max:255'],
+                    'company' => ['required', 'string', 'max:255'],
+                    // 'state' => ['required', 'string', 'max:255'],
+                    // 'country' => ['required', 'string', 'max:255'],
+                    // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    // 'dob' => ['required', 'string',  'max:255'],
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -73,11 +73,11 @@ use RegistersUsers;
                     'lname' => $data['lname'],
                     'name' => $data['fname'] . ' ' . $data['lname'],
                     'email' => $data['email'],
-                    'address' => $data['address'],
-                    'city' => $data['city'],
-                    'state' => $data['state'],
-                    'country' => $data['country'],
-                    'dob' => @$data['dob'],
+                    'company' => $data['company'],
+                    'user_type' => '2',
+                    // 'state' => $data['state'],
+                    // 'country' => $data['country'],
+                    // 'dob' => @$data['dob'],
                     'password' => Hash::make($data['password']),
         ]);
     }
@@ -88,17 +88,17 @@ use RegistersUsers;
         $email = $postData['email'];
         $isExist = is_email_exist($email);
         if ($isExist['status'] == 'exist') {
-            $res['resCode'] = 1;
-            $res['resMsg'] = 'This email has already been taken';
-            return $res;
+            set_flash_message('This email has already been taken', 'alert-danger');
+            return redirect('/signup');
         }
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        // event(new Registered($user = $this->create($request->all())));
+        $user = $this->create($request->all());
         $this->guard()->login($user);
-        $res['resCode'] = 0;
-        $res['resMsg'] = 'Congratulations ! you have registered successfully';
-        return $res;
+        set_flash_message('Congratulations ! you have registered successfully', 'alert-success');
+
+        return redirect('/login');
     }
     
     

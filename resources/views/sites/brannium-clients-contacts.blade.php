@@ -196,7 +196,7 @@
                                 <!-- <h3>4</h3> -->
                                 <div class="people-seting-contact">
                                     <div class="tabs">
-                                        <ul class="nav nav-tabs contact-nav ">
+                                        <ul class="nav nav-tabs contact-nav " style="margin-top: 5px">
                                             <li class="active"><a data-toggle="tab" href="#boomi">BOOMI</a></li>
                                             <li><a data-toggle="tab" href="#agencies">AGENCIES</a></li>
                                         </ul>

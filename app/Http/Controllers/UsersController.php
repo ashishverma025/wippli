@@ -19,11 +19,14 @@ class UsersController extends Controller {
     public function saveContactDetails(Request $request) {
 
         if (Auth::check()) {
-            // prd( $request->post() );
 
             $userDetails = getUserDetails();
             $postData = $request->post();
-
+            $this->validate($request, [
+                'role' => 'required',
+                'email' => 'required',
+                'first_name'=>'required'
+            ]);
             if (empty($postData)) {
                 $request->session()->flash('message.level', 'danger');
                 $request->session()->flash('message.content', 'Please fill all required fields!');
@@ -31,51 +34,48 @@ class UsersController extends Controller {
             }
             $contactId = !empty($postData['contact_id']) ? $postData['contact_id'] : '';
             $contactDetails = empty($postData['contact_id']) ? new ContactDetail() : ContactDetail::where(['id' => $contactId])->first();
-            // prd( $postData );
-
             $contactDetails->parent_id = !empty($userDetails['id']) ? $userDetails['id'] : '';
             $contactDetails->first_name = !empty($postData['first_name']) ? $postData['first_name'] : $contactDetails->first_name;
             $contactDetails->surname = $postData['surname'] ? $postData['surname'] : $contactDetails->surname;
-            $contactDetails->known_as = $postData['known_as'] ? $postData['known_as'] : $contactDetails->known_as;
-            $contactDetails->initials = $postData['initials'] ? $postData['initials'] : $contactDetails->initials;
             $contactDetails->positions = $postData['positions'] ? ( $postData['positions'] ) : $contactDetails->positions;
             $contactDetails->department = @$postData['department'] ? $postData['department'] : $contactDetails->department;
             $contactDetails->email = $email = @$postData['email'] ? $postData['email'] : $contactDetails->email;
-            $contactDetails->phone = @$postData['phone'] ? $postData['phone'] : $contactDetails->phone;
-            $contactDetails->mobile = @$postData['mobile'] ? $postData['mobile'] : $contactDetails->mobile;
-            $contactDetails->tbc = @$postData['tbc'] ? $postData['tbc'] : $contactDetails->tbc;
-
-            $contactDetails->country = @$postData['country'] ? $postData['country'] : $contactDetails->country;
-            $contactDetails->state = @$postData['state'] ? $postData['state'] : $contactDetails->state;
-            $contactDetails->address1 = @$postData['address1'] ? $postData['address1'] : $contactDetails->address1;
-            $contactDetails->address2 = @$postData['address2'] ? $postData['address2'] : $contactDetails->address2;
-            $contactDetails->city = @$postData['city'] ? $postData['city'] : $contactDetails->city;
-            $contactDetails->post_code = @$postData['post_code'] ? $postData['post_code'] : $contactDetails->post_code;
-
+            $contactDetails->type = @$postData['type'] ? $postData['type'] : $contactDetails->type;
             $contactDetails->role = @$postData['role'] ? $postData['role'] : $contactDetails->role;
             $contactDetails->email_notification = @$postData['email_notification'] ? $postData['email_notification'] : $contactDetails->email_notification;
-            $contactDetails->linkedin = @$postData['linkedin'] ? $postData['linkedin'] : $contactDetails->linkedin;
-            $contactDetails->twitter = @$postData['twitter'] ? $postData['twitter'] : $contactDetails->twitter;
-            $contactDetails->instagram = @$postData['instagram'] ? $postData['instagram'] : $contactDetails->instagram;
-            $contactDetails->facebook = @$postData['facebook'] ? $postData['facebook'] : $contactDetails->facebook;
-            $contactDetails->youtube = @$postData['youtube'] ? $postData['youtube'] : $contactDetails->youtube;
-            $contactDetails->anythingelse = @$postData['anythingelse'] ? $postData['anythingelse'] : $contactDetails->anythingelse;
-
-            $contactDetails->colourslogo_file = @$postData['colourslogo_file'] ? $postData['colourslogo_file'] : $contactDetails->colorlogo_file;
-            $contactDetails->coloricon_file = @$postData['coloricon_file'] ? $postData['coloricon_file'] : $contactDetails->coloricon_file;
-            $contactDetails->negativelogo_file = @$postData['negativelogo_file'] ? $postData['negativelogo_file'] : $contactDetails->negativelogo_file;
-            $contactDetails->negativeicon_file = @$postData['negativeicon_file'] ? $postData['negativeicon_file'] : $contactDetails->negativeicon_file;
-            $contactDetails->gdrive_dir = @$postData['gdrive_dir'] ? $postData['gdrive_dir'] : $contactDetails->gdrive_dir;
-            $contactDetails->dropbox_dir = @$postData['dropbox_dir'] ? $postData['dropbox_dir'] : $contactDetails->dropbox_dir;
-            $contactDetails->organisation = @$postData['organisation'] ? $postData['organisation'] : $contactDetails->organisation;
-            $contactDetails->branch = @$postData['branch'] ? $postData['branch'] : $contactDetails->branch;
+            
+            // $contactDetails->known_as = $postData['known_as'] ? $postData['known_as'] : $contactDetails->known_as;
+            // $contactDetails->initials = $postData['initials'] ? $postData['initials'] : $contactDetails->initials;
+            // $contactDetails->phone = @$postData['phone'] ? $postData['phone'] : $contactDetails->phone;
+            // $contactDetails->mobile = @$postData['mobile'] ? $postData['mobile'] : $contactDetails->mobile;
+            // $contactDetails->tbc = @$postData['tbc'] ? $postData['tbc'] : $contactDetails->tbc;
+            // $contactDetails->country = @$postData['country'] ? $postData['country'] : $contactDetails->country;
+            // $contactDetails->state = @$postData['state'] ? $postData['state'] : $contactDetails->state;
+            // $contactDetails->address1 = @$postData['address1'] ? $postData['address1'] : $contactDetails->address1;
+            // $contactDetails->address2 = @$postData['address2'] ? $postData['address2'] : $contactDetails->address2;
+            // $contactDetails->city = @$postData['city'] ? $postData['city'] : $contactDetails->city;
+            // $contactDetails->post_code = @$postData['post_code'] ? $postData['post_code'] : $contactDetails->post_code;
+            // $contactDetails->linkedin = @$postData['linkedin'] ? $postData['linkedin'] : $contactDetails->linkedin;
+            // $contactDetails->twitter = @$postData['twitter'] ? $postData['twitter'] : $contactDetails->twitter;
+            // $contactDetails->instagram = @$postData['instagram'] ? $postData['instagram'] : $contactDetails->instagram;
+            // $contactDetails->facebook = @$postData['facebook'] ? $postData['facebook'] : $contactDetails->facebook;
+            // $contactDetails->youtube = @$postData['youtube'] ? $postData['youtube'] : $contactDetails->youtube;
+            // $contactDetails->anythingelse = @$postData['anythingelse'] ? $postData['anythingelse'] : $contactDetails->anythingelse;
+            // $contactDetails->colourslogo_file = @$postData['colourslogo_file'] ? $postData['colourslogo_file'] : $contactDetails->colorlogo_file;
+            // $contactDetails->coloricon_file = @$postData['coloricon_file'] ? $postData['coloricon_file'] : $contactDetails->coloricon_file;
+            // $contactDetails->negativelogo_file = @$postData['negativelogo_file'] ? $postData['negativelogo_file'] : $contactDetails->negativelogo_file;
+            // $contactDetails->negativeicon_file = @$postData['negativeicon_file'] ? $postData['negativeicon_file'] : $contactDetails->negativeicon_file;
+            // $contactDetails->gdrive_dir = @$postData['gdrive_dir'] ? $postData['gdrive_dir'] : $contactDetails->gdrive_dir;
+            // $contactDetails->dropbox_dir = @$postData['dropbox_dir'] ? $postData['dropbox_dir'] : $contactDetails->dropbox_dir;
+            // $contactDetails->organisation = @$postData['organisation'] ? $postData['organisation'] : $contactDetails->organisation;
+            // $contactDetails->branch = @$postData['branch'] ? $postData['branch'] : $contactDetails->branch;
 
 
             if (empty($postData['contact_id'])) {
                 $contactDetails->created_at = date('Y-m-d H:i:s');
                 $contactDetails->save();
 
-                $userID = $this->createUser($postData, $contactDetails->id, $userDetails['id']);
+                $userID = $this->createUser($postData, $contactDetails->id, $userDetails);
                 if ($userID != 'error') {
                     $contactDetail = ContactDetail::where(['id' => $contactDetails->id])->first();
                     $contactDetail->user_id = $userID;
@@ -103,7 +103,7 @@ class UsersController extends Controller {
         }
     }
 
-    public function createUser($postData, $lastInsertId, $userId) {
+    public function createUser($postData, $lastInsertId, $userDetails) {
         $User = new User();
         $User->name = $postData['first_name'] ? $postData['first_name'] . ' ' . $postData['surname'] : $User->name;
         $User->fname = $postData['first_name'] ? $postData['first_name'] : $User->fname;
@@ -111,10 +111,11 @@ class UsersController extends Controller {
         $User->password = Hash::make('wippli@123');
         $User->email = $postData['email'] ? $postData['email'] : $User->email;
         $User->phone = $postData['phone'] ? $postData['phone'] : $User->phone;
-        $User->address = $postData['address1'] ? $postData['address1'] : $User->address;
+        $User->company = $userDetails['company'];
         $User->contact_id = $lastInsertId;
+        $User->parent_id = $userDetails['id'];
         $User->user_type = $postData['role'] ? $postData['role'] : $User->role;
-        ;
+        
         $User->email_verified_at = date('Y-m-d H:i:s');
         $User->created_at = date('Y-m-d H:i:s');
 
@@ -177,8 +178,6 @@ class UsersController extends Controller {
             $businessDetails->primarylightcolour2 = @$postData['primarylightcolour2'] ? $postData['primarylightcolour2'] : $businessDetails->primarylightcolour2;
             $businessDetails->businessdrive = @$postData['businessdrive'] ? $postData['businessdrive'] : $businessDetails->businessdrive;
             $businessDetails->businessdropbox = @$postData['businessdropbox'] ? $postData['businessdropbox'] : $businessDetails->businessdropbox;
-//             prd($_FILES);
-
 
             if ($file = $request->hasFile('logocolours')) {
                 $file = $request->file('logocolours');

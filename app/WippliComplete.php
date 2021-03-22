@@ -6,7 +6,7 @@ use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class WippliIncident extends Model {
+class WippliComplete extends Model {
 
     /**
      * The attributes that are mass assignable.

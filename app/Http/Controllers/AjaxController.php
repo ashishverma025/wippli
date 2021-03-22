@@ -19,7 +19,7 @@ use App\UserAllocate;
 use App\ContactDetail;
 use App\BusinessDetail;
 use App\WippliComment;
-use App\WippliIncident;
+use App\WippliComplete;
 use File;
 use ZipArchive;
 
@@ -102,7 +102,6 @@ class AjaxController extends Controller {
         $categories = Category::where('status', 'active')->get();
         $ContactDetail = ContactDetail::where('user_id', $userId)->first();
         $parent_id = @$ContactDetail->parent_id ? @$ContactDetail->parent_id : "";
-//        $businessList = BusinessDetail::where(['user_id' => $userId, 'status' => 'active'])->get();
 
         $businessList = BusinessDetail::where(['user_id' => $userId, 'status' => 'active']);
         if (!empty($parent_id)) {
@@ -110,7 +109,7 @@ class AjaxController extends Controller {
         }
         $businessList = $businessList->groupBy('id')->get();
 
-        return view('sites/popupForm', [
+        return view('nwsites/newWiplli', [
             'categories' => $categories ? $categories : "",
             'businessList' => $businessList ? $businessList : "",
         ]);
@@ -129,7 +128,6 @@ class AjaxController extends Controller {
         $NewWippli = $NewWippli[0];
         $CN = initials($NewWippli->CN);
         $FnLn = $NewWippli->first_name . '-' . $NewWippli->surname;
-//        $jobName = getCategory($NewWippli->jobtype); 
         $jobName = $NewWippli->project_name;
 
         $jobOutcome = $NewWippli->joboutcome;
@@ -227,9 +225,8 @@ class AjaxController extends Controller {
     }
 
     public function newWippliSave(Request $request) {
-        // Get the formData
         $response = [];
-        if (!empty($_POST)) {
+        if (!empty($request->post())) {
             $userDetails = getUserDetails();
             $wippliDetails = $request->post();
             $this->validate($request, [
@@ -240,10 +237,10 @@ class AjaxController extends Controller {
             $wippli_id = !empty($wippliDetails['wippli_id']) ? $wippliDetails['wippli_id'] : '';
             $NewWippli = empty($wippliDetails['wippli_id']) ? new NewWippli() : NewWippli::where(['id' => $wippli_id])->first();
             $NewWippli->project_name = !empty($wippliDetails['project_name']) ? $wippliDetails['project_name'] : $NewWippli->project_name;
-            $NewWippli->deadline = $wippliDetails['deadline'] ? $wippliDetails['deadline'] : $NewWippli->deadline;
-            $NewWippli->type = $wippliDetails['type'] ? $wippliDetails['type'] : $NewWippli->type;
-            $NewWippli->category = $wippliDetails['category'] ? $wippliDetails['category'] : $NewWippli->category;
-            $NewWippli->instruction = $wippliDetails['instruction'] ? ($wippliDetails['instruction']) : $NewWippli->instruction;
+            $NewWippli->deadline = @$wippliDetails['deadline'] ? $wippliDetails['deadline'] : $NewWippli->deadline;
+            $NewWippli->type = @$wippliDetails['type'] ? $wippliDetails['type'] : $NewWippli->type;
+            $NewWippli->category = @$wippliDetails['category'] ? $wippliDetails['category'] : $NewWippli->category;
+            $NewWippli->instruction = @$wippliDetails['instruction'] ? ($wippliDetails['instruction']) : $NewWippli->instruction;
             $NewWippli->digital = @$wippliDetails['digital'] ? $wippliDetails['digital'] : $NewWippli->digital;
             $NewWippli->print = @$wippliDetails['print'] ? $wippliDetails['print'] : $NewWippli->print;
             $NewWippli->video = @$wippliDetails['video'] ? $wippliDetails['video'] : $NewWippli->video;
@@ -258,28 +255,22 @@ class AjaxController extends Controller {
             $NewWippli->comment = @$wippliDetails['comment'] ? $wippliDetails['comment'] : $NewWippli->comment;
             $NewWippli->target_audience = @$wippliDetails['target_audience'] ? $wippliDetails['target_audience'] : $NewWippli->target_audience;
             $NewWippli->tone_of_voice = @$wippliDetails['tone_of_voice'] ? $wippliDetails['tone_of_voice	'] : $NewWippli->tone_of_voice;
-//            $NewWippli->attachment = @$wippliDetails['attachment'] ? $wippliDetails['attachment'] : $NewWippli->attachment;
+
             $NewWippli->user_id = $userDetails['id'];
-            $NewWippli->business_id = @$wippliDetails['business_id'] ? $wippliDetails['business_id'] : $NewWippli->business_id;
+            $NewWippli->company = '';
 
 
-//            pr($request->file('attachment'));
 
             if ($file = $request->hasFile('attachment')) {
                 $file = $request->file('attachment');
-//                prd($file.'attachment');
                 $NewWippli->attachment = upload_site_images($userDetails['id'], $file, 'wippli-image');
             }
-//             prd($file.'controller');
             if ($file = $request->hasFile('type_file')) {
                 $file = $request->file('type_file');
-                // prd($userDetails['id']);
                 $NewWippli->file = upload_site_images($userDetails['id'], $file, 'wippli-image');
             }
             if (empty($wippliDetails['wippli_id'])) {
                 $NewWippli->created_at = date('Y-m-d H:i:s');
-                // echo "create";
-                // prd( $wippliDetails );
                 $NewWippli->save();
                 $response['status'] = "success";
                 $response['msg'] = "Wippli added successfully alert-success";
@@ -290,15 +281,14 @@ class AjaxController extends Controller {
                 $response['msg'] = "Wippli updated successfully alert-success";
             }
 
-            // return redirect( '/admin/user' );
+            return redirect( '/user-dashboard' );
         }
-        return response()->json($response);
+        // return response()->json($response);
     }
 
     public function wippliPreview(Request $request) {
         $response = [];
         $postData = $request->post();
-//        prd($postData);
         $wippli_id = $postData['wippli_id'];
         $bId = $postData['bId'];
         $NewWippli = DB::table('new_wipplis as nw')->select('u.name', 'u.email', 'u.id as userId', 'nw.*', 'bd.id as bId', 'bd.business_name', 'bd.business_branch', 'cd.first_name', 'cd.surname', 'cd.department')
@@ -366,7 +356,6 @@ class AjaxController extends Controller {
         $UserAllocate->user_id = $toUser;
         $UserAllocate->parent_id = $parentId;
         $UserAllocate->email_address = $email_address;
-        $UserAllocate->business_id = $business_id;
         $UserAllocate->created_at = date('Y-m-d H:i:s');
         if ($UserAllocate->save()) {
             return 'success';
@@ -376,7 +365,6 @@ class AjaxController extends Controller {
     public function wippliComment(Request $request) {
         $postData = $request->post();
         $userDetails = getUserDetails();
-
         $user_id = $userDetails->id;
         $wippli_id = $postData['wippli_id'];
         $comment = $postData['comment'];
@@ -385,38 +373,39 @@ class AjaxController extends Controller {
         $WippliComment->wippli_id = $wippli_id;
         $WippliComment->user_id = $user_id;
         $WippliComment->comment = $comment;
+
+
+        if ($file = $request->hasFile('commentfile')) {
+            $file = $request->file('commentfile');
+            // prd($file);
+            $WippliComment->commentfile = upload_site_images($wippli_id, $file, 'wippli-comment');
+        }
+
         $WippliComment->created_at = date('Y-m-d H:i:s');
         if ($WippliComment->save()) {
             return 'success';
         }
     }
 
-    public function wippliIncident(Request $request) {
+    public function wippliComplete(Request $request) {
         $postData = $request->all();
         $userDetails = getUserDetails();
 
         $user_id = $userDetails->id;
         $wippli_id = $postData['wippli_id'];
-//        $attachment = $postData['attachment'];
-        $implications = $postData['implications'];
-        $incedent_type = $postData['incedent_type'];
-        $business_id = $postData['business_id'];
-        $description = $postData['description'];
-
 //        prd($postData);
-        $WippliIncident = new WippliIncident();
-        $WippliIncident->wippli_id = $wippli_id;
-        $WippliIncident->user_id = $user_id;
-        $WippliIncident->business_id = $business_id;
-        $WippliIncident->incedent_type = $incedent_type;
-        $WippliIncident->description = $description;
-        $WippliIncident->implications = $implications;
-        if ($file = $request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $WippliIncident->attachment = upload_wippli_images($file, 'Incident');
-        }
-        $WippliIncident->created_at = date('Y-m-d H:i:s');
-        if ($WippliIncident->save()) {
+        $wippliComplete = new WippliComplete();
+        $wippliComplete->wippli_id = $wippli_id;
+        $wippliComplete->status = 'Active';
+        $wippliComplete->user_id = $user_id;
+
+        $wippliComplete->created_at = date('Y-m-d H:i:s');
+        if ($wippliComplete->save()) {
+            $userAllocate = UserAllocate::where('wippli_id', $wippli_id)->first();
+            if (!empty($userAllocate)) {
+                $userAllocate->status = 'Inactive';
+                $userAllocate->save();
+            }
             return 'success';
         }
     }

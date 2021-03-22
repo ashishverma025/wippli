@@ -371,7 +371,7 @@
                                                                 <label>Attachment/File</label>
                                                             </div>
                                                             <div class="col-md-8">
-                                                                <input type="file" class="form-control" name="attachment" id="attachment"  ></textarea>
+                                                                <input type="file" class="form-control" name="attachment" id="attachment"  >
                                                             </div>
                                                         </div>
 
