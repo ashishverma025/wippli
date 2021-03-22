@@ -116,10 +116,6 @@
                             </form>
                         </div>
 
-
-
-
-
                         <div id="menu1" class="tab-pane fade">
                             <form id="detailForm"  enctype="multipart/form-data">
                                 @csrf
