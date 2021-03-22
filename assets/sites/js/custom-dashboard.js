@@ -1,4 +1,5 @@
 let route = $('meta[name="route"]').attr('content');
+
 $("#popUpform").click(function () {
     $("#myModal").modal();
     $.ajax({
@@ -72,7 +73,7 @@ $(document).on('click', '#simpleButton', function (e) {
                 $("#detailButton").html('SUBMIT WIPPLI')
                 $("#simpleButton").html('')
                 $("#simpleButton").prop('disabled', false)
-                location.reload()
+                window.location.href = route+"/user-dashboard";
             }
         }
     })
@@ -137,18 +138,23 @@ $(document).on('click', '#category', function (e) {
     e.preventDefault();
     e.stopPropagation();
     var category = $('#category').find(":selected").val();
-    $.ajax({
-        url: route+"/getTypesByCategory",
-        type: 'POST',
-        data: {'category': category},
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function (response) {
-            $("#types").html(response)
-        }
-    })
+    $(".typecls").css('display','none')
+    if(category == 6){
+        $(".typecls").css('display','block')
+    }
+    // $.ajax({
+    //     url: route+"/getTypesByCategory",
+    //     type: 'POST',
+    //     data: {'category': category},
+    //     headers: {
+    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //     },
+    //     success: function (response) {
+    //         $("#types").html(response)
+    //     }
+    // })
 });
+
 
 
 $(".previewToday,.previewDetails").click(function () {
@@ -270,25 +276,29 @@ $(document).on('change', '#toUser', function (e) {
 
 
 $(document).on('click', '#commentBtn', function (e) {
-    var wippliId = $(this).attr('data-id');
-    var business_id = $("#business_id").val();
-    var comment = $("#comment").val();
-     alert('sdjhjkshdfkjs')
-//    $("#commentBtn").text('Commenting ...')
-//    $("#commentBtn").prop('disabled', true)
+    var wippliId =  $(this).attr('data-id');
+    var form_data = new FormData();
+    var commentfile = $("#commentfile").prop("files")[0];
+    form_data.append("comment", $("#comment").val());
+    form_data.append("commentfile", commentfile);
+    form_data.append('wippli_id', $(this).attr('data-id'));
+
+    $("#commentBtn").text('Commenting ...')
+    $("#commentBtn").prop('disabled', true)
     if (wippliId !== '') {
         $.ajax({
             url: route+"/wippliComment",
-            type: 'post',
-            data: {'wippli_id': wippliId, comment: comment, business_id: business_id},
+            type: 'POST',
+            data: form_data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
+            processData: false,
+            contentType: false,
             success: function (response) {
                 if (response == 'success') {
                     $("#commentBtn").text('Commented')
                     alert('Wippli comment posted successfully!')
-//                    $("#allocateBtn").prop('disabled', false)
                     location.reload()
 
                 }
@@ -298,33 +308,23 @@ $(document).on('click', '#commentBtn', function (e) {
 })
 
 
-$(document).on('click', '#incidentBtn', function (e) {
-    var form_data = new FormData();
-    var attachment = $("#attachment").prop("files")[0];
-    form_data.append("attachment", attachment);
-    form_data.append('business_id', $("#business_id").val());
-    form_data.append('incedent_type', $("#incedent_type").val());
-    form_data.append('description', $("#description").val());
-    form_data.append('implications', $("#implications").val());
-    form_data.append('wippli_id', $(this).attr('data-id'));
+$(document).on('click', '#completeBtn', function (e) {
+    var wippli_id = $(this).attr('data-wid');
+    console.log(wippli_id)
+    $("#completeBtn").text('Process ..')
 
-
-    // alert('sdjhjkshdfkjs')
-    $("#incidentBtn").text('Sending ..')
-//    $("#incidentBtn").prop('disabled', true)
     $.ajax({
-        url: route+"/wippliIncident",
+        url: route+"/wippliComplete",
         type: 'POST',
-        data: form_data,
+        data: {'wippli_id':wippli_id},
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        processData: false,
-        contentType: false,
+
         success: function (response) {
             if (response == 'success') {
-                $("#incidentBtn").text('Commented')
-                alert('Incident sended successfully!')
+                $("#completeBtn").text('Completed')
+                alert('Wippli marked as complete successfully!')
 //                    $("#allocateBtn").prop('disabled', false)
                 location.reload()
 

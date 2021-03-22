@@ -10,6 +10,9 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Category;
+use App\NewWippli;
+use App\WippliComplete;
+
 use App\Type;
 
 if (!function_exists('PPHttpPost')) {
@@ -75,7 +78,6 @@ if (!function_exists('PPHttpPost')) {
 if (!function_exists('checkBusinessPermission')) {
 
     function checkBusinessPermission($roleId) {
-//        echo $roleId;die;
         if ($roleId == 1 || $roleId == 2) {
             return true;
         } else {
@@ -112,7 +114,6 @@ if (!function_exists('checkWippliPermission')) {
 if (!function_exists('changeRolePermission')) {
 
     function changeRolePermission($roleId) {
-//        prd($roleId);
         if ($roleId == 1 || $roleId == 2) {
             return true;
         } else {
@@ -326,28 +327,7 @@ if (!function_exists('find_file_on_directories')) {
     }
 
 }
-if (!function_exists('test')) {
 
-    function test($directory1, $directory2, $fileName) {
-        $userID = "";
-        if (!empty($fileName) && (!empty($directory1) || !empty($directory2))) {
-
-            $Directory1 = public_path() . $directory1 . '/' . $fileName;
-            $Directory2 = public_path() . $directory2 . '/' . $fileName;
-
-            if (file_exists($Directory1)) {
-                return $directory1 . '/' . $fileName;
-            } else if (file_exists($Directory2)) {
-                return $directory2 . '/' . $fileName;
-            } else {
-                return get_profile_image_dir($userID);
-            }
-        } else {
-            return "Please pass a valid parameter's !";
-        }
-    }
-
-}
 
 if (!function_exists('getUser_Detail_ByParam')) {
 
@@ -364,7 +344,6 @@ if (!function_exists('getUser_Detail_ByParam')) {
 if (!function_exists('getUserDetails')) {
 
     function getUserDetails() {
-        $userId = getUser_Detail_ByParam('id');
         $user = Auth::user();
 //        prd($User);
         return $user;
@@ -386,20 +365,6 @@ if (!function_exists('getRoleNameById')) {
     }
 
 }
-
-
-if (!function_exists('getUserDetails')) {
-
-    function getUserDetails() {
-        $userId = getUser_Detail_ByParam('id');
-        $UserDetails = $users = DB::table('learning_centers')->where('user_id', $userId)->get();
-//        pr($User);
-        return isset($UserDetails[0]) ? $UserDetails[0] : "";
-    }
-
-}
-
-
 
 if (!function_exists('findData')) {
 
@@ -453,17 +418,7 @@ if (!function_exists('get_currentuser_roles')) {
     }
 
 }
-if (!function_exists('get_institute_details')) {
 
-    function get_institute_details($data) {
-        $data = DB::table('institutes')
-                        ->select('*')->where('institute_name', $data)
-                        ->get()->toArray();
-        $data[0]->institute_logo = !empty($data[0]->institute_logo) ? '/public/admin/upload/institute/' . $data[0]->institute_logo : '/public/sites/images/dummy.jpg';
-        return isset($data[0]) ? $data[0]->institute_logo : [];
-    }
-
-}
 
 if (!function_exists('get_rolesByUserId')) {
 
@@ -645,62 +600,6 @@ if (!function_exists('is_email_exist_in_csv')) {
 
 }
 
-
-if (!function_exists('student_verify')) {
-
-    function student_verify($studentIid, $teacherId) {
-        $response = [];
-        $response['status'] = 'not exist';
-        $response['msg'] = 'Student does not exist.';
-        if (!empty($studentIid) && !empty($teacherId)) {
-            $User = DB::table('tutor_students')->where(['tutor_id' => $teacherId, 'student_id' => $studentIid])->get();
-            if (isset($User[0]) && !empty($User[0])) {
-                $response['status'] = 'exist';
-                $response['msg'] = 'Student Verified successfully';
-            }
-        }
-
-        return $response;
-    }
-
-}
-
-if (!function_exists('getStudentClases')) {
-
-    function getStudentClases($studentIid, $teacherId) {
-        $response = [];
-        if (!empty($studentIid) && !empty($teacherId)) {
-            $classes = DB::table('class_students')->select(DB::raw('group_concat(class_id) as class_ids'))
-                    ->where(['lc_id' => $teacherId, 'student_id' => $studentIid])
-                    ->get();
-            if (isset($classes[0]) && !empty($classes)) {
-                return explode(',', $classes[0]->class_ids);
-            }
-        }
-
-        return $response;
-    }
-
-}
-if (!function_exists('getStudentClasesNames')) {
-
-    function getStudentClasesNames($studentIid, $teacherId) {
-        $response = [];
-        if (!empty($studentIid) && !empty($teacherId)) {
-            $classes = DB::table('class_students as cs')->select(DB::raw('group_concat(tc.class_name) as class_names'))
-                    ->leftJoin('tutorclasses as tc', 'tc.id', 'cs.class_id')
-                    ->where(['cs.lc_id' => $teacherId, 'cs.student_id' => $studentIid])
-                    ->get();
-            if (isset($classes[0]) && !empty($classes)) {
-                return explode(',', $classes[0]->class_names);
-            }
-        }
-
-        return $response;
-    }
-
-}
-
 if (!function_exists('QueryString')) {
 
     function QueryString() {
@@ -781,19 +680,7 @@ if (!function_exists('decode')) {
 
 }
 
-if (!function_exists('getSubjectNameById')) {
 
-    function getSubjectNameById($subId) {
-//         syllabus as s ON s.subject_id = sl.id
-
-        $subjectName = DB::table('subjects')
-                ->select('subjects_name', 'id')
-                ->where('id', $subId)
-                ->get();
-        return isset($subjectName[0]->subjects_name) ? @$subjectName[0]->subjects_name : "";
-    }
-
-}
 
 if (!function_exists('initials')) {
 
@@ -816,6 +703,47 @@ if (!function_exists('getCategory')) {
     }
 
 }
+
+if (!function_exists('getWippliStatus')) {
+
+    function getWippliStatus() {
+        $count = [];
+        $userId = getUser_Detail_ByParam('id');
+        $count['generated']['week'] =  NewWippli::where('user_id', $userId)
+        ->where('created_at', '>', \Carbon\Carbon::now()->startOfWeek())
+        ->where('created_at', '<', \Carbon\Carbon::now()->endOfWeek())
+        ->get()->count();
+        $count['generated']['month'] =  NewWippli::where('user_id', $userId)
+        ->where('created_at', '>', \Carbon\Carbon::now()->startOfMonth())
+        ->where('created_at', '<', \Carbon\Carbon::now()->endOfMonth())
+        ->get()->count();
+        $count['generated']['year'] =  NewWippli::where('user_id', $userId)
+        ->where('created_at', '>', \Carbon\Carbon::now()->startOfYear())
+        ->where('created_at', '<', \Carbon\Carbon::now()->endOfYear())
+        ->get()->count();
+
+        $count['completed']['week'] =  WippliComplete::where('user_id', $userId)
+        ->where('created_at', '>', \Carbon\Carbon::now()->startOfWeek())
+        ->where('created_at', '<', \Carbon\Carbon::now()->endOfWeek())
+        ->get()->count();
+        $count['completed']['month'] =  WippliComplete::where('user_id', $userId)
+        ->where('created_at', '>', \Carbon\Carbon::now()->startOfMonth())
+        ->where('created_at', '<', \Carbon\Carbon::now()->endOfMonth())
+        ->get()->count();
+        $count['completed']['year'] =  WippliComplete::where('user_id', $userId)
+        ->where('created_at', '>', \Carbon\Carbon::now()->startOfYear())
+        ->where('created_at', '<', \Carbon\Carbon::now()->endOfYear())
+        ->get()->count();
+
+        if (!empty($count)) {
+            return $count;
+        }
+        return 'error';
+    }
+
+}
+
+
 
 if (!function_exists('generatePlanFolder')) {
 

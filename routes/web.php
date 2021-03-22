@@ -5,7 +5,7 @@ Route::get('/clear-cache', function() {
     return redirect('/');
 });
 
-// Auth::routes();
+Auth::routes();
 // Google login
 Route::get('/google-login', 'SocialAuthGoogleController@redirect');
 Route::get('/google-callback', 'SocialAuthGoogleController@callback');
@@ -15,15 +15,21 @@ Route::get('/facebook-login', 'SocialAuthFacebookController@redirect');
 Route::get('/facebook-callback', 'SocialAuthFacebookController@callback');
 
 //SITE INDEX PAGE ROUTE
+Route::post('/registration', 'Auth\RegisterController@register')->name('registration');
+Route::get('/signup', 'WelcomeController@Register');
+
 Route::post('/signin', 'Auth\LoginController@signIn');
-Route::get('/login', 'WelcomeController@landing_index');
+Route::get('/login', 'WelcomeController@landing_index')->name('login');
 Route::get('', 'WelcomeController@landing_index');
 Route::get('/user-dashboard', 'WelcomeController@userDashboard');
 
 Route::post('/popUpBusinessform', 'AjaxController@popUpBusinessform');
 Route::post('/popupForm', 'AjaxController@popupForm');
 Route::post('/newWippliSave', 'AjaxController@newWippliSave');
+
+
 Route::post('/wippliPreview', 'AjaxController@wippliPreview');
+
 Route::post('/getTypesByCategory', 'AjaxController@getTypesByCategory');
 Route::post('/generateFolderStructure', 'AjaxController@generateFolderStructure');
 Route::post('/checkExistEmail', 'AjaxController@checkExistEmail');
@@ -32,10 +38,15 @@ Route::post('/recordUpdateForm', 'AjaxController@recordUpdateForm');
 Route::post('/roleChange', 'AjaxController@roleChange');
 Route::post('/allocateUser', 'AjaxController@allocateUser');
 Route::post('/wippliComment', 'AjaxController@wippliComment');
-Route::post('/wippliIncident', 'AjaxController@wippliIncident');
+Route::post('/wippliComplete', 'AjaxController@wippliComplete');
+
+Route::get('/new-wippli', 'WelcomeController@newWippli');
+Route::get('/wippliDetails/{id?}', 'WelcomeController@wippliDetails');
 
 Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
 Route::get('/business-details', 'WelcomeController@businessDetails');
+Route::get('/contact-details', 'WelcomeController@contactDetails');
+
 Route::get('/folderView/{id}', 'WelcomeController@folderView');
 Route::get('/downloadZip/{fileName}', 'ZipController@downloadZip')->name('createZip');
 
@@ -44,14 +55,12 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('verified'
 Route::get("/homes", ["uses" => "HomeController@checkMD", "middleware" => "checkType:2"]);
 
 
-Route::get('admin', 'HomeController@index')->name('admin');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/change_password', 'UsersController@change_pwd');
 Route::post('/change_password', 'UsersController@update_changed_pwd');
 Route::post('/save-business-details', 'UsersController@saveBusinessDetails');
 Route::post('/save-contact-details', 'UsersController@saveContactDetails');
 
-Route::get('/admin', 'Auth\LoginController@showLoginForm');
 /* ----------------------- Admin Routes START -------------------------------- */
 Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
     /**
@@ -59,6 +68,7 @@ Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
      */
     Route::namespace('Auth')->group(function() {
         //Login Routes
+        Route::get('/', 'LoginController@showLoginForm')->name('login');
         Route::get('/login', 'LoginController@showLoginForm')->name('login');
         Route::post('/login', 'LoginController@login');
         Route::post('/logout', 'LoginController@logout')->name('logout');
