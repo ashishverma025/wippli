@@ -11,9 +11,9 @@
                             <a href="{{url('/user-dashboard')}}"><img src="{{ asset('assets/sites/img/demo.png') }}" alt=""></a>
                         </div>
                         <div class="img-txt">
-                            <h2>Hi Valerie!</h2>
-                            <b>Dell Boomi</b>
-                            <!-- <span>Sydney: The 29 Dec 11:39 am</span> -->
+                            <h2>Hi {{@$userDetails->fname}}!</h2>
+                            <b>{{@$userDetails->company}}</b>
+                            <span>({{(@$userDetails->user_type == 2)?'Manager':'Employee'}})</span>
                         </div>
                     </div>
                     <a href="{{url('new-wippli')}}">New Wippli</a>

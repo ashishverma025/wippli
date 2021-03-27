@@ -16,15 +16,15 @@ $wippliImage = !empty($NewWippli->attachment) ? "public/sites/images/wippli-imag
                     <div class="left-id mb-3">
                         <div class="img">
                             @if(!empty($NewWippli->business_name))
-                            <img src="{{ url('public/wippli/img/bimmo_logo.jpg') }}" alt="logo">
+                            <!-- <img src="{{ url('public/wippli/img/bimmo_logo.jpg') }}" alt="logo"> -->
                             @else
-                            <img src="{{asset('/assets/sites')}}/img/demo.png" alt="logo"> 
+                            <!-- <img src="{{asset('/assets/sites')}}/img/demo.png" alt="logo">  -->
                             @endif
                         </div>
                         <div class="img-txt">
                         <h2>Hi {{@$userDetails->fname}}!</h2>
                             <b>{{@$userDetails->company}}</b>
-                            <!-- <span>{{ $NewWippli->created_at }} </span> -->
+                            <span>({{(@$userDetails->user_type == 2)?'Manager':'Employee'}})</span>
                         </div>
                     </div>
                     <a href="{{url('new-wippli')}}">New Wippli</a>
@@ -35,7 +35,6 @@ $wippliImage = !empty($NewWippli->attachment) ? "public/sites/images/wippli-imag
 
             <div class="col-lg-9">
                 <div class="form1 form">
-
                     <div class="form_inner">
                         <div class="header new-wippli-head">
                             <div class="row">
@@ -56,7 +55,7 @@ $wippliImage = !empty($NewWippli->attachment) ? "public/sites/images/wippli-imag
                             <div class="row wippli-detail-info">
                                 <div class="col-lg-6">
                                     <div class="detail-info-left">
-                                        <span><img src="{{asset('/assets/sites')}}/img/demo.png" alt=""> <strong>Valerie Earth</strong> - Marketing </span>
+                                        {{-- <span><img src="{{asset('/assets/sites')}}/img/demo.png" alt=""> <strong>Valerie Earth</strong> - Marketing </span> --}}
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -145,8 +144,17 @@ $wippliImage = !empty($NewWippli->attachment) ? "public/sites/images/wippli-imag
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <h4>Assigned to</h4>
+                                        </div>
 
+                                        <div class="col-lg-9">
+                                            <span>{{@$wippliAllocate->name?@$wippliAllocate->name:'N/A'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                              
                                 <!-- box -->
 
 
@@ -221,18 +229,19 @@ $wippliImage = !empty($NewWippli->attachment) ? "public/sites/images/wippli-imag
 
                                     <div class="row boomi_btn">
                                     <?php 
-                                        $sts = empty($wippliAllocate) ? 'block' : ($wippliAllocate->status == 'Active'?'block':'none');
+                                        $sts = empty($wippliAllocate) ? 'block' : 'none';
+                                        $compsts = empty($wippliAllocate) ? 'none' : 'block';
                                     ?>
                                         <div class="col-lg-4 col-sm-3" style="display:{{$sts}}">
                                             <a href="#" id="allocateBtn" data-email="{{@$NewWippli->email}}" data-id="{{@$NewWippli->id}}">ALLOCATE</a>
                                         </div>
                                         
-                                        <div class="col-lg-4 col-sm-3">
+                                        <div class="col-lg-4 col-sm-3" style="display:{{$sts}}">
                                             <a id="takeOn" data-email="{{@$uEmail}}" data-uid="{{@$uId}}" data-wid="{{@$NewWippli->id}}">TAKE ON</a>
                                         </div>
 
                                         @if(empty($wippliComplete))
-                                        <div class="col-lg-4 col-sm-3">
+                                        <div class="col-lg-4 col-sm-3" style="display:{{$compsts}}">
                                             <a id="completeBtn" data-uid="{{@$uId}}" data-wid="{{@$NewWippli->id}}">Complete</a>
                                         </div>
                                         @endif

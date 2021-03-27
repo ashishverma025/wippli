@@ -346,21 +346,72 @@ class AjaxController extends Controller {
         $parentId = $userDetails->id;
         $wippli_id = $postData['wippli_id'];
         $toUser = $postData['toUser'];
-        $NewWippliDetail = NewWippli::where(['id' => $wippli_id])->first();
-        $email_address = $postData['email_address'];
-        $business_id = $NewWippliDetail->business_id ? $NewWippliDetail->business_id : '';
-
-
+       
         $UserAllocate = new UserAllocate();
         $UserAllocate->wippli_id = $wippli_id;
         $UserAllocate->user_id = $toUser;
         $UserAllocate->parent_id = $parentId;
-        $UserAllocate->email_address = $email_address;
+        $UserAllocate->email_address = $postData['email_address'];
         $UserAllocate->created_at = date('Y-m-d H:i:s');
+
         if ($UserAllocate->save()) {
+            $NewWippli = NewWippli::where('id', $wippli_id)->first();
+            if (!empty($NewWippli)) {
+                $NewWippli->status = 'Inactive';
+                $NewWippli->save();
+
+                $mailDetails = mailTaskDetails($wippli_id,$toUser);
+                $data = [];
+                $data['username'] = $mailDetails['employee_name'];
+                $data['wippli_name'] = $mailDetails['wippli_name'];
+                $data['url'] = url('/wippliDetails/').'/'.$wippli_id ;
+                $data['msg'] = $mailDetails['manager_name']." have assigned a new task " .$mailDetails['wippli_name'] .' to '.$mailDetails['employee_name'].'.';
+                $data['message'] =' You have allocated a new task';
+                $emails = [$mailDetails['employee_email'],$mailDetails['manager_email']];
+                sendMail($data, 'TASC ', $emails, 'Tasc Allocated ', "event@tasc.com", 'registrationMail');         
+
+            }
             return 'success';
         }
     }
+
+    public function wippliComplete(Request $request) {
+        $postData = $request->all();
+        $userDetails = getUserDetails();
+
+        $user_id = $userDetails->id;
+        $wippli_id = $postData['wippli_id'];
+
+        $wippliComplete = new WippliComplete();
+        $wippliComplete->wippli_id = $wippli_id;
+        $wippliComplete->status = 'Active';
+        $wippliComplete->user_id = $user_id;
+
+        $wippliComplete->created_at = date('Y-m-d H:i:s');
+        if ($wippliComplete->save()) {
+            $userAllocate = UserAllocate::where('wippli_id', $wippli_id)->first();
+            if (!empty($userAllocate)) {
+                $userAllocate->status = 'Inactive';
+                $userAllocate->save();
+
+                $mailDetails = mailTaskDetails($wippli_id,$user_id);
+                $data = [];
+                $data['username'] = $mailDetails['employee_name'];
+                $data['wippli_name'] = $mailDetails['wippli_name'];
+                $data['url'] = url('/wippliDetails/').'/'.$wippli_id ;
+                $data['assigned_by'] = $userDetails->name;
+                $data['manager_email'] = $mailDetails['manager_email'];
+                $data['msg'] = $mailDetails['employee_name']." Completed Task  " .$mailDetails['wippli_name'];
+                $data['message'] ='Congratulation! you have completed your task';
+                $emails = [$mailDetails['employee_email'],$mailDetails['manager_email']];
+                // prd($data);
+                sendMail($data, 'TASC ', $emails, 'Tasc Completed ', "event@tasc.com", 'registrationMail'); 
+        
+            }
+            return 'success';
+        }
+    }
+
 
     public function wippliComment(Request $request) {
         $postData = $request->post();
@@ -387,28 +438,7 @@ class AjaxController extends Controller {
         }
     }
 
-    public function wippliComplete(Request $request) {
-        $postData = $request->all();
-        $userDetails = getUserDetails();
 
-        $user_id = $userDetails->id;
-        $wippli_id = $postData['wippli_id'];
-//        prd($postData);
-        $wippliComplete = new WippliComplete();
-        $wippliComplete->wippli_id = $wippli_id;
-        $wippliComplete->status = 'Active';
-        $wippliComplete->user_id = $user_id;
-
-        $wippliComplete->created_at = date('Y-m-d H:i:s');
-        if ($wippliComplete->save()) {
-            $userAllocate = UserAllocate::where('wippli_id', $wippli_id)->first();
-            if (!empty($userAllocate)) {
-                $userAllocate->status = 'Inactive';
-                $userAllocate->save();
-            }
-            return 'success';
-        }
-    }
 
 //join learning center verification link get request
     public function checkExistEmail(Request $request) {

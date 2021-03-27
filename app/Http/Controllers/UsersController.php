@@ -80,12 +80,17 @@ class UsersController extends Controller {
                     $contactDetail = ContactDetail::where(['id' => $contactDetails->id])->first();
                     $contactDetail->user_id = $userID;
                     $contactDetail->update();
+                    
+                    $data = [];
+                    $data['username'] = $name = $postData['first_name'];
+                    $data['url'] = url('/brannium-clients-contacts/');
+                    $data['message'] = "Congratulation! ".$name." you have registered successfully";
+                    $data['msg'] ="Username : " . $email . ' ' . "Password: " . 'wippli@123';
+                    $emails = [$email];
 
-                    $subject = "Wippli Client Login Credentials";
-                    $message = "Username : " . $email . ' ' . "Password: " . 'wippli@123';
-                    mailSend($email, $subject, $message);
-                    // prd( $contactDetails );
-
+                    sendMail($data, 'TASC ', $emails, 'Tasc Registration ', "tasc@tasc.com", 'registrationMail'); 
+            
+                    // mailSend($email, $subject, $message);
                     $request->session()->flash('message.level', 'success');
                     $request->session()->flash('message.content', 'Contact added successfully!');
                 } else {

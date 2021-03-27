@@ -34,7 +34,7 @@
                             <li ><a href="{{url('contact-details')}}">New Contact</a></li>
                             <!-- <li class="active"><a data-toggle="tab" href="#menu1">Brannium</a></li> -->
                             <!-- <li><a data-toggle="tab" href="#menu2">Clients</a></li> -->
-                            <li><a class="active" data-toggle="tab" href="#menu3">Contacts</a></li>
+                            <!-- <li><a class="active" data-toggle="tab" href="#menu3">Contacts</a></li> -->
                         </ul>
                         <div class="tab-content">
                             <div id="home" class="tab-pane">
@@ -50,9 +50,9 @@
                                                             <li></li>
                                                             <li>Name</li>
                                                             <li>Position</li>
-                                                            <li>company</li>
                                                             <li>Email Address</li>
-                                                            <!-- <li>Role</li> -->
+                                                            <li>company</li>
+                                                            <li>Department</li>
                                                             <li>Action</li>
                                                             <!-- <li><i class="fas fa-search"></i></li> -->
                                                         </ul>
@@ -73,13 +73,14 @@
                                                                             <img src="{{url('public/wippli/img/logo-icn-inner.png')}}" alt="logo"> 
                                                                         </a>
                                                                     </div>
-                                                                    <div class="grid-inner-txt">{{$cDetails->first_name}}</div>
+                                                                    <!-- <div class="grid-inner-txt">{{$cDetails->first_name}}</div> -->
                                                                 </div>
                                                             </li>
+                                                            <li>{{$cDetails->first_name}}</li>
                                                             <li>{{$cDetails->positions}}</li>
-                                                            <li>{{$cDetails->email}}</li>
                                                             <li>{{@$cDetails->company}}</li>
-                                                            <li>{{$cDetails->type}}</li>
+                                                            <li>{{$cDetails->email}}</li>
+                                                            <li>{{$cDetails->department}}</li>
                                                            {{-- <li>
                                                                 @if(changeRolePermission($userDetails->user_type) && ($userDetails->id != $cDetails->user_id))
                                                                 <select id="inputState" class="form-control" onchange="changeRole(this,'Agency',{{$cDetails->id}},{{$cDetails->user_id}})">

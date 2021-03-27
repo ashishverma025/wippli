@@ -40,8 +40,9 @@ Route::post('/allocateUser', 'AjaxController@allocateUser');
 Route::post('/wippliComment', 'AjaxController@wippliComment');
 Route::post('/wippliComplete', 'AjaxController@wippliComplete');
 
-Route::get('/new-wippli', 'WelcomeController@newWippli');
+Route::get('/new-task', 'WelcomeController@newWippli');
 Route::get('/wippliDetails/{id?}', 'WelcomeController@wippliDetails');
+Route::get('/TascDetails/{id?}', 'WelcomeController@wippliDetails');
 
 Route::get('/brannium-clients-contacts', 'WelcomeController@branniumClientsContacts');
 Route::get('/business-details', 'WelcomeController@businessDetails');

@@ -8,17 +8,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Wippli</h4>
+                <h4 class="modal-title">Tasc</h4>
             </div>
             <div class="modal-body" id="popupFormModal"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
-
     </div>
 </div>
-
 
 <section class="dashboard mt-5">
     <div class="container">
@@ -27,48 +25,40 @@
             <div class="col-lg-3">
                 <div class="left-board">
                     <div class="left-id mb-3">
-                        <div class="img">
-                            
-                            <img src="{{url('public/wippli/img/logo-icn.png')}}" alt="logo">
-                        </div>
+                        <div class="img"> </div>
                         <div class="img-txt">
                             <h2>Hi {{@$userDetails->fname}}!</h2>
                             <b>{{@$userDetails->company}}</b>
-                            <!-- <span>29 Dec 11:39 am</span> -->
+                            <span>({{(@$userDetails->user_type == 2)?'Manager':'Employee'}})</span>
+                            
                         </div>
                     </div>
-                    <a href="{{url('new-wippli')}}" id="popUpform">New Wippli</a>
-
-                    <!-- @if(checkWippliPermission(@$userDetails->user_type)) -->
-                    <!-- <a href="{{url('new-wippli')}}" id="popUpform">New Wippli</a> -->
-                    <!-- @else
-                    <a href="#" onclick="return confirm('You don\'t have permission to add wippli please contact to Super Admin')" >New Wippli</a>
-                    @endif -->
+                    <a href="{{url('new-task')}}" id="popUpform">New Tasc</a>
                 </div>
                 <div class="left-board left-board-second mt-5">
-                    <a href="#">What's on</a>
+                    <a href="#">Notifications</a>
                     <div class="left-inner-box grid-board-second">
 
-                        @if(!empty($NewWippli))
-                        @foreach($NewWippli as $wippli)
+                        @if(!empty($NewTasc))
+                        @foreach($NewTasc as $tasc)
                         <div class="box">
-                            <!--<a href="{{url('wippliDetails').'/'.$wippli->id}}" >-->
+                            <!--<a href="{{url('TascDetails').'/'.$tasc->id}}" >-->
                             <div class="box-img">
                                 <?php
-                                $uId = $wippli->userId;
+                                $uId = $tasc->userId;
                                 
-                                $img =  !empty($wippli->attachment) ? explode('.',$wippli->attachment):"";
+                                $img =  !empty($tasc->attachment) ? explode('.',$tasc->attachment):"";
                                 $extn = $img?$img[1]:'';
-                                $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                $tascImage = !empty($tasc->attachment) ? "public/sites/images/wippli-image/$tasc->parent_id/$tasc->attachment" : 'public/wippli/img/logo-icn.png';
                                 $extns = ['jpg','jpeg','png','gif'];
-                                $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($wippliImage); 
+                                $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($tascImage); 
                                 
                                 ?>
                                 <img src="{{url($fileImg)}}" alt="">
                             </div>
                             <div class="box-txt">
-                                <em>{{$wippli->updated_at}} min ago</em>
-                                <p><b>{{$wippli->name}}</b> from <b>Boomi</b> created a <b>New Wippli</b> for <b>{{$wippli->project_name}}</b></p>
+                                <em>{{$tasc->updated_at}} min ago</em>
+                                <p><b>{{$tasc->fname}}</b> Created New Task <b>{{$tasc->project_name}}</b></p>
                             </div>
                             <!--</a>-->
                         </div>
@@ -160,20 +150,20 @@
                                                                 <div class="card-body">
                                                                     <div class="card-txt">
 
-                                                                        @if(!empty($NewWippli))
-                                                                        @foreach($NewWippli as $wippli)
-                                                                        <a href="{{url('wippliDetails').'/'.$wippli->id}}" >
+                                                                        @if(!empty($ToDo))
+                                                                        @foreach($ToDo as $tasc)
+                                                                        <a href="{{url('TascDetails').'/'.$tasc->id}}" >
                                                                             <div class="row">
                                                                                 <div class="col-lg-3">
                                                                                     <div class="small_company_logo">
                                                                                         <?php
-                                                                                        $uId = $wippli->userId;
+                                                                                        $uId = $tasc->userId;
 
-                                                                                        $img =  !empty($wippli->attachment) ? explode('.',$wippli->attachment):"";
+                                                                                        $img =  !empty($tasc->attachment) ? explode('.',$tasc->attachment):"";
                                                                                         $extn = $img?$img[1]:'';
-                                                                                        $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                                                        $tascImage = !empty($tasc->attachment) ? "public/sites/images/wippli-image/$uId/$tasc->attachment" : 'public/Tasc/img/logo-icn.png';
                                                                                         $extns = ['jpg','jpeg','png','gif'];
-                                                                                        $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($wippliImage); 
+                                                                                        $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($tascImage); 
                                                                                        
                                                                                         ?>
                                                                                         <img src="{{ url($fileImg) }}" alt="icn">
@@ -181,8 +171,8 @@
                                                                                 </div>
                                                                                 <div class="col-lg-9">
                                                                                     <div class="company_txt">
-                                                                                        <span class="time">{{$wippli->updated_at}}</span>
-                                                                                        <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
+                                                                                        <p><b>{{$tasc->fname}}</b> Created <b>New Task</b> <b>{{$tasc->project_name}}</b></p>
+                                                                                        <span class="time">At {{$tasc->updated_at}}</span>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -222,30 +212,31 @@
                                                                     <div class="card-txt">
 
                                                                         @if(!empty($userAllocate))
-                                                                        @foreach($userAllocate as $allocate)
+                                                                        @foreach($userAllocate as $tasc)
 
-                                                                        <a href="{{url('wippliDetails').'/'.$allocate->id}}" >
+                                                                        <a href="{{url('TascDetails').'/'.$tasc->id}}" >
                                                                             <div class="row">
                                                                                 <div class="col-lg-3">
                                                                                     <div class="small_company_logo">
                                                                                         <?php
-                                                                                        $uId = $allocate->userId;
+                                                                                        $uId = $tasc->userId;
                                                                                         
-                                                                                        $img =  !empty($allocate->attachment) ? explode('.',$allocate->attachment):"";
+                                                                                        $img =  !empty($tasc->attachment) ? explode('.',$tasc->attachment):"";
                                                                                         $extn = $img?$img[1]:'';
-                                                                                        $wippliImage = !empty($allocate->attachment) ? "public/sites/images/wippli-image/$uId/$allocate->attachment" : 'public/wippli/img/logo-icn.png';
+                                                                                        $tascImage = !empty($tasc->attachment) ? "public/sites/images/wippli-image/$tasc->parent_id/$tasc->attachment" : 'public/Tasc/img/logo-icn.png';
                                                                                         $extns = ['jpg','jpeg','png','gif'];
-                                                                                        $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($wippliImage); 
+                                                                                        $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($tascImage); 
                                                                                        
-                                                                                        
+                        
                                                                                         ?>
                                                                                         <img src="{{url($fileImg)}}" alt="icn">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-9">
                                                                                     <div class="company_txt">
-                                                                                        <span class="time">{{$allocate->created_at}} AM</span>
-                                                                                        <p>{{@$allocate->project_name}}  has created a New Wippli for {{@$wippli->project_name}}</p>
+                                                                                        <p><b>{{$tasc->assign_by}} </b> Assign Task <b>{{$tasc->project_name}}</b> To <b>{{$tasc->fname}}</b></p>
+                                                                                        <span class="time">At {{$tasc->created_at}} AM</span>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -284,19 +275,19 @@
                                                                 <div class="card-body">
                                                                     <div class="card-txt">
                                                                         
-                                                                    @if(!empty($wippliCompleted))
-                                                                        @foreach($wippliCompleted as $wippli)
-                                                                        <a href="{{url('wippliDetails').'/'.$wippli->id}}" >
+                                                                    @if(!empty($tascCompleted))
+                                                                        @foreach($tascCompleted as $tasc)
+                                                                        <a href="{{url('TascDetails').'/'.$tasc->id}}" >
                                                                             <div class="row">
                                                                                 <div class="col-lg-3">
                                                                                     <div class="small_company_logo">
                                                                                         <?php
-                                                                                        $uId = $wippli->parent_id;
-                                                                                        $img =  !empty($wippli->attachment) ? explode('.',$wippli->attachment):"";
+                                                                                        $uId = $tasc->parent_id;
+                                                                                        $img =  !empty($tasc->attachment) ? explode('.',$tasc->attachment):"";
                                                                                         $extn = $img?$img[1]:'';
-                                                                                        $wippliImage = !empty($wippli->attachment) ? "public/sites/images/wippli-image/$uId/$wippli->attachment" : 'public/wippli/img/logo-icn.png';
+                                                                                        $tascImage = !empty($tasc->attachment) ? "public/sites/images/wippli-image/$uId/$tasc->attachment" : 'public/Tasc/img/logo-icn.png';
                                                                                         $extns = ['jpg','jpeg','png','gif'];
-                                                                                        $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($wippliImage); 
+                                                                                        $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($tascImage); 
                                                                                         
                                                                                         ?>
                                                                                         <img src="{{ url($fileImg) }}" alt="icn">
@@ -304,8 +295,9 @@
                                                                                 </div>
                                                                                 <div class="col-lg-9">
                                                                                     <div class="company_txt">
-                                                                                        <span class="time">{{$wippli->created_at}}</span>
-                                                                                        <p>{{$wippli->name}} has created a New Wippli for {{$wippli->project_name}}</p>
+                                                                                        <p><b>{{$tasc->fname}}</b> Completed Task <b>{{$tasc->project_name}}</b></p>
+                                                                                        <span class="time"> At {{$tasc->created_at}}</span>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -331,10 +323,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="wippli-ftr">
-                        <div class="wippli-ftr-inner">
+                    <div class="Tasc-ftr">
+                        <div class="Tasc-ftr-inner">
                             <p>Powered by</p>
-                            <img src="{{ asset('assets/sites/img/tasc-logo.png') }}" alt="">
+                            <img src="{{ asset('assets/sites/img/wippli-logo.png') }}" alt="">
                         </div>
                     </div>
                 </div>

@@ -409,9 +409,7 @@
                 "category": {
                     required: true,
                 }, 
-                "type": {
-                    required: true,
-                }, 
+               
                 "instruction": {
                     required: true,
                 },

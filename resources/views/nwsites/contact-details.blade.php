@@ -8,7 +8,7 @@
                 <div class="left-board">
                     <div class="left-id mb-3">
                         <div class="img">
-                            <a href="{{url('/user-dashboard')}}"><img src="{{ asset('assets/sites/img/demo.png') }}" alt=""></a>
+                            <!-- <a href="{{url('/user-dashboard')}}"><img src="{{ asset('assets/sites/img/demo.png') }}" alt=""></a> -->
                         </div>
                         <div class="img-txt">
                             <h2>Hi {{@$userDetails->name}}!</h2>
