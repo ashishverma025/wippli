@@ -39,29 +39,36 @@
                     <a href="#">Notifications</a>
                     <div class="left-inner-box grid-board-second">
 
-                        @if(!empty($NewTasc))
-                        @foreach($NewTasc as $tasc)
+                        @if(!empty($notiFications))
+                        @foreach($notiFications as $key=>$noti)
+                        @foreach($noti as $tasc)
+                      
                         <div class="box">
                             <!--<a href="{{url('TascDetails').'/'.$tasc->id}}" >-->
                             <div class="box-img">
                                 <?php
                                 $uId = $tasc->userId;
-                                
                                 $img =  !empty($tasc->attachment) ? explode('.',$tasc->attachment):"";
                                 $extn = $img?$img[1]:'';
                                 $tascImage = !empty($tasc->attachment) ? "public/sites/images/wippli-image/$tasc->parent_id/$tasc->attachment" : 'public/wippli/img/logo-icn.png';
                                 $extns = ['jpg','jpeg','png','gif'];
                                 $fileImg = !in_array($extn, $extns)?asset('/assets/sites/img/file.png'):url($tascImage); 
-                                
                                 ?>
                                 <img src="{{url($fileImg)}}" alt="">
                             </div>
                             <div class="box-txt">
-                                <em>{{$tasc->updated_at}} min ago</em>
-                                <p><b>{{$tasc->fname}}</b> Created New Task <b>{{$tasc->project_name}}</b></p>
+                                <em>{{$tasc->created_at}} min ago</em>
+                                @if($key == 'todo')
+                                    <p><b>{{$tasc->fname}}</b> Created New Task <b>{{$tasc->project_name}}</b></p>
+                                @elseif($key == 'workinprogress')
+                                    <p><b>{{$tasc->assign_by}} </b> Assign Task <b>{{$tasc->project_name}}</b> To <b>{{$tasc->fname}}</b></p>
+                                @else
+                                <p><b>{{$tasc->fname}}</b> Completed Task <b>{{$tasc->project_name}}</b></p>
+                                @endif
                             </div>
                             <!--</a>-->
                         </div>
+                        @endforeach
                         @endforeach
                         @endif
                     </div>

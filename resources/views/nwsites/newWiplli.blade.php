@@ -128,7 +128,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    {{--<div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Department <span>*</span></label>
                                             <select class="form-control" name="category" id="category">
@@ -138,7 +138,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>--}}
 
                                     <div class="col-lg-6 typecls" style="display: none;">
                                         <div class="form-group">

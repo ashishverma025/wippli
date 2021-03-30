@@ -46,7 +46,7 @@ class WelcomeController extends Controller {
             $userDetails = getUserDetails();
             $userId = $userDetails['id'];
             $parentId = $userDetails['parent_id'];
-            $notiFication = [];
+            $notiFications = [];
             $data = DB::table('users')->select(DB::raw("group_concat(users.id) as childsId"))
             ->groupBy('parent_id')->where('parent_id',$userId)->get()->first();
             $chData = @$data->childsId ? @$data->childsId :"";
@@ -56,50 +56,60 @@ class WelcomeController extends Controller {
                     ->select('u.fname', 'u.id as userId', 'nw.id', 'nw.user_id as parent_id','nw.project_name','nw.status','nw.created_at')
                     ->join('users as u', 'u.id', 'nw.user_id')
                     ->where('nw.user_id', $userId)
-                    ->where('nw.status','!=','Inactive')
                     ->orwhereIn('nw.user_id', $childList)
                     ->orderBy('nw.id', 'DESC')
                     ->get();
-            $wip = [];
+            $todo = [];
             foreach ($ToDo as $key => $value) {
                 if($value->status == 'Active'){
                     $value->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
-                    $wip[] = $value;
-                    $notiFication[] = $value;
+                    $todo[] = $value;
                 }
+                $notiFications['todo'][] = $value;
+
             }
+
+            $mWip = [];
+            $uWip = [];
+
             $managerAllocate = DB::table('user_allocates as ua')
-            ->select('u.fname','u1.fname as assign_by', 'u.id as userId', 'nw.id as id', 'nw.user_id as parent_id', 'nw.project_name','nw.user_id as parent_id', 'nw.attachment', 'nw.created_at')
+            ->select('u.fname','u1.fname as assign_by', 'u.id as userId', 'nw.id as id', 'nw.user_id as parent_id', 'nw.project_name','nw.user_id as parent_id', 'nw.attachment', 'nw.created_at','ua.status')
             ->leftJoin('new_wipplis as nw', 'nw.id', 'ua.wippli_id')
             ->leftJoin('users as u', 'u.id', 'ua.user_id')
             ->leftJoin('users as u1', 'u1.id', 'ua.parent_id')
-
-            ->where('ua.status','Active')
             ->where('ua.user_id', $userId);
             if (!empty($childList)) {
                 $managerAllocate =  $managerAllocate->orwhereIn('ua.user_id', $childList);
             }
             $managerAllocate =  $managerAllocate->orderBy('ua.id', 'DESC')->get();
+
             foreach ($managerAllocate as $key => $value) {
-                $managerAllocate[$key]->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
                 if($userDetails['user_type'] == 2)
-                    $notiFication[] = $value;
+                    if($value->status == 'Active'){
+                        $managerAllocate[$key]->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
+                        $mWip[] = $value;
+                    }
+                    $notiFications['workinprogress'][] = $value;
             }
             // prd($managerAllocate);
             $userAllocate = DB::table('user_allocates as ua')
-                    ->select('u.fname','u1.fname as assign_by','u.id as userId', 'nw.user_id as parent_id', 'nw.id as id', 'nw.project_name', 'nw.attachment', 'nw.created_at')
+                    ->select('u.fname','u1.fname as assign_by','u.id as userId', 'nw.user_id as parent_id', 'nw.id as id', 'nw.project_name', 'nw.attachment', 'nw.created_at','ua.status')
                     ->leftJoin('new_wipplis as nw', 'nw.id', 'ua.wippli_id')
                     ->leftJoin('users as u', 'u.id', 'ua.user_id')
                     ->leftJoin('users as u1', 'u1.id', 'ua.parent_id')
                     ->where('ua.user_id', $userId)
-                    ->where('ua.status','Active')
                     ->orderBy('ua.id', 'DESC')
                     ->get();
                     foreach ($userAllocate as $key => $value) {
                         $userAllocate[$key]->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
-                        if($userDetails['user_type'] != 2)
-                            $notiFication[] = $value;
+                        if ($userDetails['user_type'] != 2) {
+                            $notiFications['workinprogress'][] = $value;
+                            if ($value->status == 'Active') {
+                                $uWip[] = $value;
+                            }
+                        }
                     }
+
 
             $tascCompleted = DB::table('wippli_completes as wc')
                     ->select('u.fname', 'u.id as userId', 'nw.id as id', 'nw.user_id as parent_id', 'nw.project_name', 'nw.attachment', 'wc.created_at')
@@ -114,18 +124,18 @@ class WelcomeController extends Controller {
                     $tascCompleted =  $tascCompleted->get();
                     foreach ($tascCompleted as $key => $value) {
                         $tascCompleted[$key]->updated_at = \Carbon\Carbon::parse($value->created_at)->format('h:i A');
-                        $notiFication[] = $value;
+                        $notiFications['completed'][] = $value;
                     }
             $count = getWippliStatus();
 
-            // prd($tascCompleted);
+            // prd($notiFications);
 
             return view('nwsites.dashboard', [
-                'ToDo'=>$wip,
+                'ToDo'=>$todo,
                 'tascCompleted'=>$tascCompleted,
                 'userDetails' => $userDetails, 
-                'NewTasc' => $notiFication,
-                'userAllocate' => ($userDetails['user_type'] == 2)?$managerAllocate:$userAllocate,
+                'notiFications' => $notiFications,
+                'userAllocate' => ($userDetails['user_type'] == 2)?$mWip:$uWip,
                 'recordCount'=>$count
             ]);
         }
